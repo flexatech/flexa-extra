@@ -95,8 +95,10 @@ class OptionSetResolver {
                 'post_status' => 'publish',
                 'numberposts' => -1,
                 'fields'      => 'ids',
-                'meta_key'    => self::META_STATUS,
-                'meta_value'  => '1',
+                // Option sets are a small, admin-managed set; this runs once per
+                // request and the result is memoized in self::$cache.
+                'meta_key'    => self::META_STATUS, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Small admin-managed dataset, cached per request.
+                'meta_value'  => '1', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Small admin-managed dataset, cached per request.
             )
         );
 

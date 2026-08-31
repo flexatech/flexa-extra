@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Flexa Extra - WooCommerce Extra Product Options
+ * Plugin Name:       Flexa Extra - Extra Product Options for WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/flexa-extra
  * Description:       Add customizable extra options and personalization fields to WooCommerce products (text, checkbox, radio, dropdown, swatches, buttons) with optional extra fees.
  * Version:           1.0.0
@@ -91,8 +91,10 @@ if ( ! function_exists( 'Flexa\\Extra\\plugin_init' ) ) {
 
         add_action( 'before_woocommerce_init', [ \Flexa\Extra\Engine\ActDeact::class, 'before_woocommerce_init' ] );
 
+        // Translations load just-in-time from WordPress.org language packs and the
+        // bundled /languages directory (auto-loaded since WP 4.6) — no manual
+        // text-domain loading is needed for a wordpress.org-hosted plugin.
         Initialize::get_instance();
-        I18n::load_plugin_textdomain();
     }
 }
 

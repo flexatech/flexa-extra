@@ -10,3 +10,10 @@
 /bin/phpunit-9.phar
 
 # Build output is committed (assets/dist) — do not ignore it here.
+
+# Release archives produced by release.sh
+/dist/
+
+# OS cruft
+.DS_Store
+Thumbs.db

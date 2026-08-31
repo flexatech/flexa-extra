@@ -1,4 +1,4 @@
-=== Flexa Extra - WooCommerce Extra Product Options ===
+=== Flexa Extra - Extra Product Options for WooCommerce ===
 Contributors: flexatech
 Tags: woocommerce, product options, extra product options, product addons, personalization
 Requires at least: 5.0
@@ -70,7 +70,8 @@ Yes — see `docs/HOOKS.md` for the available actions and filters.
 == Source code for compiled JavaScript and CSS ==
 
 The admin app ships as a compiled bundle in `assets/dist/admin/`. The
-human-readable source lives in `apps/admin/src/` and is built with pnpm + Vite:
+human-readable source is included in this package under `apps/admin/src/`
+(with its build config) and is built with pnpm + Vite:
 
 1. `cd apps/admin`
 2. `pnpm install`

@@ -1,4 +1,4 @@
-# Flexa Extra — WooCommerce Extra Product Options
+# Flexa Extra — Extra Product Options for WooCommerce
 
 A Flexa-lineage plugin that adds extra options and personalization fields to
 WooCommerce products. This is the **foundation + admin shell** milestone:
