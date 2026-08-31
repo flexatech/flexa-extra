@@ -1,0 +1,22 @@
+# Files and folders excluded from the distributed plugin zip.
+# The compiled admin bundle in assets/dist/ IS shipped; its source
+# (apps/admin/src) is documented in readme.txt but excluded from the zip.
+
+/.git
+/.github
+/.gitignore
+/.distignore
+/node_modules
+/apps
+/tests
+/bin
+/phpstan
+/phpstan.neon
+/phpstan-integration.xml.dist
+/phpunit.xml.dist
+/phpunit-integration.xml.dist
+/composer.json
+/composer.lock
+/vendor
+/docs
+/.editorconfig

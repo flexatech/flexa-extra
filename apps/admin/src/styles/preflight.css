@@ -1,0 +1,40 @@
+.flexa-extra-ui {
+  @apply text-foreground text-sm;
+
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+* {
+  @apply border-border;
+}
+
+/* Override WP admin chrome inside the app shell */
+.flexa-extra-ui {
+  :where(button, code, form, h1, h2, h3, h4, h5, h6, input, ul, ol, li, nav, p, textarea) {
+    @apply m-0 p-0;
+  }
+}
+
+#wpcontent {
+  padding-left: 0px !important;
+}
+
+.flexa-extra-ui .notice,
+.flexa-extra-ui .notice-info,
+.flexa-extra-ui .notice-warning,
+.flexa-extra-ui .notice-error,
+.flexa-extra-ui .notice-success,
+.flexa-extra-ui .error,
+.flexa-extra-ui .success {
+  display: none;
+}

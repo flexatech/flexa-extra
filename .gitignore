@@ -1,0 +1,12 @@
+# Dependencies
+/vendor/
+/apps/admin/node_modules/
+
+# Test / tooling caches
+/.phpunit.cache/
+/.phpunit.result.cache
+
+# PHPUnit 9 phar for the WP integration suite (fetched on demand — see tests/README.md)
+/bin/phpunit-9.phar
+
+# Build output is committed (assets/dist) — do not ignore it here.

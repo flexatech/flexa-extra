@@ -1,0 +1,13 @@
+@layer theme, base, components, utilities;
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import './styles/theme.css';
+@import 'tailwindcss/preflight.css';
+@import './styles/preflight.css';
+
+.flexa-extra-ui {
+  @import 'tailwindcss/utilities.css';
+}

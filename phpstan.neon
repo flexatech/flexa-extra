@@ -1,0 +1,27 @@
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+    level: 6
+    phpVersion: 80100
+    paths:
+        - includes
+        - flexa-extra.php
+    bootstrapFiles:
+        - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+        - phpstan/constants.php
+    scanFiles:
+        - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+    # Defined in flexa-extra.php; toggles the Vite dev-server asset path.
+    dynamicConstantNames:
+        - FLEXA_EXTRA_IS_DEVELOPMENT
+    ignoreErrors:
+        # Upstream wordpress-stubs types rest_sanitize_boolean() with a template
+        # parameter it cannot resolve from a mixed argument. Runtime is correct
+        # (it always returns bool); this is a known stub limitation.
+        -
+            identifier: argument.templateType
+            message: '#rest_sanitize_boolean#'
+    excludePaths:
+        analyseAndScan:
+            - vendor/*

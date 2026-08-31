@@ -1,0 +1,391 @@
+/* Flexa Extra — storefront field styling. Plain CSS, no build step.
+ * Swatch size/shape and button colors are driven by CSS custom properties
+ * emitted on .flexa-extra-fields by ProductRenderer; each var has a sane
+ * fallback so the file also works standalone. */
+
+.flexa-extra-fields {
+    margin: 1.25em 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+/* Reveal once the storefront script has computed initial visibility/totals,
+ * so no field flashes before conditional logic runs. Absent JS, it stays
+ * visible (progressive enhancement). */
+.flexa-extra-fields.is-ready {
+    animation: flexa-extra-fade-in 0.18s ease-out;
+}
+
+@keyframes flexa-extra-fade-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: none; }
+}
+
+.flexa-extra-set {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.flexa-extra-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+}
+
+.flexa-extra-field[hidden] {
+    display: none;
+}
+
+.flexa-extra-field__label {
+    font-weight: 600;
+    font-size: 0.95em;
+    line-height: 1.3;
+}
+
+.flexa-extra-required {
+    color: #e2401c;
+    border: 0;
+    text-decoration: none;
+}
+
+.flexa-extra-tooltip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.1em;
+    height: 1.1em;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: #374151;
+    font-size: 0.72em;
+    cursor: help;
+}
+
+/* Style setting: hide the tooltip markers site-wide. */
+.flexa-extra-fields--no-tooltips .flexa-extra-tooltip {
+    display: none;
+}
+
+.flexa-extra-control {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.55em 0.7em;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #fff;
+    font: inherit;
+    line-height: 1.3;
+}
+
+.flexa-extra-control:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 1px #4f46e5;
+}
+
+textarea.flexa-extra-control {
+    resize: vertical;
+    min-height: 3em;
+}
+
+/* Keyboard focus ring on the visible choice surfaces (inputs are visually
+ * hidden). :focus-within tracks the hidden input's focus. */
+.flexa-extra-choice:focus-within,
+.flexa-extra-button:focus-within,
+.flexa-extra-swatch:focus-within {
+    outline: 2px solid #4f46e5;
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
+/* Price badge */
+.flexa-extra-price {
+    color: #6b7280;
+    font-size: 0.85em;
+    white-space: nowrap;
+}
+
+.flexa-extra-field__label .flexa-extra-price {
+    margin-left: 0.35em;
+    font-weight: 500;
+}
+
+/* Choice groups render as a fieldset; strip the UA chrome. */
+.flexa-extra-choices {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45em;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+}
+
+.flexa-extra-choice {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    cursor: pointer;
+    font-size: 0.95em;
+}
+
+.flexa-extra-choice__label {
+    flex: 1 1 auto;
+}
+
+/* Buttons */
+.flexa-extra-choices--button {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.flexa-extra-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.5em 0.9em;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: var(--fxe-btn-bg, transparent);
+    color: var(--fxe-btn-text, inherit);
+    cursor: pointer;
+    transition: border-color 0.12s, background 0.12s, color 0.12s;
+    user-select: none;
+}
+
+.flexa-extra-button input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.flexa-extra-button:has(input:checked) {
+    border-color: var(--fxe-btn-active-bg, #4f46e5);
+    background: var(--fxe-btn-active-bg, #eef2ff);
+    color: var(--fxe-btn-active-text, inherit);
+}
+
+/* Swatches — size/shape from style settings. */
+.flexa-extra-choices--swatch {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.6em;
+}
+
+.flexa-extra-swatch {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3em;
+    cursor: pointer;
+    font-size: 0.8em;
+}
+
+.flexa-extra-swatch input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.flexa-extra-swatch__chip {
+    width: var(--fxe-swatch-size, 36px);
+    height: var(--fxe-swatch-size, 36px);
+    border-radius: var(--fxe-swatch-radius, 6px);
+    border: 2px solid #e5e7eb;
+    background-size: cover;
+    background-position: center;
+    transition: border-color 0.12s, box-shadow 0.12s;
+}
+
+.flexa-extra-swatch:has(input:checked) .flexa-extra-swatch__chip {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 1px #4f46e5;
+}
+
+.flexa-extra-swatch__label {
+    color: #4b5563;
+}
+
+/* Heading / description */
+.flexa-extra-heading__title {
+    font-weight: 700;
+    font-size: 1.05em;
+}
+
+.flexa-extra-heading__desc {
+    color: #6b7280;
+    font-size: 0.9em;
+}
+
+/* Totals */
+.flexa-extra-totals {
+    margin-top: 0.5em;
+    padding-top: 0.75em;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+}
+
+.flexa-extra-totals[hidden] {
+    display: none;
+}
+
+.flexa-extra-totals__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+}
+
+.flexa-extra-totals__total {
+    font-weight: 700;
+    font-size: 1.05em;
+}
+
+.flexa-extra-totals__value {
+    white-space: nowrap;
+}
+
+/* Responsive — stack swatches/buttons tighter on narrow viewports. */
+@media (max-width: 480px) {
+    .flexa-extra-choices--button,
+    .flexa-extra-choices--swatch {
+        gap: 0.4em;
+    }
+
+    .flexa-extra-button {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+}
+
+/* Respect users who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+    .flexa-extra-fields.is-ready {
+        animation: none;
+    }
+
+    .flexa-extra-button,
+    .flexa-extra-swatch__chip,
+    .flexa-extra-control {
+        transition: none;
+    }
+}
+
+/* ==========================================================================
+ * Cart & checkout — extra-option line items
+ * Styles the option meta both in the classic cart (<dl class="variation">),
+ * the block cart/checkout (.wc-block-components-product-details) and order
+ * emails/received pages (.wc-item-meta). Values are emitted by CartHandler.
+ * ========================================================================== */
+
+/* --- Classic cart / checkout: turn the stacked <dl> into tidy label rows --- */
+.woocommerce dl.variation,
+.wc-item-meta {
+    margin: 0.5em 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+    font-size: 0.875em;
+    line-height: 1.45;
+    list-style: none;
+}
+
+.woocommerce dl.variation dt,
+.wc-item-meta .wc-item-meta-label {
+    display: inline;
+    float: none;
+    clear: none;
+    margin: 0 0.35em 0 0;
+    padding: 0;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.woocommerce dl.variation dd,
+.wc-item-meta li {
+    display: block;
+    margin: 0;
+    padding: 0;
+    color: inherit;
+}
+
+.woocommerce dl.variation dd p {
+    display: inline;
+    margin: 0;
+}
+
+.wc-item-meta li > * { display: inline; }
+
+/* --- Block cart / checkout --- */
+.wc-block-components-product-details {
+    margin: 0.4em 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+    font-size: 0.875em;
+    line-height: 1.45;
+}
+
+.wc-block-components-product-details__item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35em;
+    margin: 0;
+}
+
+.wc-block-components-product-details__name {
+    font-weight: 600;
+    color: #6b7280;
+}
+
+/* --- Shared: the value payload (chip + text + fee pill) --- */
+.flexa-extra-cart-item {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.45em;
+    vertical-align: middle;
+}
+
+.flexa-extra-cart-text {
+    font-weight: 500;
+}
+
+.flexa-extra-cart-swatch {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35), 0 1px 2px rgba(0, 0, 0, 0.12);
+    background-color: #e5e7eb;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    flex: none;
+    vertical-align: middle;
+}
+
+.flexa-extra-cart-fee {
+    display: inline-block;
+    padding: 0.05em 0.55em;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-size: 0.82em;
+    font-weight: 600;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+/* wc_price() wraps the amount in its own span — inherit the pill colour. */
+.flexa-extra-cart-fee .woocommerce-Price-amount,
+.flexa-extra-cart-fee bdi {
+    color: inherit;
+}

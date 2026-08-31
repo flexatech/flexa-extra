@@ -1,0 +1,35 @@
+{
+    "name": "flexatech/flexa-extra",
+    "description": "WooCommerce Extra Product Options — Flexa lineage.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6 || ^10.5 || ^11.5",
+        "yoast/phpunit-polyfills": "^2.0 || ^3.0",
+        "phpstan/phpstan": "^2",
+        "php-stubs/wordpress-stubs": "^6.9",
+        "php-stubs/woocommerce-stubs": "^11.0",
+        "szepeviktor/phpstan-wordpress": "^2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Flexa\\Extra\\": "includes/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Flexa\\Extra\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test:integration": "php bin/phpunit-9.phar -c phpunit-integration.xml.dist",
+        "analyse": "phpstan analyse --no-progress --memory-limit=1G"
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}
