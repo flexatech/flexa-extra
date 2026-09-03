@@ -4,6 +4,7 @@ namespace Flexa\Extra\Helpers;
 defined( 'ABSPATH' ) || exit;
 
 use Flexa\Extra\Fields\FieldType;
+use Flexa\Extra\Support\OnboardingState;
 
 /**
  * Shared helpers: JS config for the admin app and the settings schema.
@@ -25,6 +26,7 @@ class Helper {
             'rest_base'  => FLEXA_EXTRA_REST_NAMESPACE,
             'settings'   => self::get_settings(),
             'field_catalog' => FieldType::catalog(),
+            'onboarding' => OnboardingState::all(),
 
             'currency_settings' => [
                 'currency'     => get_woocommerce_currency(),

@@ -205,6 +205,16 @@ với fallback nên vẫn chạy standalone. Class modifier (`--swatch-{sm|md|lg
       rỗng trong `render_totals`; `flexa-extra.js` `recalculate()` dựng mảng `lines[]` (label option/field
       + amount, mirror `SelectionProcessor` line) rồi render bằng `textContent` (an toàn XSS), subtotal =
       tổng lines. Cart/checkout/order vốn đã itemize sẵn (`CartHandler::format_line_value`). Không đổi REST.
+- [x] **Onboarding / quick-start guide (nhẹ)** — 2026-09-03. Kế thừa quy ước `flexa-seo-aeo`
+      nhưng lược nhẹ: option `flexa_extra_onboarding` (`Support\OnboardingState`: schema `status`
+      pending|in_progress|completed|dismissed + timestamp server-stamp), REST GET/POST `/onboarding`
+      (`OnboardingRestController`, `manage_options`), `Engine\Admin\ActivationRedirect` (transient
+      một lần khi activate → redirect vào trang plugin; fallback notice + dismiss ở Plugins screen),
+      state localize sẵn trong `get_js_config`. UI: `WelcomeOverlay` (khi `pending`) foreground
+      template gallery, tái dùng `PresetPicker` + builder sẵn có (không dựng wizard song song);
+      `QuickStartBanner` (khi `in_progress`) nhắc bước tiếp + "Done"→completed; nút "Replay setup
+      guide" trong AdvancedTab. Skippable, không chặn luồng thường, không hiện lại khi đã xong.
+      Unit +6 (`OnboardingStateTest`, tổng 63 xanh), phpstan sạch.
 - [ ] **REST API công khai + cache** cho headless / tích hợp.
 - [ ] **Live preview nâng cao + tính giá server-side realtime** (AJAX/REST) chống lệch giá.
 - [ ] **Analytics add-on**: thống kê option nào bán chạy, doanh thu phụ phí.

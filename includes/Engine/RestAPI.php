@@ -7,6 +7,7 @@ use Flexa\Extra\Utils\SingletonTrait;
 use Flexa\Extra\Controllers\SettingsRestController;
 use Flexa\Extra\Controllers\OptionSetsRestController;
 use Flexa\Extra\Controllers\ResourcesRestController;
+use Flexa\Extra\Controllers\OnboardingRestController;
 
 /**
  * Boots every REST controller on rest_api_init.
@@ -25,6 +26,7 @@ final class RestAPI {
         SettingsRestController::get_instance();
         OptionSetsRestController::get_instance();
         ResourcesRestController::get_instance();
+        OnboardingRestController::get_instance();
 
         do_action( 'flexa_extra/rest/register_routes' );
     }

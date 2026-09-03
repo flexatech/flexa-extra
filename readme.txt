@@ -66,7 +66,8 @@ Every price is recomputed on the server from your saved field definitions when t
 
 1. Upload the plugin to `/wp-content/plugins/flexa-extra` or install it through the Plugins screen.
 2. Activate it. WooCommerce must be active.
-3. Open **Flexa Extra** in the admin menu to configure settings and build Option Sets.
+3. On activation a short quick-start guide points you at the template gallery so you can build your first Option Set in a couple of minutes. It is skippable, and you can replay it later from Advanced settings.
+4. Open **Flexa Extra** in the admin menu to configure settings and build Option Sets.
 
 == Frequently Asked Questions ==
 

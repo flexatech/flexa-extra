@@ -1,5 +1,6 @@
 import { SettingsFormData } from '@/lib/schema/settings';
 import { FieldCatalogEntry } from '@/lib/fields/registry';
+import { OnboardingState } from '@/lib/api/onboarding';
 
 declare global {
   interface Window {
@@ -10,6 +11,7 @@ declare global {
       rest_base: string;
       settings?: SettingsFormData;
       field_catalog?: FieldCatalogEntry[];
+      onboarding?: OnboardingState;
       currency_settings: {
         currency: string;
         symbol: string;

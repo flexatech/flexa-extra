@@ -23,7 +23,13 @@ import {
 } from '@/lib/queries/option-sets';
 import { downloadEnvelope, readJsonFile } from '@/lib/export-import';
 import { PresetDefinition } from '@/lib/fields/presets';
+import {
+  useOnboardingQuery,
+  useUpdateOnboardingMutation,
+} from '@/lib/queries/onboarding';
 import { PresetPicker } from './PresetPicker';
+import { WelcomeOverlay } from '@/pages/onboarding/WelcomeOverlay';
+import { QuickStartBanner } from '@/pages/onboarding/QuickStartBanner';
 import { showToast } from '@/components/custom/showToast';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -38,6 +44,25 @@ export default function OptionSets() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [pendingPresetId, setPendingPresetId] = useState<string | null>(null);
+
+  const { data: onboarding } = useOnboardingQuery();
+  const onboardingMutation = useUpdateOnboardingMutation();
+  const status = onboarding?.status ?? 'completed';
+  const showWelcome = status === 'pending' && !pickerOpen;
+  const showQuickStart = status === 'in_progress';
+
+  const handleBrowseTemplates = () => {
+    if (status === 'pending') onboardingMutation.mutate('in_progress');
+    setPickerOpen(true);
+  };
+
+  const handleStartBlank = () => {
+    if (status === 'pending') onboardingMutation.mutate('in_progress');
+    navigate('/option-sets/new');
+  };
+
+  const handleSkipOnboarding = () => onboardingMutation.mutate('dismissed');
+  const handleFinishOnboarding = () => onboardingMutation.mutate('completed');
 
   const handleSelectPreset = async (preset: PresetDefinition) => {
     setPendingPresetId(preset.id);
@@ -113,16 +138,33 @@ export default function OptionSets() {
               {__('Export all', 'flexa-extra')}
             </Button>
           )}
-          <Button variant="outline" size="lg" onClick={() => setPickerOpen(true)}>
+          <Button variant="outline" size="lg" onClick={handleBrowseTemplates}>
             <LayoutTemplate className="h-4 w-4" />
             {__('Start from a template', 'flexa-extra')}
           </Button>
-          <Button size="lg" onClick={() => navigate('/option-sets/new')}>
+          <Button size="lg" onClick={handleStartBlank}>
             <Plus className="h-4 w-4" />
             {__('New Option Set', 'flexa-extra')}
           </Button>
         </div>
       </div>
+
+      <WelcomeOverlay
+        open={showWelcome}
+        onBrowseTemplates={handleBrowseTemplates}
+        onStartBlank={handleStartBlank}
+        onSkip={handleSkipOnboarding}
+      />
+
+      {showQuickStart && (
+        <QuickStartBanner
+          hasSets={items.length > 0}
+          onBrowseTemplates={handleBrowseTemplates}
+          onCreateAnother={handleStartBlank}
+          onOpenSettings={() => navigate('/settings')}
+          onFinish={handleFinishOnboarding}
+        />
+      )}
 
       <PresetPicker
         open={pickerOpen}
@@ -137,8 +179,8 @@ export default function OptionSets() {
         </div>
       ) : items.length === 0 ? (
         <EmptyState
-          onCreate={() => navigate('/option-sets/new')}
-          onBrowseTemplates={() => setPickerOpen(true)}
+          onCreate={handleStartBlank}
+          onBrowseTemplates={handleBrowseTemplates}
         />
       ) : (
         <div className="border-border bg-card overflow-hidden rounded-xl border">

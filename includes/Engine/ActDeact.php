@@ -42,6 +42,19 @@ class ActDeact {
         if ( false === get_option( 'flexa_extra_settings' ) ) {
             update_option( 'flexa_extra_settings', \Flexa\Extra\Helpers\Helper::get_default_settings() );
         }
+
+        // Offer the quick-start guide on first activation. A short, user-scoped
+        // transient is the safe way to trigger a one-time redirect: activation
+        // runs sandboxed, so the redirect happens later on admin_init (see
+        // ActivationRedirect). Skipped once the user has finished or dismissed
+        // the guide, so re-activating a configured site never hijacks the admin.
+        if ( ! \Flexa\Extra\Support\OnboardingState::is_finished() ) {
+            set_transient(
+                \Flexa\Extra\Engine\Admin\ActivationRedirect::REDIRECT_TRANSIENT,
+                get_current_user_id(),
+                MINUTE_IN_SECONDS
+            );
+        }
     }
 
     public static function deactivate(): void {

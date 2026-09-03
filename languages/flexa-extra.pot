@@ -1275,3 +1275,121 @@ msgstr ""
 #: apps/admin/src/pages/settings/tabs/GeneralTab.tsx
 msgid "List each selected option and its price on the product page."
 msgstr ""
+
+#: apps/admin/src/pages/onboarding/WelcomeOverlay.tsx
+msgid "Welcome to Flexa Extra"
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/WelcomeOverlay.tsx
+msgid "Add options shoppers can pick"
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/WelcomeOverlay.tsx
+msgid "Text, choices, swatches, buttons, date and colour pickers."
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/WelcomeOverlay.tsx
+msgid "Charge for the extras"
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/WelcomeOverlay.tsx
+msgid "Per-option fees, recomputed on the server so totals always match."
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/WelcomeOverlay.tsx
+msgid "Assign to the right products"
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/WelcomeOverlay.tsx
+msgid "All products, a hand-picked list, or by category, tag and more."
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/WelcomeOverlay.tsx
+msgid ""
+"Add extra options to your products and start charging for them. The quickest "
+"way is to begin from a ready-made template."
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/WelcomeOverlay.tsx
+#: apps/admin/src/pages/onboarding/QuickStartBanner.tsx
+msgid "Browse templates"
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/WelcomeOverlay.tsx
+msgid "Start from scratch"
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/WelcomeOverlay.tsx
+msgid "Skip for now"
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/QuickStartBanner.tsx
+msgid "Dismiss the quick-start guide"
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/QuickStartBanner.tsx
+msgid "Your first option set is ready"
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/QuickStartBanner.tsx
+msgid "Finish your first option set"
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/QuickStartBanner.tsx
+msgid ""
+"Open a product it applies to and check the extra fields on the page. From "
+"here you can add more sets or fine-tune how they look."
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/QuickStartBanner.tsx
+msgid ""
+"Pick a template to drop in ready-made fields, then edit and publish it. You "
+"can leave and come back any time."
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/QuickStartBanner.tsx
+msgid "Create another"
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/QuickStartBanner.tsx
+msgid "Display settings"
+msgstr ""
+
+#: apps/admin/src/pages/onboarding/QuickStartBanner.tsx
+msgid "Got it"
+msgstr ""
+
+#: apps/admin/src/pages/settings/tabs/AdvancedTab.tsx
+msgid "Replay setup guide"
+msgstr ""
+
+#: apps/admin/src/pages/settings/tabs/AdvancedTab.tsx
+msgid "Show the first-run quick-start guide again on the Option Sets screen."
+msgstr ""
+
+#: apps/admin/src/pages/settings/tabs/AdvancedTab.tsx
+msgid "Replay"
+msgstr ""
+
+#: apps/admin/src/lib/api/onboarding.ts
+msgid "Failed to load setup guide"
+msgstr ""
+
+#: apps/admin/src/lib/api/onboarding.ts
+msgid "Failed to update setup guide"
+msgstr ""
+
+#: includes/Engine/Admin/ActivationRedirect.php
+msgid ""
+"Flexa Extra is active. Build your first option set in a couple of minutes "
+"with the quick-start guide."
+msgstr ""
+
+#: includes/Engine/Admin/ActivationRedirect.php
+msgid "Start the guide"
+msgstr ""
+
+#: includes/Engine/Admin/ActivationRedirect.php
+#: apps/admin/src/pages/onboarding/QuickStartBanner.tsx
+msgid "Dismiss"
+msgstr ""

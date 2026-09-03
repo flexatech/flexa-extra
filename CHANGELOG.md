@@ -6,6 +6,11 @@ All notable changes to Flexa Extra are documented here. This project adheres to
 ## [Unreleased]
 
 ### Added
+- **First-run quick-start guide**: on activation you land on a short welcome that
+  points at the template gallery, so the fastest path to a first option set is
+  the default one. It reuses the normal builder (no separate wizard), is
+  skippable at every step, and never shows again once finished or dismissed. A
+  "Replay setup guide" control under Advanced settings brings it back on demand.
 - **Itemized price breakdown**: the product page can list each selected option
   (and any conditional fee or discount) with its own price, updating live as the
   shopper picks, above the extra subtotal. Toggle it under General settings. The

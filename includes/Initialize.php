@@ -15,6 +15,7 @@ final class Initialize {
 
     protected function __construct() {
         \Flexa\Extra\Engine\Admin\Settings::get_instance();
+        \Flexa\Extra\Engine\Admin\ActivationRedirect::get_instance();
         \Flexa\Extra\Engine\Admin\CustomPostType::get_instance();
         \Flexa\Extra\Register\RegisterFacade::get_instance();
         \Flexa\Extra\Engine\RestAPI::get_instance();

@@ -224,3 +224,18 @@ if ( ! function_exists( 'has_term' ) ) {
         return in_array( (int) $term, array_map( 'intval', $terms ), true );
     }
 }
+
+if ( ! function_exists( 'get_option' ) ) {
+    function get_option( $key, $default = false ) {
+        return array_key_exists( $key, $GLOBALS['fx_options'] ?? array() )
+            ? $GLOBALS['fx_options'][ $key ]
+            : $default;
+    }
+}
+
+if ( ! function_exists( 'update_option' ) ) {
+    function update_option( $key, $value ) {
+        $GLOBALS['fx_options'][ $key ] = $value;
+        return true;
+    }
+}
