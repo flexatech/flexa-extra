@@ -46,7 +46,7 @@ interface Props {
 
 export function FieldPalette({ onSelectField }: Props) {
   const { control } = useFormContext<OptionSet>();
-  const { append } = useFieldArray({ control, name: 'fields' });
+  const { append } = useFieldArray({ control, name: 'fields', keyName: '_rhfId' });
 
   const catalog = getFieldCatalog();
   const groups = ['input', 'choice', 'display'] as const;

@@ -22,7 +22,7 @@ export default function Header() {
   return (
     <header
       className={cn(
-        'bg-background fixed top-8 left-0 z-40 flex h-[56px] w-full items-center gap-6 border-b border-border px-4 transition-shadow duration-300',
+        'bg-background sticky top-8 z-40 flex h-[56px] w-full items-center gap-6 border-b border-border px-4 transition-shadow duration-300',
         scrolled ? 'shadow-[0_8px_8px_0_rgba(85,93,102,0.15)]' : 'shadow-none',
       )}
     >

@@ -38,6 +38,8 @@
     "@types/react": "^18.3.20",
     "@types/react-dom": "^18.3.6",
     "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^30.0.1",
+    "puppeteer-core": "^25.10.0",
     "tailwindcss": "^4.1.3",
     "terser": "^5.39.0",
     "tw-animate-css": "^1.2.5",

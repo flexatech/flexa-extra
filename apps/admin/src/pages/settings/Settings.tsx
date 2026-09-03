@@ -34,7 +34,7 @@ export default function Settings() {
   return (
     <FormProvider {...form}>
       <form id="flexa-extra-settings-form" onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="mx-auto mt-[110px] min-h-screen max-w-7xl space-y-6 px-6 pb-16">
+        <div className="mx-auto mt-8 min-h-screen max-w-7xl space-y-6 px-6 pb-16">
           <SettingsHeader saving={saveSettingsMutation.isPending} />
 
           <div className="flex flex-col gap-8 lg:flex-row">

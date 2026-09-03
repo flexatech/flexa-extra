@@ -27,7 +27,7 @@ interface Props {
 
 export function FieldCanvas({ selectedId, onSelect }: Props) {
   const { control } = useFormContext<OptionSet>();
-  const { fields, move, remove } = useFieldArray({ control, name: 'fields', keyName: '_rhfId' });
+  const { move, remove } = useFieldArray({ control, name: 'fields', keyName: '_rhfId' });
   const watched = (useWatch({ control, name: 'fields' }) ?? []) as Field[];
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
@@ -35,12 +35,12 @@ export function FieldCanvas({ selectedId, onSelect }: Props) {
   const onDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
-    const from = fields.findIndex((f) => f.id === active.id);
-    const to = fields.findIndex((f) => f.id === over.id);
+    const from = watched.findIndex((f) => f.id === active.id);
+    const to = watched.findIndex((f) => f.id === over.id);
     if (from !== -1 && to !== -1) move(from, to);
   };
 
-  if (fields.length === 0) {
+  if (watched.length === 0) {
     return (
       <div className="border-border text-muted-foreground flex min-h-[320px] flex-col items-center justify-center rounded-xl border border-dashed text-center">
         <LayoutGrid className="mb-3 h-8 w-8" />
@@ -55,12 +55,12 @@ export function FieldCanvas({ selectedId, onSelect }: Props) {
   return (
     <div className="space-y-2">
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-        <SortableContext items={fields.map((f) => f.id)} strategy={verticalListSortingStrategy}>
-          {fields.map((field, index) => (
+        <SortableContext items={watched.map((f) => f.id)} strategy={verticalListSortingStrategy}>
+          {watched.map((field, index) => (
             <SortableFieldCard
-              key={field._rhfId}
+              key={field.id}
               id={field.id}
-              data={watched[index]}
+              data={field}
               selected={selectedId === field.id}
               onSelect={() => onSelect(field.id)}
               onRemove={() => {

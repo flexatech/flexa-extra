@@ -88,7 +88,7 @@ export default function OptionSetBuilder() {
 
   if (!isNew && isLoading) {
     return (
-      <div className="mt-[140px] flex items-center justify-center">
+      <div className="mt-20 flex items-center justify-center">
         <Loader2 className="text-muted-foreground h-6 w-6 animate-spin" />
       </div>
     );
@@ -96,7 +96,7 @@ export default function OptionSetBuilder() {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={onSubmit} className="mx-auto mt-[92px] max-w-[1400px] px-6 pb-16">
+      <form onSubmit={onSubmit} className="mx-auto mt-6 max-w-[1400px] px-6 pb-16">
         <BuilderHeader
           heading={heading}
           view={view}
