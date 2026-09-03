@@ -68,6 +68,18 @@ A numeric input with optional constraints:
 Values outside min/max are rejected with a message. A number field can carry a
 field-level price.
 
+### Date picker
+
+A native date input. The shopper picks a calendar date, stored and shown on the
+order in `YYYY-MM-DD` form. Set a **Default** date in the Inspector to pre-fill
+it. Like the other input fields, it can carry a field-level price.
+
+### Colour picker
+
+A native colour input. The shopper picks a colour, stored and shown on the order
+as a hex value (for example `#3366ff`). Set a **Default** colour in the
+Inspector. It can also carry a field-level price.
+
 ---
 
 ## Choice fields
@@ -128,15 +140,6 @@ selected/active states) are controlled globally under
 A non-interactive block used to title a section or add explanatory text between
 fields. It collects no value and carries no price — it is purely for structure
 and clarity on the product page.
-
----
-
-## A note on "Pro" field types
-
-The builder palette may also list advanced field types — **Date picker**,
-**File upload**, **Image upload**, and **Color picker**. These are part of the
-Pro feature set. In the free plugin they are recognized but not rendered on the
-storefront; the fields documented above are the ones available for free.
 
 ---
 

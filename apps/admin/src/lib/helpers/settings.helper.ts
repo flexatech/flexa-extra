@@ -7,6 +7,7 @@ export const DEFAULT_SETTINGS: SettingsFormData = {
     enabled: true,
     showExtraSubtotal: true,
     showTotalPrice: true,
+    showPriceBreakdown: true,
     showValueInMiniCart: true,
   },
   display: {

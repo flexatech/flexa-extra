@@ -99,6 +99,38 @@ final class OptionSetSchemaTest extends TestCase {
         $this->assertSame( 0.0, $result['fields'][0]['price']['amount'] );
     }
 
+    public function test_color_picker_default_is_hex_validated(): void {
+        $result = OptionSetSchema::sanitize(
+            array(
+                'name'   => 'Set',
+                'fields' => array(
+                    array( 'type' => 'color_picker', 'id' => 'a', 'label' => 'A', 'default' => '#ABC' ),
+                    array( 'type' => 'color_picker', 'id' => 'b', 'label' => 'B', 'default' => 'red' ),
+                ),
+            )
+        );
+
+        $this->assertSame( '#ABC', $result['fields'][0]['default'] );
+        $this->assertSame( '', $result['fields'][1]['default'] );
+    }
+
+    public function test_date_picker_default_accepts_only_valid_iso_dates(): void {
+        $result = OptionSetSchema::sanitize(
+            array(
+                'name'   => 'Set',
+                'fields' => array(
+                    array( 'type' => 'date_picker', 'id' => 'a', 'label' => 'A', 'default' => '2026-09-03' ),
+                    array( 'type' => 'date_picker', 'id' => 'b', 'label' => 'B', 'default' => '2026-13-40' ),
+                    array( 'type' => 'date_picker', 'id' => 'c', 'label' => 'C', 'default' => '03/09/2026' ),
+                ),
+            )
+        );
+
+        $this->assertSame( '2026-09-03', $result['fields'][0]['default'] );
+        $this->assertSame( '', $result['fields'][1]['default'] );
+        $this->assertSame( '', $result['fields'][2]['default'] );
+    }
+
     public function test_checkbox_is_always_multiple(): void {
         $result = OptionSetSchema::sanitize(
             array(
@@ -192,5 +224,92 @@ final class OptionSetSchemaTest extends TestCase {
         $options = $result['fields'][0]['options'];
         $this->assertSame( '#ff0000', $options[0]['color'] );
         $this->assertSame( '', $options[1]['color'] );
+    }
+
+    public function test_choice_stock_is_normalized(): void {
+        $result = OptionSetSchema::sanitize(
+            array(
+                'name'   => 'Set',
+                'fields' => array(
+                    array(
+                        'type'    => 'dropdown',
+                        'id'      => 'd',
+                        'label'   => 'D',
+                        'options' => array(
+                            array( 'id' => 'a', 'label' => 'A', 'stock' => '5' ),
+                            array( 'id' => 'b', 'label' => 'B', 'stock' => -3 ),
+                            array( 'id' => 'c', 'label' => 'C', 'stock' => '' ),
+                            array( 'id' => 'e', 'label' => 'E' ),
+                            array( 'id' => 'f', 'label' => 'F', 'stock' => 'abc' ),
+                        ),
+                    ),
+                ),
+            )
+        );
+
+        $options = $result['fields'][0]['options'];
+        $this->assertSame( 5, $options[0]['stock'], 'Numeric string becomes int.' );
+        $this->assertSame( 0, $options[1]['stock'], 'Negative clamps to zero.' );
+        $this->assertNull( $options[2]['stock'], 'Empty string means unlimited.' );
+        $this->assertNull( $options[3]['stock'], 'Missing means unlimited.' );
+        $this->assertNull( $options[4]['stock'], 'Non-numeric means unlimited.' );
+    }
+
+    public function test_select_bounds_are_normalized(): void {
+        $result = OptionSetSchema::sanitize(
+            array(
+                'name'   => 'Set',
+                'fields' => array(
+                    array(
+                        'type'      => 'checkbox',
+                        'id'        => 'addons',
+                        'label'     => 'Add-ons',
+                        'minSelect' => '2',
+                        'maxSelect' => -1,
+                        'options'   => array( array( 'id' => 'a', 'label' => 'A' ) ),
+                    ),
+                    array(
+                        'type'    => 'radio',
+                        'id'      => 'plain',
+                        'label'   => 'Plain',
+                        'options' => array( array( 'id' => 'x', 'label' => 'X' ) ),
+                    ),
+                ),
+            )
+        );
+
+        $this->assertSame( 2, $result['fields'][0]['minSelect'], 'Numeric string becomes int.' );
+        $this->assertSame( 0, $result['fields'][0]['maxSelect'], 'Negative clamps to zero.' );
+        $this->assertNull( $result['fields'][1]['minSelect'], 'Unset stays null.' );
+        $this->assertNull( $result['fields'][1]['maxSelect'], 'Unset stays null.' );
+    }
+
+    public function test_actions_are_normalized(): void {
+        $result = OptionSetSchema::sanitize(
+            array(
+                'name'    => 'Set',
+                'actions' => array(
+                    array(
+                        'id'    => 'a1',
+                        'label' => 'Rush',
+                        'kind'  => 'bogus',
+                        'price' => array( 'type' => 'fixed', 'amount' => 12 ),
+                        'match' => 'all',
+                        'rules' => array(
+                            array( 'field' => 'color', 'operator' => 'weird', 'value' => 'red' ),
+                        ),
+                    ),
+                    'not-an-array',
+                ),
+            )
+        );
+
+        $this->assertCount( 1, $result['actions'], 'Non-array actions are dropped.' );
+        $action = $result['actions'][0];
+        $this->assertSame( 'fee', $action['kind'], 'Unknown kind falls back to fee.' );
+        $this->assertSame( 'all', $action['match'] );
+        $this->assertSame( 12.0, $action['price']['amount'] );
+        $this->assertSame( 'is', $action['rules'][0]['operator'], 'Unknown operator falls back to is.' );
+        $this->assertSame( 'color', $action['rules'][0]['field'] );
     }
 }

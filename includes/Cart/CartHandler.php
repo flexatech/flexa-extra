@@ -26,6 +26,12 @@ final class CartHandler {
         add_filter( 'woocommerce_get_item_data', [ $this, 'display_in_cart' ], 10, 2 );
         add_action( 'woocommerce_checkout_create_order_line_item', [ $this, 'add_order_line_item_meta' ], 10, 3 );
         add_action( 'wp_enqueue_scripts', [ $this, 'maybe_enqueue_cart_style' ] );
+
+        // Edit options in cart.
+        add_filter( 'woocommerce_cart_item_name', [ $this, 'append_edit_link' ], 10, 3 );
+        add_filter( 'woocommerce_quantity_input_args', [ $this, 'prefill_edit_quantity' ], 10, 2 );
+        add_filter( 'woocommerce_product_single_add_to_cart_text', [ $this, 'edit_button_text' ], 10, 2 );
+        add_action( 'woocommerce_add_to_cart', [ $this, 'replace_edited_item' ], 20, 6 );
     }
 
     /**
@@ -112,7 +118,9 @@ final class CartHandler {
         $raw    = Input::read();
         $result = SelectionProcessor::process( $product, $raw, $base );
 
-        if ( empty( $result['selections'] ) ) {
+        // Store when there is anything to reproduce: an explicit selection, or a
+        // set-level action that fired (which can happen with no field selection).
+        if ( empty( $result['selections'] ) && empty( $result['lines'] ) ) {
             return $cart_item_data;
         }
 
@@ -166,18 +174,132 @@ final class CartHandler {
     public function add_order_line_item_meta( $item, $cart_item_key, $values ): void {
         unset( $cart_item_key );
 
-        if ( empty( $values[ self::KEY ]['selections'] ) ) {
+        if ( ! isset( $values[ self::KEY ] ) ) {
             return;
         }
 
         $lines = $this->recompute_lines( $values );
+        if ( empty( $lines ) ) {
+            return;
+        }
 
         foreach ( $lines as $line ) {
             $item->add_meta_data( $line['label'], $this->format_line_value( $line ), false );
         }
 
         // Hidden machine-readable copy for integrations.
-        $item->add_meta_data( '_flexa_extra', $values[ self::KEY ]['selections'], true );
+        $item->add_meta_data( '_flexa_extra', $values[ self::KEY ]['selections'] ?? array(), true );
+    }
+
+    /**
+     * Append an "Edit options" link to a cart line that carries our selections,
+     * pointing back to the product page in edit mode. Classic cart only (the
+     * block cart renders item names client-side and drops such markup).
+     *
+     * @param string $name          Product name HTML.
+     * @param mixed  $cart_item     Cart-item array (from the filter; type-checked here).
+     * @param string $cart_item_key
+     */
+    public function append_edit_link( $name, $cart_item, $cart_item_key ): string {
+        $name = (string) $name;
+
+        if ( ! function_exists( 'is_cart' ) || ! is_cart() ) {
+            return $name;
+        }
+        if ( ! is_array( $cart_item ) || ! isset( $cart_item[ self::KEY ] ) ) {
+            return $name;
+        }
+
+        $product = isset( $cart_item['data'] ) && $cart_item['data'] instanceof \WC_Product ? $cart_item['data'] : null;
+        if ( null === $product || ! $product->is_purchasable() ) {
+            return $name;
+        }
+
+        $url = add_query_arg( EditContext::QUERY, rawurlencode( (string) $cart_item_key ), $product->get_permalink() );
+
+        return $name . sprintf(
+            '<div class="flexa-extra-edit"><a class="flexa-extra-edit-link" href="%1$s">%2$s</a></div>',
+            esc_url( $url ),
+            esc_html__( 'Edit options', 'flexa-extra' )
+        );
+    }
+
+    /**
+     * On the product page opened in edit mode, default the quantity input to the
+     * quantity already on the edited cart line.
+     *
+     * @param array<string,mixed> $args
+     * @param mixed               $product WC_Product for the quantity input.
+     * @return array<string,mixed>
+     */
+    public function prefill_edit_quantity( $args, $product ): array {
+        $args = (array) $args;
+
+        $key = EditContext::editing_key();
+        if ( '' === $key || ! ( $product instanceof \WC_Product ) || null === WC()->cart ) {
+            return $args;
+        }
+
+        $item = WC()->cart->get_cart_item( $key );
+        if ( ! empty( $item ) ) {
+            $pid = $product->get_id();
+            if ( (int) ( $item['product_id'] ?? 0 ) === $pid || (int) ( $item['variation_id'] ?? 0 ) === $pid ) {
+                $args['input_value'] = $item['quantity'];
+            }
+        }
+
+        return $args;
+    }
+
+    /**
+     * Relabel the single-product add-to-cart button while editing a cart line.
+     *
+     * @param string $text
+     * @param mixed  $product Unused; the current product for the button.
+     */
+    public function edit_button_text( $text, $product = null ): string {
+        unset( $product );
+        return '' !== EditContext::editing_key() ? __( 'Update cart', 'flexa-extra' ) : (string) $text;
+    }
+
+    /**
+     * After a successful add in edit mode, drop the line that was being edited so
+     * the new selection replaces it. Guarded by a nonce carried in the form.
+     *
+     * @param string              $cart_item_key Key of the line just added/updated.
+     * @param int                 $product_id
+     * @param int                 $quantity
+     * @param int                 $variation_id
+     * @param array<string,mixed> $variation
+     * @param array<string,mixed> $cart_item_data
+     */
+    public function replace_edited_item( $cart_item_key, $product_id, $quantity, $variation_id = 0, $variation = array(), $cart_item_data = array() ): void {
+        unset( $product_id, $variation_id, $variation, $cart_item_data );
+
+        if ( ! isset( $_POST[ EditContext::NONCE_FIELD ], $_POST[ EditContext::QUERY ] ) ) {
+            return;
+        }
+
+        $nonce = sanitize_text_field( wp_unslash( (string) $_POST[ EditContext::NONCE_FIELD ] ) );
+        if ( ! wp_verify_nonce( $nonce, EditContext::NONCE_ACTION ) ) {
+            return;
+        }
+
+        $edit_key = sanitize_text_field( wp_unslash( (string) $_POST[ EditContext::QUERY ] ) );
+        if ( '' === $edit_key || ! function_exists( 'WC' ) || null === WC()->cart ) {
+            return;
+        }
+
+        // Identical selection: WC merged into the same line and stacked the
+        // quantity. Reset it to the edited quantity instead of adding on top.
+        if ( $edit_key === (string) $cart_item_key ) {
+            WC()->cart->set_quantity( (string) $cart_item_key, (int) $quantity, true );
+            return;
+        }
+
+        if ( ! empty( WC()->cart->get_cart_item( $edit_key ) ) ) {
+            WC()->cart->remove_cart_item( $edit_key );
+        }
     }
 
     /**
@@ -187,7 +309,7 @@ final class CartHandler {
      * @return list<array{field_id:string,label:string,type:string,display:string,amount:float,swatches:list<array{label:string,color:string,image:string}>}>
      */
     private function recompute_lines( array $cart_item ): array {
-        if ( empty( $cart_item[ self::KEY ]['selections'] ) ) {
+        if ( ! isset( $cart_item[ self::KEY ] ) ) {
             return [];
         }
 
@@ -200,7 +322,7 @@ final class CartHandler {
         }
 
         $base   = isset( $cart_item[ self::KEY ]['base'] ) ? (float) $cart_item[ self::KEY ]['base'] : null;
-        $result = SelectionProcessor::process( $product, (array) $cart_item[ self::KEY ]['selections'], $base );
+        $result = SelectionProcessor::process( $product, (array) ( $cart_item[ self::KEY ]['selections'] ?? array() ), $base );
 
         return $result['lines'];
     }
@@ -225,10 +347,10 @@ final class CartHandler {
         $value .= $chips;
 
         // An unlabelled colour swatch is fully conveyed by its chip, so don't
-        // repeat the raw hex as text — the chip's title still exposes it.
-        if ( ! $this->swatches_are_unlabelled( $line ) ) {
-            $text   = '' !== $line['display'] ? wp_kses_post( $line['display'] ) : '&mdash;';
-            $value .= '<span class="flexa-extra-cart-text">' . $text . '</span>';
+        // repeat the raw hex as text — the chip's title still exposes it. An
+        // action line has no display text; it is represented by its fee pill.
+        if ( '' !== $line['display'] && ! $this->swatches_are_unlabelled( $line ) ) {
+            $value .= '<span class="flexa-extra-cart-text">' . wp_kses_post( $line['display'] ) . '</span>';
         }
 
         if ( 0.0 !== $line['amount'] ) {

@@ -12,22 +12,17 @@ defined( 'ABSPATH' ) || exit;
  */
 class FieldType {
 
-    // Free field types.
-    const TEXT     = 'text';
-    const TEXTAREA = 'textarea';
-    const NUMBER   = 'number';
-    const CHECKBOX = 'checkbox';
-    const RADIO    = 'radio';
-    const DROPDOWN = 'dropdown';
-    const SWATCH   = 'swatch';
-    const BUTTON   = 'button';
-    const HEADING  = 'heading';
-
-    // Pro field types (declared so the schema knows them; render is gated in Pro).
+    const TEXT         = 'text';
+    const TEXTAREA     = 'textarea';
+    const NUMBER       = 'number';
     const DATE_PICKER  = 'date_picker';
-    const FILE_UPLOAD  = 'file_upload';
-    const IMAGE_UPLOAD = 'image_upload';
     const COLOR_PICKER = 'color_picker';
+    const CHECKBOX     = 'checkbox';
+    const RADIO        = 'radio';
+    const DROPDOWN     = 'dropdown';
+    const SWATCH       = 'swatch';
+    const BUTTON       = 'button';
+    const HEADING      = 'heading';
 
     protected function __construct() {}
 
@@ -47,7 +42,7 @@ class FieldType {
      * @return list<string>
      */
     public static function input_types(): array {
-        return array( self::TEXT, self::TEXTAREA, self::NUMBER );
+        return array( self::TEXT, self::TEXTAREA, self::NUMBER, self::DATE_PICKER, self::COLOR_PICKER );
     }
 
     /**
@@ -60,16 +55,7 @@ class FieldType {
     }
 
     /**
-     * Pro-only field types. Free builds may store them but must not render them.
-     *
-     * @return list<string>
-     */
-    public static function pro_types(): array {
-        return array( self::DATE_PICKER, self::FILE_UPLOAD, self::IMAGE_UPLOAD, self::COLOR_PICKER );
-    }
-
-    /**
-     * All field types known to the plugin (free + pro).
+     * All field types known to the plugin.
      *
      * @return list<string>
      */
@@ -77,8 +63,7 @@ class FieldType {
         $types = array_merge(
             self::input_types(),
             self::choice_types(),
-            self::display_types(),
-            self::pro_types()
+            self::display_types()
         );
 
         return apply_filters( 'flexa_extra/field/types', $types );
@@ -100,31 +85,25 @@ class FieldType {
         return in_array( $type, self::display_types(), true );
     }
 
-    public static function is_pro( string $type ): bool {
-        return in_array( $type, self::pro_types(), true );
-    }
-
     /**
      * Descriptor list for the admin builder palette: type + label + which group
      * it belongs to. Kept here (not in JS) so the two never drift.
      *
-     * @return list<array{type:string,label:string,group:string,pro:bool}>
+     * @return list<array{type:string,label:string,group:string}>
      */
     public static function catalog(): array {
         $catalog = array(
-            array( 'type' => self::TEXT, 'label' => __( 'Text', 'flexa-extra' ), 'group' => 'input', 'pro' => false ),
-            array( 'type' => self::TEXTAREA, 'label' => __( 'Paragraph', 'flexa-extra' ), 'group' => 'input', 'pro' => false ),
-            array( 'type' => self::NUMBER, 'label' => __( 'Number', 'flexa-extra' ), 'group' => 'input', 'pro' => false ),
-            array( 'type' => self::CHECKBOX, 'label' => __( 'Checkboxes', 'flexa-extra' ), 'group' => 'choice', 'pro' => false ),
-            array( 'type' => self::RADIO, 'label' => __( 'Radio buttons', 'flexa-extra' ), 'group' => 'choice', 'pro' => false ),
-            array( 'type' => self::DROPDOWN, 'label' => __( 'Dropdown', 'flexa-extra' ), 'group' => 'choice', 'pro' => false ),
-            array( 'type' => self::SWATCH, 'label' => __( 'Color / image swatch', 'flexa-extra' ), 'group' => 'choice', 'pro' => false ),
-            array( 'type' => self::BUTTON, 'label' => __( 'Buttons', 'flexa-extra' ), 'group' => 'choice', 'pro' => false ),
-            array( 'type' => self::HEADING, 'label' => __( 'Heading / description', 'flexa-extra' ), 'group' => 'display', 'pro' => false ),
-            array( 'type' => self::DATE_PICKER, 'label' => __( 'Date picker', 'flexa-extra' ), 'group' => 'input', 'pro' => true ),
-            array( 'type' => self::FILE_UPLOAD, 'label' => __( 'File upload', 'flexa-extra' ), 'group' => 'input', 'pro' => true ),
-            array( 'type' => self::IMAGE_UPLOAD, 'label' => __( 'Image upload', 'flexa-extra' ), 'group' => 'input', 'pro' => true ),
-            array( 'type' => self::COLOR_PICKER, 'label' => __( 'Color picker', 'flexa-extra' ), 'group' => 'input', 'pro' => true ),
+            array( 'type' => self::TEXT, 'label' => __( 'Text', 'flexa-extra' ), 'group' => 'input' ),
+            array( 'type' => self::TEXTAREA, 'label' => __( 'Paragraph', 'flexa-extra' ), 'group' => 'input' ),
+            array( 'type' => self::NUMBER, 'label' => __( 'Number', 'flexa-extra' ), 'group' => 'input' ),
+            array( 'type' => self::DATE_PICKER, 'label' => __( 'Date picker', 'flexa-extra' ), 'group' => 'input' ),
+            array( 'type' => self::COLOR_PICKER, 'label' => __( 'Color picker', 'flexa-extra' ), 'group' => 'input' ),
+            array( 'type' => self::CHECKBOX, 'label' => __( 'Checkboxes', 'flexa-extra' ), 'group' => 'choice' ),
+            array( 'type' => self::RADIO, 'label' => __( 'Radio buttons', 'flexa-extra' ), 'group' => 'choice' ),
+            array( 'type' => self::DROPDOWN, 'label' => __( 'Dropdown', 'flexa-extra' ), 'group' => 'choice' ),
+            array( 'type' => self::SWATCH, 'label' => __( 'Color / image swatch', 'flexa-extra' ), 'group' => 'choice' ),
+            array( 'type' => self::BUTTON, 'label' => __( 'Buttons', 'flexa-extra' ), 'group' => 'choice' ),
+            array( 'type' => self::HEADING, 'label' => __( 'Heading / description', 'flexa-extra' ), 'group' => 'display' ),
         );
 
         return apply_filters( 'flexa_extra/field/catalog', $catalog );

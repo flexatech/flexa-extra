@@ -29,6 +29,13 @@ if ( ! function_exists( 'esc_html__' ) ) {
     }
 }
 
+if ( ! function_exists( '_n' ) ) {
+    function _n( $single, $plural, $number, $domain = 'default' ) {
+        unset( $domain );
+        return 1 === (int) $number ? $single : $plural;
+    }
+}
+
 if ( ! function_exists( 'apply_filters' ) ) {
     function apply_filters( $tag, $value = null, ...$args ) {
         unset( $tag, $args );
@@ -175,8 +182,33 @@ if ( ! function_exists( 'get_post_meta' ) ) {
                 return $set['targeting'] ?? array();
             case '_flexa_extra_status':
                 return (string) ( $set['status'] ?? 0 );
+            case '_flexa_extra_actions':
+                return $set['actions'] ?? array();
         }
         return '';
+    }
+}
+
+if ( ! function_exists( 'update_post_meta' ) ) {
+    function update_post_meta( $id, $key, $value ) {
+        if ( ! isset( $GLOBALS['fx_sets'][ $id ] ) ) {
+            return false;
+        }
+        switch ( $key ) {
+            case '_flexa_extra_fields':
+                $GLOBALS['fx_sets'][ $id ]['fields'] = $value;
+                break;
+            case '_flexa_extra_targeting':
+                $GLOBALS['fx_sets'][ $id ]['targeting'] = $value;
+                break;
+            case '_flexa_extra_status':
+                $GLOBALS['fx_sets'][ $id ]['status'] = $value;
+                break;
+            case '_flexa_extra_actions':
+                $GLOBALS['fx_sets'][ $id ]['actions'] = $value;
+                break;
+        }
+        return true;
     }
 }
 

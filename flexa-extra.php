@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Flexa Extra - Extra Product Options for WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/flexa-extra
- * Description:       Add customizable extra options and personalization fields to WooCommerce products (text, checkbox, radio, dropdown, swatches, buttons) with optional extra fees.
+ * Description:       Add customizable extra options and personalization fields to WooCommerce products (text, checkbox, radio, dropdown, swatches, buttons, date and colour pickers) with optional extra fees.
  * Version:           1.0.0
  * Author:            FlexaTech
  * Author URI:        https://profiles.wordpress.org/flexatech/

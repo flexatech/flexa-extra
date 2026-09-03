@@ -32,7 +32,7 @@ final class PriceCalculator {
         }
 
         foreach ( $cart->get_cart() as $cart_item ) {
-            if ( empty( $cart_item[ self::KEY ]['selections'] ) || ! isset( $cart_item['data'] ) ) {
+            if ( ! isset( $cart_item[ self::KEY ], $cart_item['data'] ) ) {
                 continue;
             }
 
@@ -42,11 +42,13 @@ final class PriceCalculator {
             }
 
             $base   = isset( $cart_item[ self::KEY ]['base'] ) ? (float) $cart_item[ self::KEY ]['base'] : (float) $product->get_price();
-            $result = SelectionProcessor::process( $product, (array) $cart_item[ self::KEY ]['selections'], $base );
+            $result = SelectionProcessor::process( $product, (array) ( $cart_item[ self::KEY ]['selections'] ?? array() ), $base );
 
             $extra = (float) apply_filters( 'flexa_extra/cart/item_extra', $result['total'], $cart_item, $result );
 
-            $product->set_price( (string) ( $base + $extra ) );
+            // A discount action can push the extra negative; never let the line
+            // price fall below zero.
+            $product->set_price( (string) max( 0.0, $base + $extra ) );
         }
     }
 }

@@ -71,8 +71,31 @@ export function ChoiceEditor({ fieldIndex }: Props) {
                 <X className="h-4 w-4" />
               </Button>
             </div>
-            <div className="mt-2 pl-6">
+            <div className="mt-2 space-y-2 pl-6">
               <PriceEditor name={`${base}.${i}.price`} label={__('Extra charge', 'flexa-extra')} />
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-muted-foreground text-xs">{__('Stock', 'flexa-extra')}</span>
+                <Controller
+                  control={control}
+                  name={`${base}.${i}.stock` as const}
+                  render={({ field }) => (
+                    <Input
+                      type="number"
+                      min={0}
+                      step={1}
+                      inputMode="numeric"
+                      value={field.value ?? ''}
+                      onChange={(e) => {
+                        const raw = e.target.value;
+                        field.onChange(raw === '' ? null : Math.max(0, Math.floor(Number(raw))));
+                      }}
+                      placeholder={__('Unlimited', 'flexa-extra')}
+                      className="h-8 w-28"
+                      aria-label={__('Stock quantity', 'flexa-extra')}
+                    />
+                  )}
+                />
+              </div>
             </div>
           </div>
         ))}

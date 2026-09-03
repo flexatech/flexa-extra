@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { __ } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 
 import {
   createOptionSet,
   deleteOptionSet,
+  duplicateOptionSet,
   fetchOptionSet,
   fetchOptionSets,
+  importOptionSets,
   OptionSetInput,
   updateOptionSet,
 } from '@/lib/api/option-sets';
@@ -57,6 +59,36 @@ export function useDeleteOptionSetMutation() {
     mutationFn: (id: number) => deleteOptionSet(id),
     onSuccess: () => {
       showToast.success(__('Option set deleted', 'flexa-extra'));
+      queryClient.invalidateQueries({ queryKey: LIST_KEY });
+    },
+    onError: (error: Error) => showToast.error(error.message),
+  });
+}
+
+export function useDuplicateOptionSetMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => duplicateOptionSet(id),
+    onSuccess: () => {
+      showToast.success(__('Option set duplicated!', 'flexa-extra'));
+      queryClient.invalidateQueries({ queryKey: LIST_KEY });
+    },
+    onError: (error: Error) => showToast.error(error.message),
+  });
+}
+
+export function useImportOptionSetsMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: unknown) => importOptionSets(payload),
+    onSuccess: (result) => {
+      showToast.success(
+        sprintf(
+          /* translators: %d: number of option sets imported. */
+          _n('Imported %d option set', 'Imported %d option sets', result.count, 'flexa-extra'),
+          result.count,
+        ),
+      );
       queryClient.invalidateQueries({ queryKey: LIST_KEY });
     },
     onError: (error: Error) => showToast.error(error.message),

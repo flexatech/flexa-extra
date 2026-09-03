@@ -11,22 +11,20 @@ export const FIELD_TYPES = [
   'text',
   'textarea',
   'number',
+  'date_picker',
+  'color_picker',
   'checkbox',
   'radio',
   'dropdown',
   'swatch',
   'button',
   'heading',
-  'date_picker',
-  'file_upload',
-  'image_upload',
-  'color_picker',
 ] as const;
 
 export type FieldType = (typeof FIELD_TYPES)[number];
 
 export const CHOICE_TYPES: FieldType[] = ['checkbox', 'radio', 'dropdown', 'swatch', 'button'];
-export const INPUT_TYPES: FieldType[] = ['text', 'textarea', 'number'];
+export const INPUT_TYPES: FieldType[] = ['text', 'textarea', 'number', 'date_picker', 'color_picker'];
 
 export const priceSchema = z.object({
   type: z.enum(['none', 'fixed', 'percent']),
@@ -57,6 +55,8 @@ export const choiceSchema = z.object({
   color: z.string(),
   image: z.string(),
   price: priceSchema,
+  // Per-option inventory: null means unlimited (not stock-managed).
+  stock: z.number().int().nonnegative().nullable().optional(),
 });
 export type FieldChoice = z.infer<typeof choiceSchema>;
 
@@ -86,8 +86,22 @@ export const fieldSchema = z.object({
   // Choice fields carry a list of selectable options.
   multiple: z.boolean().optional(),
   options: z.array(choiceSchema).optional(),
+
+  // Min / max number of options for a multi-select field. Null = no bound.
+  minSelect: z.number().int().nonnegative().nullable().optional(),
+  maxSelect: z.number().int().nonnegative().nullable().optional(),
 });
 export type Field = z.infer<typeof fieldSchema>;
+
+export const actionSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  kind: z.enum(['fee', 'discount']),
+  price: priceSchema,
+  match: z.enum(['any', 'all']),
+  rules: z.array(logicRuleSchema),
+});
+export type OptionSetAction = z.infer<typeof actionSchema>;
 
 export const conditionSchema = z.object({
   type: z.enum(['category', 'tag', 'price', 'stock', 'product']),
@@ -109,6 +123,7 @@ export const optionSetSchema = z.object({
   status: z.boolean(),
   fields: z.array(fieldSchema),
   targeting: targetingSchema,
+  actions: z.array(actionSchema),
 });
 export type OptionSet = z.infer<typeof optionSetSchema>;
 
@@ -119,4 +134,5 @@ export interface OptionSetSummary {
   status: boolean;
   fields: Field[];
   targeting: Targeting;
+  actions?: OptionSetAction[];
 }

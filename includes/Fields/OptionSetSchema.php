@@ -27,13 +27,16 @@ class OptionSetSchema {
     const TARGET_MANUAL     = 'manual';
     const TARGET_CONDITIONS = 'conditions';
 
+    const ACTION_FEE      = 'fee';
+    const ACTION_DISCOUNT = 'discount';
+
     protected function __construct() {}
 
     /**
      * Normalize a full option-set body.
      *
      * @param array<string,mixed> $input
-     * @return array{name:string,status:bool,fields:list<array<string,mixed>>,targeting:array<string,mixed>}
+     * @return array{name:string,status:bool,fields:list<array<string,mixed>>,targeting:array<string,mixed>,actions:list<array<string,mixed>>}
      */
     public static function sanitize( array $input ): array {
         $name = isset( $input['name'] ) ? sanitize_text_field( (string) $input['name'] ) : '';
@@ -56,11 +59,20 @@ class OptionSetSchema {
             isset( $input['targeting'] ) && is_array( $input['targeting'] ) ? $input['targeting'] : array()
         );
 
+        $raw_actions = isset( $input['actions'] ) && is_array( $input['actions'] ) ? $input['actions'] : array();
+        $actions     = array();
+        foreach ( $raw_actions as $raw_action ) {
+            if ( is_array( $raw_action ) ) {
+                $actions[] = self::sanitize_action( $raw_action );
+            }
+        }
+
         $result = array(
             'name'      => $name,
             'status'    => isset( $input['status'] ) ? (bool) rest_sanitize_boolean( $input['status'] ) : false,
             'fields'    => $fields,
             'targeting' => $targeting,
+            'actions'   => $actions,
         );
 
         return apply_filters( 'flexa_extra/option_set/sanitize', $result, $input );
@@ -100,6 +112,15 @@ class OptionSetSchema {
             $field['step'] = self::sanitize_nullable_number( $raw['step'] ?? null );
         }
 
+        // The default value carries the field's own format for the native inputs.
+        if ( FieldType::COLOR_PICKER === $type ) {
+            $field['default'] = isset( $raw['default'] ) ? ( sanitize_hex_color( (string) $raw['default'] ) ?? '' ) : '';
+        }
+
+        if ( FieldType::DATE_PICKER === $type ) {
+            $field['default'] = self::sanitize_date( isset( $raw['default'] ) ? (string) $raw['default'] : '' );
+        }
+
         // Input fields (text/textarea/number) can carry a flat price on the field itself.
         if ( FieldType::is_input( $type ) ) {
             $field['price'] = self::sanitize_price( isset( $raw['price'] ) && is_array( $raw['price'] ) ? $raw['price'] : array() );
@@ -110,6 +131,11 @@ class OptionSetSchema {
             $field['multiple'] = FieldType::CHECKBOX === $type
                 ? true
                 : ( isset( $raw['multiple'] ) ? (bool) rest_sanitize_boolean( $raw['multiple'] ) : false );
+
+            // How many options a shopper must / may pick. Null = no bound. Only
+            // meaningful for multi-select; enforced server-side in SelectionProcessor.
+            $field['minSelect'] = self::sanitize_count( $raw['minSelect'] ?? null );
+            $field['maxSelect'] = self::sanitize_count( $raw['maxSelect'] ?? null );
 
             $raw_options       = isset( $raw['options'] ) && is_array( $raw['options'] ) ? $raw['options'] : array();
             $field['options']  = array();
@@ -137,7 +163,33 @@ class OptionSetSchema {
             'color'   => isset( $raw['color'] ) ? sanitize_hex_color( (string) $raw['color'] ) ?? '' : '',
             'image'   => isset( $raw['image'] ) ? esc_url_raw( (string) $raw['image'] ) : '',
             'price'   => self::sanitize_price( isset( $raw['price'] ) && is_array( $raw['price'] ) ? $raw['price'] : array() ),
+            'stock'   => self::sanitize_stock( $raw['stock'] ?? null ),
         );
+    }
+
+    /**
+     * Per-option inventory. Null means the option is not stock-managed (unlimited);
+     * a non-negative integer is the remaining quantity.
+     *
+     * @param mixed $value
+     */
+    private static function sanitize_stock( $value ): ?int {
+        if ( null === $value || '' === $value || ! is_numeric( $value ) ) {
+            return null;
+        }
+        return max( 0, (int) $value );
+    }
+
+    /**
+     * A non-negative selection bound (min/max chosen options). Null = no bound.
+     *
+     * @param mixed $value
+     */
+    private static function sanitize_count( $value ): ?int {
+        if ( null === $value || '' === $value || ! is_numeric( $value ) ) {
+            return null;
+        }
+        return max( 0, (int) $value );
     }
 
     /**
@@ -166,8 +218,22 @@ class OptionSetSchema {
         $action = isset( $raw['action'] ) && 'hide' === $raw['action'] ? 'hide' : 'show';
         $match  = isset( $raw['match'] ) && 'all' === $raw['match'] ? 'all' : 'any';
 
-        $rules     = array();
-        $raw_rules = isset( $raw['rules'] ) && is_array( $raw['rules'] ) ? $raw['rules'] : array();
+        return array(
+            'enabled' => isset( $raw['enabled'] ) ? (bool) rest_sanitize_boolean( $raw['enabled'] ) : false,
+            'action'  => $action,
+            'match'   => $match,
+            'rules'   => self::sanitize_rules( isset( $raw['rules'] ) && is_array( $raw['rules'] ) ? $raw['rules'] : array() ),
+        );
+    }
+
+    /**
+     * Normalize a list of condition rules shared by conditional logic and actions.
+     *
+     * @param array<int,mixed> $raw_rules
+     * @return list<array{field:string,operator:string,value:string}>
+     */
+    private static function sanitize_rules( array $raw_rules ): array {
+        $rules = array();
         foreach ( $raw_rules as $raw_rule ) {
             if ( ! is_array( $raw_rule ) ) {
                 continue;
@@ -182,12 +248,27 @@ class OptionSetSchema {
                 'value'    => isset( $raw_rule['value'] ) ? sanitize_text_field( (string) $raw_rule['value'] ) : '',
             );
         }
+        return $rules;
+    }
+
+    /**
+     * A set-level fee or discount applied when its condition rules match. Empty
+     * rules mean the action always applies.
+     *
+     * @param array<string,mixed> $raw
+     * @return array{id:string,label:string,kind:string,price:array{type:string,amount:float},match:string,rules:list<array{field:string,operator:string,value:string}>}
+     */
+    private static function sanitize_action( array $raw ): array {
+        $kind  = isset( $raw['kind'] ) && self::ACTION_DISCOUNT === $raw['kind'] ? self::ACTION_DISCOUNT : self::ACTION_FEE;
+        $match = isset( $raw['match'] ) && 'all' === $raw['match'] ? 'all' : 'any';
 
         return array(
-            'enabled' => isset( $raw['enabled'] ) ? (bool) rest_sanitize_boolean( $raw['enabled'] ) : false,
-            'action'  => $action,
-            'match'   => $match,
-            'rules'   => $rules,
+            'id'    => self::sanitize_id( isset( $raw['id'] ) ? (string) $raw['id'] : '' ),
+            'label' => isset( $raw['label'] ) ? sanitize_text_field( (string) $raw['label'] ) : '',
+            'kind'  => $kind,
+            'price' => self::sanitize_price( isset( $raw['price'] ) && is_array( $raw['price'] ) ? $raw['price'] : array() ),
+            'match' => $match,
+            'rules' => self::sanitize_rules( isset( $raw['rules'] ) && is_array( $raw['rules'] ) ? $raw['rules'] : array() ),
         );
     }
 
@@ -263,5 +344,18 @@ class OptionSetSchema {
             return null;
         }
         return is_numeric( $value ) ? (float) $value : null;
+    }
+
+    /**
+     * Accepts an ISO date (YYYY-MM-DD) as the native date input emits it; anything
+     * else collapses to an empty default.
+     */
+    private static function sanitize_date( string $value ): string {
+        $value = trim( $value );
+        if ( '' === $value || 1 !== preg_match( '/^\d{4}-\d{2}-\d{2}$/', $value ) ) {
+            return '';
+        }
+        $parts = array_map( 'intval', explode( '-', $value ) );
+        return checkdate( $parts[1], $parts[2], $parts[0] ) ? $value : '';
     }
 }

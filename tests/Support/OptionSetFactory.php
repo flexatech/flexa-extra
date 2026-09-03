@@ -31,6 +31,7 @@ final class OptionSetFactory {
             'status'    => $data['status'] ? 1 : 0,
             'fields'    => $data['fields'],
             'targeting' => $data['targeting'],
+            'actions'   => $data['actions'],
         );
     }
 

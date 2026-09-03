@@ -8,10 +8,12 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 
+type BuilderView = 'fields' | 'assignment' | 'actions';
+
 interface Props {
   heading: string;
-  view: 'fields' | 'assignment';
-  onViewChange: (view: 'fields' | 'assignment') => void;
+  view: BuilderView;
+  onViewChange: (view: BuilderView) => void;
   isSaving: boolean;
   onBack: () => void;
 }
@@ -57,6 +59,9 @@ export function BuilderHeader({ heading, view, onViewChange, isSaving, onBack }:
       <div className="border-border flex gap-1 border-b">
         <TabButton active={view === 'fields'} onClick={() => onViewChange('fields')}>
           {__('Fields', 'flexa-extra')}
+        </TabButton>
+        <TabButton active={view === 'actions'} onClick={() => onViewChange('actions')}>
+          {__('Fees & discounts', 'flexa-extra')}
         </TabButton>
         <TabButton active={view === 'assignment'} onClick={() => onViewChange('assignment')}>
           {__('Product assignment', 'flexa-extra')}

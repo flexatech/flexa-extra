@@ -131,6 +131,15 @@ export function Inspector({ selectedId }: Props) {
       )}
 
       {isInputType(type) && (
+        <Labeled label={__('Default value', 'flexa-extra')}>
+          <Input
+            type={type === 'date_picker' ? 'date' : type === 'color_picker' ? 'color' : 'text'}
+            {...register(`${base}.default` as const)}
+          />
+        </Labeled>
+      )}
+
+      {isInputType(type) && (
         <div className="border-border border-t pt-4">
           <PriceEditor name={`${base}.price`} label={__('Field price', 'flexa-extra')} />
         </div>
@@ -151,6 +160,30 @@ export function Inspector({ selectedId }: Props) {
                 </label>
               )}
             />
+          )}
+          {(type === 'checkbox' || field.multiple === true) && (
+            <div className="grid grid-cols-2 gap-2">
+              <Labeled
+                label={__('Min choices', 'flexa-extra')}
+                hint={__('Leave blank for no minimum.', 'flexa-extra')}
+              >
+                <Input
+                  type="number"
+                  min={0}
+                  {...register(`${base}.minSelect` as const, { setValueAs: toNullableNumber })}
+                />
+              </Labeled>
+              <Labeled
+                label={__('Max choices', 'flexa-extra')}
+                hint={__('Leave blank for no maximum.', 'flexa-extra')}
+              >
+                <Input
+                  type="number"
+                  min={0}
+                  {...register(`${base}.maxSelect` as const, { setValueAs: toNullableNumber })}
+                />
+              </Labeled>
+            </div>
           )}
           <ChoiceEditor fieldIndex={index} />
         </div>

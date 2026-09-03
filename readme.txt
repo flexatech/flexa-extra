@@ -10,7 +10,7 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Add customizable extra options and personalization fields to WooCommerce products — text, choices, swatches, buttons — with optional per-option fees.
+Add customizable extra options and personalization fields to WooCommerce products: text, choices, swatches, buttons, date and colour pickers, with optional per-option fees.
 
 == Description ==
 
@@ -21,25 +21,44 @@ Every price is recomputed on the server from your saved field definitions when t
 = Field types (free) =
 
 * Text, textarea, number (with min/max/step and email/URL/regex validation)
+* Date picker and colour picker
 * Checkbox, radio, dropdown
 * Colour/image swatches
 * Button group
 * Heading / description block
+* Minimum and maximum number of choices on any multi-select field
 
 = Pricing =
 
 * Per-field or per-option surcharge
 * Fixed amount or a percentage of the product price
+* Conditional fees and discounts applied to the item when selections match a rule
+
+= Inventory =
+
+* Optional stock limit per choice option: sold-out options are disabled, over-selling is blocked at add-to-cart, and paid orders draw the stock down (restored on cancel or refund)
+
+= Templates =
+
+* Start from a template: pick a ready-made starter (gift wrapping, engraving, size & colour, installation service, warranty plan, product add-ons) and it creates a draft option set you can edit before publishing
 
 = Assignment & logic =
 
 * Target all products, a manual list, or conditions (category, tag, product, price, stock)
 * Conditional logic to show/hide fields based on other selections
+* Duplicate an option set, and import or export sets as a JSON file
+
+= Cart =
+
+* Edit a line's options straight from the cart: the product page reopens with the
+  saved selections filled in, and re-adding replaces the line instead of stacking a
+  duplicate
 
 = Display & accessibility =
 
 * Position fields before or after the add-to-cart button
 * Live "extra subtotal" and "total price" readouts
+* Itemized price breakdown: each selected option and conditional fee/discount listed with its own price, updating live
 * Swatch size/shape and button colour styling
 * Accessible markup (fieldset/legend groups, `aria-required`, keyboard focus), responsive, and reduced-motion aware
 
@@ -83,7 +102,7 @@ no build step.
 == Changelog ==
 
 = 1.0.0 =
-* Initial release: option-set builder, storefront render engine, server-authoritative pricing/cart engine, UX & style settings, and a two-tier automated test suite.
+* Initial release: option-set builder with text, number, date picker, colour picker, choice, swatch and button fields; storefront render engine; server-authoritative pricing/cart engine; UX & style settings; and a two-tier automated test suite.
 
 == Upgrade Notice ==
 

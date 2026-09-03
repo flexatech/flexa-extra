@@ -22,6 +22,7 @@
         num_decimals: 2,
     };
     var settings = config.settings || {};
+    var i18n = config.i18n || {};
 
     function formatMoney(amount) {
         var negative = amount < 0;
@@ -118,6 +119,12 @@
         return value !== '' && value !== null && value !== undefined;
     }
 
+    /** A positive integer selection bound, or 0 when unset/invalid. */
+    function toCount(value) {
+        var n = parseInt(value, 10);
+        return isNaN(n) || n <= 0 ? 0 : n;
+    }
+
     function valueMatches(value, target) {
         if (Array.isArray(value)) {
             return value.indexOf(target) !== -1;
@@ -151,6 +158,16 @@
         return logic.action === 'hide' ? !combined : combined;
     }
 
+    /** Whether a set-level action's rules match (empty rules always apply). */
+    function actionApplies(action, values) {
+        var rules = action.rules || [];
+        if (!rules.length) {
+            return true;
+        }
+        var results = rules.map(function (rule) { return rulePasses(rule, values); });
+        return action.match === 'all' ? results.every(Boolean) : results.some(Boolean);
+    }
+
     function priceFor(price, productPrice) {
         if (!price || price.type === 'none' || !price.amount) {
             return 0;
@@ -173,6 +190,25 @@
         return null;
     }
 
+    /**
+     * Readable label for a breakdown row. Mirrors the server: prefer the option
+     * label, fall back to the swatch colour, then the raw value/id.
+     */
+    function optionLabel(field, opt) {
+        if (opt.label) {
+            return opt.label;
+        }
+        if (opt.color) {
+            return String(opt.color).toUpperCase();
+        }
+        return String(opt.value || opt.id || '');
+    }
+
+    /** A breakdown amount with an explicit sign (+ for fees, - for discounts). */
+    function signedMoney(amount) {
+        return (amount < 0 ? '' : '+') + formatMoney(amount);
+    }
+
     function initContainer(container) {
         var island = container.querySelector('.flexa-extra-data');
         if (!island) {
@@ -187,13 +223,16 @@
 
         var productPrice = parseFloat(data.productPrice) || 0;
         var fields = [];
+        var actions = [];
         (data.sets || []).forEach(function (set) {
             (set.fields || []).forEach(function (f) { fields.push(f); });
+            (set.actions || []).forEach(function (a) { actions.push(a); });
         });
 
         var totalsEl = container.querySelector('.flexa-extra-totals');
         var subtotalEl = container.querySelector('[data-role="subtotal"]');
         var totalEl = container.querySelector('[data-role="total"]');
+        var breakdownEl = container.querySelector('[data-role="breakdown"]');
 
         function recalculate() {
             // 1. Snapshot raw values for logic evaluation.
@@ -202,8 +241,8 @@
                 values[field.id] = readValue(fieldWrap(container, field.id));
             });
 
-            // 2. Visibility + price accumulation.
-            var subtotal = 0;
+            // 2. Visibility + itemized price lines.
+            var lines = [];
             fields.forEach(function (field) {
                 var wrap = fieldWrap(container, field.id);
                 if (!wrap) {
@@ -221,19 +260,91 @@
                 if (field.options) {
                     selectedOptionIds(wrap).forEach(function (id) {
                         var opt = optionById(field, id);
-                        if (opt) {
-                            subtotal += priceFor(opt.price, productPrice);
+                        if (!opt) {
+                            return;
+                        }
+                        var amount = priceFor(opt.price, productPrice);
+                        if (amount) {
+                            lines.push({ label: optionLabel(field, opt), amount: amount });
                         }
                     });
                 } else if (field.price && hasValue(values[field.id])) {
-                    subtotal += priceFor(field.price, productPrice);
+                    var fieldAmount = priceFor(field.price, productPrice);
+                    if (fieldAmount) {
+                        lines.push({ label: field.label || field.id, amount: fieldAmount });
+                    }
                 }
             });
 
-            render(subtotal);
+            // 2b. Enforce a max-selection cap on multi-checkbox groups: once the
+            // limit is reached, the remaining unchecked boxes are disabled.
+            fields.forEach(function (field) {
+                var max = toCount(field.maxSelect);
+                if (!max) {
+                    return;
+                }
+                var wrap = fieldWrap(container, field.id);
+                if (!wrap || wrap.hidden) {
+                    return;
+                }
+                var boxes = wrap.querySelectorAll('input[type="checkbox"]');
+                if (!boxes.length) {
+                    return;
+                }
+                var checked = 0;
+                boxes.forEach(function (b) { if (b.checked) { checked += 1; } });
+                boxes.forEach(function (b) {
+                    if (!b.checked) {
+                        b.disabled = checked >= max;
+                    }
+                });
+            });
+
+            // 3. Set-level fee / discount actions.
+            actions.forEach(function (action) {
+                if (!actionApplies(action, values)) {
+                    return;
+                }
+                var magnitude = Math.abs(priceFor(action.price, productPrice));
+                if (!magnitude) {
+                    return;
+                }
+                var isDiscount = action.kind === 'discount';
+                var signed = isDiscount ? -magnitude : magnitude;
+                var label = action.label || (isDiscount ? (i18n.discount || 'Discount') : (i18n.fee || 'Fee'));
+                lines.push({ label: label, amount: signed });
+            });
+
+            var subtotal = lines.reduce(function (sum, line) { return sum + line.amount; }, 0);
+            render(subtotal, lines);
         }
 
-        function render(subtotal) {
+        function renderBreakdown(lines) {
+            if (!breakdownEl) {
+                return;
+            }
+            breakdownEl.textContent = '';
+            breakdownEl.hidden = lines.length === 0;
+            lines.forEach(function (line) {
+                var row = document.createElement('div');
+                row.className = 'flexa-extra-breakdown__row';
+
+                var label = document.createElement('span');
+                label.className = 'flexa-extra-breakdown__label';
+                label.textContent = line.label;
+
+                var amount = document.createElement('span');
+                amount.className = 'flexa-extra-breakdown__amount';
+                amount.textContent = signedMoney(line.amount);
+
+                row.appendChild(label);
+                row.appendChild(amount);
+                breakdownEl.appendChild(row);
+            });
+        }
+
+        function render(subtotal, lines) {
+            renderBreakdown(lines);
             if (subtotalEl) {
                 subtotalEl.textContent = formatMoney(subtotal);
             }

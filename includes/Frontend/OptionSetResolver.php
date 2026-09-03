@@ -19,6 +19,7 @@ class OptionSetResolver {
     private const META_FIELDS    = '_flexa_extra_fields';
     private const META_TARGETING = '_flexa_extra_targeting';
     private const META_STATUS    = '_flexa_extra_status';
+    private const META_ACTIONS   = '_flexa_extra_actions';
 
     /**
      * Per-request cache keyed by product id.
@@ -37,7 +38,7 @@ class OptionSetResolver {
     /**
      * Option sets that apply to a product.
      *
-     * @return list<array{id:int,name:string,fields:list<mixed>}>
+     * @return list<array{id:int,name:string,fields:list<mixed>,actions:list<mixed>}>
      */
     public static function for_product( WC_Product $product ): array {
         $product_id = $product->get_id();
@@ -63,18 +64,22 @@ class OptionSetResolver {
                 continue;
             }
 
+            $actions = get_post_meta( $post_id, self::META_ACTIONS, true );
+            $actions = is_array( $actions ) ? $actions : array();
+
             $applicable[] = array(
-                'id'     => $post_id,
-                'name'   => get_the_title( $post_id ),
-                'fields' => array_values( $fields ),
+                'id'      => $post_id,
+                'name'    => get_the_title( $post_id ),
+                'fields'  => array_values( $fields ),
+                'actions' => array_values( $actions ),
             );
         }
 
         /**
          * Filter the option sets applied to a product before rendering.
          *
-         * @param list<array{id:int,name:string,fields:list<mixed>}> $applicable
-         * @param WC_Product                                                        $product
+         * @param list<array{id:int,name:string,fields:list<mixed>,actions:list<mixed>}> $applicable
+         * @param WC_Product                                                              $product
          */
         $applicable = apply_filters( 'flexa_extra/resolver/applicable_sets', $applicable, $product );
 

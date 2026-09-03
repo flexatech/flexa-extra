@@ -137,10 +137,6 @@ msgid "Add field"
 msgstr ""
 
 #: js/main.js:1
-msgid "Pro"
-msgstr ""
-
-#: js/main.js:1
 msgid "No fields yet"
 msgstr ""
 
@@ -744,7 +740,7 @@ msgstr ""
 
 #. Description of the plugin
 #: flexa-extra.php
-msgid "Add customizable extra options and personalization fields to WooCommerce products (text, checkbox, radio, dropdown, swatches, buttons) with optional extra fees."
+msgid "Add customizable extra options and personalization fields to WooCommerce products (text, checkbox, radio, dropdown, swatches, buttons, date and colour pickers) with optional extra fees."
 msgstr ""
 
 #. Author of the plugin
@@ -871,19 +867,11 @@ msgstr ""
 msgid "Heading / description"
 msgstr ""
 
-#: includes/Fields/FieldType.php:124
+#: includes/Fields/FieldType.php:99
 msgid "Date picker"
 msgstr ""
 
-#: includes/Fields/FieldType.php:125
-msgid "File upload"
-msgstr ""
-
-#: includes/Fields/FieldType.php:126
-msgid "Image upload"
-msgstr ""
-
-#: includes/Fields/FieldType.php:127
+#: includes/Fields/FieldType.php:100
 msgid "Color picker"
 msgstr ""
 
@@ -893,4 +881,397 @@ msgstr ""
 
 #: includes/Frontend/ProductRenderer.php:57
 msgid "This field is required."
+msgstr ""
+
+#: js/main.js:1
+msgid "Import"
+msgstr ""
+
+#: js/main.js:1
+msgid "Export all"
+msgstr ""
+
+#: js/main.js:1
+msgid "That file is not valid JSON."
+msgstr ""
+
+#: js/main.js:1
+msgid "Option set duplicated!"
+msgstr ""
+
+#: js/main.js:1
+msgid "Failed to duplicate option set"
+msgstr ""
+
+#: js/main.js:1
+msgid "Failed to import option sets"
+msgstr ""
+
+#. translators: %d: number of option sets imported.
+#: js/main.js:1
+msgid "Imported %d option set"
+msgid_plural "Imported %d option sets"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Controllers/OptionSetsRestController.php:120
+msgid "Could not create the option set."
+msgstr ""
+
+#. translators: %s: name of the option set being copied.
+#: includes/Controllers/OptionSetsRestController.php:132
+msgid "%s (copy)"
+msgstr ""
+
+#: includes/Controllers/OptionSetsRestController.php:139
+msgid "Option set duplicated."
+msgstr ""
+
+#: includes/Controllers/OptionSetsRestController.php:137
+msgid "Could not duplicate the option set."
+msgstr ""
+
+#: includes/Controllers/OptionSetsRestController.php:145
+msgid "No option sets were found in the imported file."
+msgstr ""
+
+#: includes/Controllers/OptionSetsRestController.php:159
+msgid "None of the option sets could be imported."
+msgstr ""
+
+#. translators: %d: number of option sets imported.
+#: includes/Controllers/OptionSetsRestController.php:167
+msgid "Imported %d option set."
+msgid_plural "Imported %d option sets."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Frontend/FieldRenderer.php:377
+msgid "Out of stock"
+msgstr ""
+
+#. translators: appended to a sold-out dropdown option.
+#: includes/Frontend/FieldRenderer.php:282
+msgid "(out of stock)"
+msgstr ""
+
+#. translators: %s: option label.
+#: includes/Cart/StockManager.php:150
+msgid "\"%s\" is out of stock."
+msgstr ""
+
+#. translators: 1: option label, 2: remaining quantity.
+#: includes/Cart/StockManager.php:154
+msgid "Only %2$d of \"%1$s\" is left in stock."
+msgid_plural "Only %2$d of \"%1$s\" are left in stock."
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/admin/src/pages/option-sets/builder/inspector/ChoiceEditor.tsx:92
+msgid "Unlimited"
+msgstr ""
+
+#: apps/admin/src/pages/option-sets/builder/inspector/ChoiceEditor.tsx:94
+msgid "Stock quantity"
+msgstr ""
+
+#. translators: 1: field label, 2: minimum number of options.
+#: includes/Cart/SelectionProcessor.php:276
+msgid "Please choose at least %2$d option for \"%1$s\"."
+msgid_plural "Please choose at least %2$d options for \"%1$s\"."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: field label, 2: maximum number of options.
+#: includes/Cart/SelectionProcessor.php:284
+msgid "Please choose at most %2$d option for \"%1$s\"."
+msgid_plural "Please choose at most %2$d options for \"%1$s\"."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: exact number of options to choose.
+#: includes/Frontend/FieldRenderer.php:441
+msgid "Choose exactly %d option."
+msgid_plural "Choose exactly %d options."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: minimum, 2: maximum number of options.
+#: includes/Frontend/FieldRenderer.php:444
+msgid "Choose between %1$d and %2$d options."
+msgstr ""
+
+#. translators: %d: minimum number of options to choose.
+#: includes/Frontend/FieldRenderer.php:448
+msgid "Choose at least %d option."
+msgid_plural "Choose at least %d options."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: maximum number of options to choose.
+#: includes/Frontend/FieldRenderer.php:451
+msgid "Choose up to %d option."
+msgid_plural "Choose up to %d options."
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/admin/src/pages/option-sets/builder/Inspector.tsx:167
+msgid "Min choices"
+msgstr ""
+
+#: apps/admin/src/pages/option-sets/builder/Inspector.tsx:168
+msgid "Leave blank for no minimum."
+msgstr ""
+
+#: apps/admin/src/pages/option-sets/builder/Inspector.tsx:177
+msgid "Max choices"
+msgstr ""
+
+#: apps/admin/src/pages/option-sets/builder/Inspector.tsx:178
+msgid "Leave blank for no maximum."
+msgstr ""
+
+#: includes/Cart/CartHandler.php:223
+msgid "Edit options"
+msgstr ""
+
+#: includes/Cart/CartHandler.php:262
+msgid "Update cart"
+msgstr ""
+
+#: includes/Cart/SelectionProcessor.php:144
+msgid "Fee"
+msgstr ""
+
+#: includes/Cart/SelectionProcessor.php:144
+msgid "Discount"
+msgstr ""
+
+#: apps/admin/src/pages/option-sets/builder/BuilderHeader.tsx:64
+#: apps/admin/src/pages/option-sets/builder/ActionsPanel.tsx:25
+msgid "Fees & discounts"
+msgstr ""
+
+#: apps/admin/src/pages/option-sets/builder/ActionsPanel.tsx:31
+msgid "Add a fee or discount to the item when the shopper’s selections match your conditions."
+msgstr ""
+
+#: apps/admin/src/pages/option-sets/builder/ActionsPanel.tsx:41
+msgid "No fees or discounts yet. Add one to adjust the price based on selections."
+msgstr ""
+
+#: apps/admin/src/pages/option-sets/builder/ActionsPanel.tsx:96
+msgid "Label (shown in cart)"
+msgstr ""
+
+#: apps/admin/src/pages/option-sets/builder/ActionsPanel.tsx:115
+msgid "Add a field first to build a condition."
+msgstr ""
+
+#: apps/admin/src/pages/option-sets/builder/ActionsPanel.tsx:120
+msgid "Apply when"
+msgstr ""
+
+#: apps/admin/src/pages/option-sets/builder/ActionsPanel.tsx:137
+msgid "of these conditions match:"
+msgstr ""
+
+#: apps/admin/src/pages/option-sets/builder/ActionsPanel.tsx:143
+msgid "No conditions: this always applies."
+msgstr ""
+
+#: apps/admin/src/pages/option-sets/OptionSets.tsx
+msgid "Start from a template"
+msgstr ""
+
+#: apps/admin/src/pages/option-sets/PresetPicker.tsx
+msgid "Pick a starting point. It creates a draft you can edit before publishing."
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Gift wrapping & message"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "A paid gift-wrap add-on plus an optional printed message."
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Gift wrapping"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Wrap this as a gift"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Gift message"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Write a short message (optional)"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Engraving / personalization"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "A flat-fee engraving text field with a font choice."
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Engraving"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Engraving text"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Up to 20 characters"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Font style"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Classic"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Script"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Modern"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Size & colour"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "A size button group and a colour swatch picker."
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Size"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "S"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "M"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "L"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "XL"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Colour"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Black"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "White"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Red"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Blue"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Installation service"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "A single-choice service tier with per-tier fees."
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Installation"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "No installation"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Standard installation"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Premium installation"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Warranty / protection plan"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "An add-on plan priced as a percentage of the product."
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Protection plan"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "No thanks"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "1-year protection"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "2-year protection"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Product add-ons"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "A multi-select list of paid extras the shopper can bundle in."
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Add extras"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Extra battery pack"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Carry case"
+msgstr ""
+
+#: apps/admin/src/lib/fields/presets.ts
+msgid "Extended cable"
+msgstr ""
+
+#: apps/admin/src/pages/settings/tabs/GeneralTab.tsx
+msgid "Show price breakdown"
+msgstr ""
+
+#: apps/admin/src/pages/settings/tabs/GeneralTab.tsx
+msgid "List each selected option and its price on the product page."
 msgstr ""

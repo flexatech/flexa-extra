@@ -104,6 +104,72 @@ final class SelectionProcessorTest extends TestCase {
         $this->assertSame( 'A, C', $result['lines'][0]['display'] );
     }
 
+    /**
+     * A three-option checkbox with optional min/max selection bounds.
+     *
+     * @param array<string,mixed> $bounds
+     */
+    private function register_addons_with_bounds( array $bounds ): void {
+        OptionSetFactory::register(
+            1,
+            array(
+                'name'      => 'Add-ons',
+                'status'    => true,
+                'targeting' => array( 'mode' => 'all' ),
+                'fields'    => array(
+                    array_merge(
+                        array(
+                            'type'    => 'checkbox',
+                            'id'      => 'addons',
+                            'label'   => 'Add-ons',
+                            'options' => array(
+                                OptionSetFactory::choice( 'a', 'A' ),
+                                OptionSetFactory::choice( 'b', 'B' ),
+                                OptionSetFactory::choice( 'c', 'C' ),
+                            ),
+                        ),
+                        $bounds
+                    ),
+                ),
+            )
+        );
+    }
+
+    public function test_max_select_blocks_too_many_options(): void {
+        $this->register_addons_with_bounds( array( 'maxSelect' => 2 ) );
+
+        $result = SelectionProcessor::process( $this->product(), array( 'addons' => array( 'a', 'b', 'c' ) ) );
+
+        $this->assertNotEmpty( $result['errors'] );
+        $this->assertStringContainsString( 'at most', strtolower( $result['errors'][0] ) );
+    }
+
+    public function test_min_select_requires_enough_options(): void {
+        $this->register_addons_with_bounds( array( 'minSelect' => 2 ) );
+
+        $result = SelectionProcessor::process( $this->product(), array( 'addons' => array( 'a' ) ) );
+
+        $this->assertNotEmpty( $result['errors'] );
+        $this->assertStringContainsString( 'at least', strtolower( $result['errors'][0] ) );
+    }
+
+    public function test_selection_within_bounds_passes(): void {
+        $this->register_addons_with_bounds( array( 'minSelect' => 1, 'maxSelect' => 2 ) );
+
+        $result = SelectionProcessor::process( $this->product(), array( 'addons' => array( 'a', 'b' ) ) );
+
+        $this->assertSame( array(), $result['errors'] );
+    }
+
+    public function test_bounds_do_not_fire_on_untouched_optional_field(): void {
+        // min is set but the shopper picked nothing: an optional field stays valid.
+        $this->register_addons_with_bounds( array( 'minSelect' => 2 ) );
+
+        $result = SelectionProcessor::process( $this->product(), array() );
+
+        $this->assertSame( array(), $result['errors'] );
+    }
+
     public function test_required_field_missing_produces_error(): void {
         $this->register_required_text();
 
@@ -274,5 +340,119 @@ final class SelectionProcessorTest extends TestCase {
                 ),
             )
         );
+    }
+
+    /**
+     * @param array<int,array<string,mixed>> $actions
+     */
+    private function register_colour_with_actions( array $actions ): void {
+        OptionSetFactory::register(
+            1,
+            array(
+                'name'      => 'Colour',
+                'status'    => true,
+                'targeting' => array( 'mode' => 'all' ),
+                'fields'    => array(
+                    array(
+                        'type'    => 'radio',
+                        'id'      => 'color',
+                        'label'   => 'Colour',
+                        'options' => array(
+                            OptionSetFactory::choice( 'red', 'Red' ),
+                            OptionSetFactory::choice( 'blue', 'Blue' ),
+                        ),
+                    ),
+                ),
+                'actions'   => $actions,
+            )
+        );
+    }
+
+    public function test_fee_action_applies_only_when_rule_matches(): void {
+        $this->register_colour_with_actions(
+            array(
+                array(
+                    'id'    => 'rush',
+                    'label' => 'Rush fee',
+                    'kind'  => 'fee',
+                    'price' => OptionSetFactory::price( 'fixed', 10.0 ),
+                    'match' => 'any',
+                    'rules' => array(
+                        array( 'field' => 'color', 'operator' => 'is', 'value' => 'red' ),
+                    ),
+                ),
+            )
+        );
+
+        $red = SelectionProcessor::process( $this->product(), array( 'color' => 'red' ) );
+        $this->assertSame( 10.0, $red['total'] );
+        $action_line = end( $red['lines'] );
+        $this->assertSame( 'action', $action_line['type'] );
+        $this->assertSame( 'Rush fee', $action_line['label'] );
+        $this->assertSame( 10.0, $action_line['amount'] );
+
+        $blue = SelectionProcessor::process( $this->product(), array( 'color' => 'blue' ) );
+        $this->assertSame( 0.0, $blue['total'] );
+    }
+
+    public function test_discount_action_subtracts_from_total(): void {
+        $this->register_colour_with_actions(
+            array(
+                array(
+                    'id'    => 'promo',
+                    'label' => 'Promo',
+                    'kind'  => 'discount',
+                    'price' => OptionSetFactory::price( 'percent', 10.0 ),
+                    'match' => 'any',
+                    'rules' => array(
+                        array( 'field' => 'color', 'operator' => 'is', 'value' => 'red' ),
+                    ),
+                ),
+            )
+        );
+
+        // 10% of the 100.0 base, applied as a discount.
+        $result = SelectionProcessor::process( $this->product(), array( 'color' => 'red' ) );
+        $this->assertSame( -10.0, $result['total'] );
+        $this->assertSame( -10.0, end( $result['lines'] )['amount'] );
+    }
+
+    public function test_action_with_no_rules_always_applies(): void {
+        $this->register_colour_with_actions(
+            array(
+                array(
+                    'id'    => 'handling',
+                    'label' => 'Handling',
+                    'kind'  => 'fee',
+                    'price' => OptionSetFactory::price( 'fixed', 3.0 ),
+                    'match' => 'any',
+                    'rules' => array(),
+                ),
+            )
+        );
+
+        $result = SelectionProcessor::process( $this->product(), array( 'color' => 'blue' ) );
+        $this->assertSame( 3.0, $result['total'] );
+    }
+
+    public function test_match_all_requires_every_rule(): void {
+        $this->register_colour_with_actions(
+            array(
+                array(
+                    'id'    => 'combo',
+                    'label' => 'Combo',
+                    'kind'  => 'fee',
+                    'price' => OptionSetFactory::price( 'fixed', 7.0 ),
+                    'match' => 'all',
+                    'rules' => array(
+                        array( 'field' => 'color', 'operator' => 'is', 'value' => 'red' ),
+                        array( 'field' => 'color', 'operator' => 'is_not', 'value' => 'blue' ),
+                    ),
+                ),
+            )
+        );
+
+        $this->assertSame( 7.0, SelectionProcessor::process( $this->product(), array( 'color' => 'red' ) )['total'] );
+        $this->assertSame( 0.0, SelectionProcessor::process( $this->product(), array( 'color' => 'blue' ) )['total'] );
     }
 }

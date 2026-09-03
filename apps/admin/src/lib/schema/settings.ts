@@ -5,6 +5,7 @@ export const settingsFormSchema = z.object({
     enabled: z.boolean(),
     showExtraSubtotal: z.boolean(),
     showTotalPrice: z.boolean(),
+    showPriceBreakdown: z.boolean(),
     showValueInMiniCart: z.boolean(),
   }),
   display: z.object({

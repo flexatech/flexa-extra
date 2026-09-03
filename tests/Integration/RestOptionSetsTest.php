@@ -55,6 +55,92 @@ final class RestOptionSetsTest extends IntegrationTestCase {
         $routes = $this->server->get_routes();
         $this->assertArrayHasKey( '/flexa-extra/v1/option-sets', $routes );
         $this->assertArrayHasKey( '/flexa-extra/v1/option-sets/(?P<id>\d+)', $routes );
+        $this->assertArrayHasKey( '/flexa-extra/v1/option-sets/(?P<id>\d+)/duplicate', $routes );
+        $this->assertArrayHasKey( '/flexa-extra/v1/option-sets/import', $routes );
+    }
+
+    public function test_duplicate_clones_fields_as_draft_copy(): void {
+        $id = $this->register_option_set(
+            array(
+                'name'      => 'Gift options',
+                'status'    => true,
+                'targeting' => array( 'mode' => 'all' ),
+                'fields'    => array( array( 'type' => 'text', 'id' => 'msg', 'label' => 'Message' ) ),
+            )
+        );
+
+        $response = $this->server->dispatch( new WP_REST_Request( 'POST', '/flexa-extra/v1/option-sets/' . $id . '/duplicate' ) );
+
+        $this->assertSame( 200, $response->get_status() );
+        $data = $response->get_data()['data'];
+
+        $this->assertNotSame( $id, $data['id'] );
+        $this->assertSame( 'Gift options (copy)', $data['name'] );
+        $this->assertFalse( $data['status'] ); // copies are drafts
+        $this->assertCount( 1, $data['fields'] );
+        $this->assertSame( 'msg', $data['fields'][0]['id'] );
+
+        // Original is untouched.
+        $this->assertSame( 'Gift options', get_the_title( $id ) );
+    }
+
+    public function test_duplicate_unknown_id_is_404(): void {
+        $response = $this->server->dispatch( new WP_REST_Request( 'POST', '/flexa-extra/v1/option-sets/999999/duplicate' ) );
+        $this->assertSame( 404, $response->get_status() );
+    }
+
+    public function test_import_envelope_creates_multiple_sets(): void {
+        $response = $this->server->dispatch(
+            $this->json_request(
+                'POST',
+                '/flexa-extra/v1/option-sets/import',
+                array(
+                    'plugin'  => 'flexa-extra',
+                    'type'    => 'option-sets',
+                    'version' => 1,
+                    'items'   => array(
+                        array( 'name' => 'Imported A', 'status' => true, 'targeting' => array( 'mode' => 'all' ), 'fields' => array( array( 'type' => 'text', 'id' => 'a', 'label' => 'A' ) ) ),
+                        array( 'name' => 'Imported B', 'status' => false, 'targeting' => array( 'mode' => 'all' ), 'fields' => array( array( 'type' => 'number', 'id' => 'b', 'label' => 'B' ) ) ),
+                    ),
+                )
+            )
+        );
+
+        $this->assertSame( 200, $response->get_status() );
+        $data = $response->get_data()['data'];
+        $this->assertSame( 2, $data['count'] );
+        $this->assertCount( 2, $data['items'] );
+        $this->assertSame( 'Imported A', $data['items'][0]['name'] );
+    }
+
+    public function test_import_accepts_a_single_set_object(): void {
+        $response = $this->server->dispatch(
+            $this->json_request(
+                'POST',
+                '/flexa-extra/v1/option-sets/import',
+                array( 'name' => 'Solo', 'status' => true, 'targeting' => array( 'mode' => 'all' ), 'fields' => array( array( 'type' => 'text', 'id' => 'a', 'label' => 'A' ) ) )
+            )
+        );
+
+        $this->assertSame( 200, $response->get_status() );
+        $this->assertSame( 1, $response->get_data()['data']['count'] );
+    }
+
+    public function test_import_empty_payload_is_422(): void {
+        $response = $this->server->dispatch(
+            $this->json_request( 'POST', '/flexa-extra/v1/option-sets/import', array() )
+        );
+        $this->assertSame( 422, $response->get_status() );
+    }
+
+    public function test_import_requires_manage_options(): void {
+        wp_set_current_user( self::factory()->user->create( array( 'role' => 'subscriber' ) ) );
+
+        $response = $this->server->dispatch(
+            $this->json_request( 'POST', '/flexa-extra/v1/option-sets/import', array( 'items' => array() ) )
+        );
+
+        $this->assertSame( 403, $response->get_status() );
     }
 
     public function test_create_persists_sanitized_option_set(): void {
@@ -82,6 +168,39 @@ final class RestOptionSetsTest extends IntegrationTestCase {
         $this->assertTrue( $data['status'] );
         $this->assertCount( 1, $data['fields'] ); // unknown type dropped by the sanitizer
         $this->assertSame( 'text', $data['fields'][0]['type'] );
+    }
+
+    public function test_create_persists_actions(): void {
+        $response = $this->server->dispatch(
+            $this->json_request(
+                'POST',
+                '/flexa-extra/v1/option-sets',
+                array(
+                    'name'      => 'With fee',
+                    'status'    => true,
+                    'fields'    => array( array( 'type' => 'text', 'id' => 'msg', 'label' => 'Message' ) ),
+                    'targeting' => array( 'mode' => 'all' ),
+                    'actions'   => array(
+                        array(
+                            'id'    => 'rush',
+                            'label' => 'Rush fee',
+                            'kind'  => 'discount',
+                            'price' => array( 'type' => 'fixed', 'amount' => 9 ),
+                            'match' => 'all',
+                            'rules' => array( array( 'field' => 'msg', 'operator' => 'not_empty', 'value' => '' ) ),
+                        ),
+                    ),
+                )
+            )
+        );
+
+        $this->assertSame( 200, $response->get_status() );
+        $data = $response->get_data()['data'];
+
+        $this->assertCount( 1, $data['actions'] );
+        $this->assertSame( 'discount', $data['actions'][0]['kind'] );
+        $this->assertSame( 9.0, $data['actions'][0]['price']['amount'] );
+        $this->assertSame( 'not_empty', $data['actions'][0]['rules'][0]['operator'] );
     }
 
     public function test_index_returns_created_sets(): void {

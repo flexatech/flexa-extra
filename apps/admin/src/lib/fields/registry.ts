@@ -4,6 +4,7 @@ import {
   FieldChoice,
   FieldType,
   INPUT_TYPES,
+  OptionSetAction,
   PriceRule,
   Targeting,
 } from '@/lib/schema/option-set';
@@ -18,7 +19,6 @@ export interface FieldCatalogEntry {
   type: FieldType;
   label: string;
   group: 'input' | 'choice' | 'display';
-  pro: boolean;
 }
 
 /** Catalog localized by PHP (`window.flexaExtra.field_catalog`). */
@@ -48,6 +48,7 @@ export function createChoice(label = ''): FieldChoice {
     color: '',
     image: '',
     price: noPrice(),
+    stock: null,
   };
 }
 
@@ -73,10 +74,15 @@ export function createField(type: FieldType): Field {
   if (type === 'number') {
     return { ...base, min: null, max: null, step: null, price: noPrice() };
   }
+  if (type === 'date_picker' || type === 'color_picker') {
+    return { ...base, price: noPrice() };
+  }
   if (isChoiceType(type)) {
     return {
       ...base,
       multiple: type === 'checkbox',
+      minSelect: null,
+      maxSelect: null,
       options: [createChoice()],
     };
   }
@@ -85,4 +91,15 @@ export function createField(type: FieldType): Field {
 
 export function emptyTargeting(): Targeting {
   return { mode: 'all', productIds: [], match: 'any', conditions: [] };
+}
+
+export function createAction(): OptionSetAction {
+  return {
+    id: uid('act'),
+    label: '',
+    kind: 'fee',
+    price: { type: 'fixed', amount: 0 },
+    match: 'any',
+    rules: [],
+  };
 }

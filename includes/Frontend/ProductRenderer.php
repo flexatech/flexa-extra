@@ -6,6 +6,7 @@ defined( 'ABSPATH' ) || exit;
 use Flexa\Extra\Utils\SingletonTrait;
 use Flexa\Extra\Register\ScriptName;
 use Flexa\Extra\Helpers\Helper;
+use Flexa\Extra\Cart\EditContext;
 
 /**
  * Renders applicable option sets on the single-product page and enqueues the
@@ -49,12 +50,15 @@ final class ProductRenderer {
                 'settings' => [
                     'showExtraSubtotal' => ! empty( $settings['general']['showExtraSubtotal'] ),
                     'showTotalPrice'    => ! empty( $settings['general']['showTotalPrice'] ),
+                    'showPriceBreakdown' => ! empty( $settings['general']['showPriceBreakdown'] ),
                     'hideZeroSubtotal'  => ! empty( $settings['advanced']['hideZeroSubtotal'] ),
                     'subtotalLabel'     => (string) $settings['display']['subtotalLabel'],
                     'totalPriceLabel'   => (string) $settings['display']['totalPriceLabel'],
                 ],
                 'i18n'     => [
                     'required' => __( 'This field is required.', 'flexa-extra' ),
+                    'fee'      => __( 'Fee', 'flexa-extra' ),
+                    'discount' => __( 'Discount', 'flexa-extra' ),
                 ],
             ]
         );
@@ -94,18 +98,26 @@ final class ProductRenderer {
     }
 
     /**
-     * @param list<array{id:int,name:string,fields:list<mixed>}> $sets
-     * @param array<string,mixed>                                              $settings
+     * @param list<array{id:int,name:string,fields:list<mixed>,actions:list<mixed>}> $sets
+     * @param array<string,mixed>                                                     $settings
      */
     private function render_container( \WC_Product $product, array $sets, array $settings ): string {
         $fields_html = '';
         $island_sets = array();
 
+        // Edit-in-cart: when the page was opened from a cart line's "Edit"
+        // link, pre-fill fields from that line's stored selections instead of
+        // the configured defaults.
+        $edit_key   = EditContext::editing_key();
+        $editing    = '' !== $edit_key;
+        $selections = $editing ? EditContext::selections_for( $edit_key ) : array();
+
         foreach ( $sets as $set ) {
             $rendered = '';
             foreach ( $set['fields'] as $field ) {
                 if ( is_array( $field ) ) {
-                    $rendered .= FieldRenderer::render( $field, $product );
+                    $selected  = $editing ? ( $selections[ $field['id'] ] ?? '' ) : null;
+                    $rendered .= FieldRenderer::render( $field, $product, $selected );
                 }
             }
             if ( '' === $rendered ) {
@@ -113,13 +125,25 @@ final class ProductRenderer {
             }
             $fields_html  .= '<div class="flexa-extra-set" data-set-id="' . esc_attr( (string) $set['id'] ) . '">' . $rendered . '</div>';
             $island_sets[] = array(
-                'id'     => $set['id'],
-                'fields' => $set['fields'],
+                'id'      => $set['id'],
+                'fields'  => $set['fields'],
+                'actions' => $set['actions'],
             );
         }
 
         if ( '' === $fields_html ) {
             return '';
+        }
+
+        // Carry the edited cart-line key (and a nonce) so the add-to-cart POST
+        // can replace that line instead of creating a new one.
+        if ( $editing ) {
+            $fields_html .= sprintf(
+                '<input type="hidden" name="%1$s" value="%2$s" />',
+                esc_attr( EditContext::QUERY ),
+                esc_attr( $edit_key )
+            );
+            $fields_html .= wp_nonce_field( EditContext::NONCE_ACTION, EditContext::NONCE_FIELD, true, false );
         }
 
         $price = (float) wc_get_price_to_display( $product );
@@ -222,14 +246,20 @@ final class ProductRenderer {
      * @param array<string,mixed> $settings
      */
     private function render_totals( array $settings ): string {
-        $show_subtotal = ! empty( $settings['general']['showExtraSubtotal'] );
-        $show_total    = ! empty( $settings['general']['showTotalPrice'] );
+        $show_subtotal  = ! empty( $settings['general']['showExtraSubtotal'] );
+        $show_total     = ! empty( $settings['general']['showTotalPrice'] );
+        $show_breakdown = ! empty( $settings['general']['showPriceBreakdown'] );
 
-        if ( ! $show_subtotal && ! $show_total ) {
+        if ( ! $show_subtotal && ! $show_total && ! $show_breakdown ) {
             return '';
         }
 
         $html = '<div class="flexa-extra-totals" hidden>';
+
+        if ( $show_breakdown ) {
+            // Filled live by the storefront script, one row per priced selection.
+            $html .= '<div class="flexa-extra-breakdown" data-role="breakdown" hidden></div>';
+        }
 
         if ( $show_subtotal ) {
             $html .= sprintf(

@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { OptionSet, optionSetSchema } from '@/lib/schema/option-set';
 import { emptyTargeting } from '@/lib/fields/registry';
+import { ActionsPanel } from './ActionsPanel';
 import {
   useCreateOptionSetMutation,
   useOptionSetQuery,
@@ -18,7 +19,7 @@ import { FieldCanvas } from './FieldCanvas';
 import { Inspector } from './Inspector';
 import { AssignmentPanel } from './AssignmentPanel';
 
-type BuilderView = 'fields' | 'assignment';
+type BuilderView = 'fields' | 'assignment' | 'actions';
 
 function blankOptionSet(): OptionSet {
   return {
@@ -26,6 +27,7 @@ function blankOptionSet(): OptionSet {
     status: false,
     fields: [],
     targeting: emptyTargeting(),
+    actions: [],
   };
 }
 
@@ -56,6 +58,7 @@ export default function OptionSetBuilder() {
         status: data.status,
         fields: data.fields ?? [],
         targeting: data.targeting ?? emptyTargeting(),
+        actions: data.actions ?? [],
       });
     }
   }, [data, form]);
@@ -68,6 +71,7 @@ export default function OptionSetBuilder() {
       status: values.status,
       fields: values.fields,
       targeting: values.targeting,
+      actions: values.actions,
     };
     if (isNew) {
       const created = await createMutation.mutateAsync(input);
@@ -101,15 +105,21 @@ export default function OptionSetBuilder() {
           onBack={() => navigate('/option-sets')}
         />
 
-        {view === 'fields' ? (
+        {view === 'fields' && (
           <div className="mt-5 grid grid-cols-[220px_1fr_340px] gap-5">
             <FieldPalette onSelectField={setSelectedId} />
             <FieldCanvas selectedId={selectedId} onSelect={setSelectedId} />
             <Inspector selectedId={selectedId} onDeleted={() => setSelectedId(null)} />
           </div>
-        ) : (
+        )}
+        {view === 'assignment' && (
           <div className="mt-5">
             <AssignmentPanel />
+          </div>
+        )}
+        {view === 'actions' && (
+          <div className="mt-5">
+            <ActionsPanel />
           </div>
         )}
       </form>

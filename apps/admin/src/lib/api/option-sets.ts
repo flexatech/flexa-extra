@@ -52,3 +52,26 @@ export async function deleteOptionSet(id: number): Promise<void> {
   const response = await api.delete(`option-sets/${id}`);
   await handleResponse(response, __('Failed to delete option set', 'flexa-extra'));
 }
+
+export async function duplicateOptionSet(id: number): Promise<OptionSetSummary> {
+  const response = await api.post(`option-sets/${id}/duplicate`);
+  const result = await handleResponse<OptionSetSummary>(
+    response,
+    __('Failed to duplicate option set', 'flexa-extra'),
+  );
+  return result.data as OptionSetSummary;
+}
+
+export interface ImportResult {
+  items: OptionSetSummary[];
+  count: number;
+}
+
+export async function importOptionSets(payload: unknown): Promise<ImportResult> {
+  const response = await api.post('option-sets/import', { json: payload });
+  const result = await handleResponse<ImportResult>(
+    response,
+    __('Failed to import option sets', 'flexa-extra'),
+  );
+  return result.data as ImportResult;
+}

@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { Power, Receipt, ShoppingCart, Sigma } from 'lucide-react';
+import { ListTree, Power, Receipt, ShoppingCart, Sigma } from 'lucide-react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { SettingsFormData } from '@/lib/schema/settings';
@@ -48,6 +48,18 @@ export default function GeneralTab() {
             icon={Sigma}
             label={__('Show total price', 'flexa-extra')}
             description={__('Display product price plus extras.', 'flexa-extra')}
+            control={<Switch checked={field.value} onCheckedChange={field.onChange} />}
+          />
+        )}
+      />
+      <Controller
+        control={control}
+        name="general.showPriceBreakdown"
+        render={({ field }) => (
+          <SettingRow
+            icon={ListTree}
+            label={__('Show price breakdown', 'flexa-extra')}
+            description={__('List each selected option and its price on the product page.', 'flexa-extra')}
             control={<Switch checked={field.value} onCheckedChange={field.onChange} />}
           />
         )}

@@ -112,6 +112,34 @@ textarea.flexa-extra-control {
     font-weight: 500;
 }
 
+.flexa-extra-stock--out {
+    color: #b91c1c;
+    font-size: 0.8em;
+    white-space: nowrap;
+}
+
+/* "Choose N to M options" helper under a multi-select group. */
+.flexa-extra-select-hint {
+    display: block;
+    margin-top: 0.35em;
+    color: #6b7280;
+    font-size: 0.8em;
+}
+
+/* Sold-out options stay visible but read-only. */
+.flexa-extra-choice.is-out-of-stock,
+.flexa-extra-button.is-out-of-stock,
+.flexa-extra-swatch.is-out-of-stock {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.is-out-of-stock .flexa-extra-choice__label,
+.is-out-of-stock .flexa-extra-button__label,
+.is-out-of-stock .flexa-extra-swatch__label {
+    text-decoration: line-through;
+}
+
 /* Choice groups render as a fieldset; strip the UA chrome. */
 .flexa-extra-choices {
     display: flex;
@@ -245,6 +273,36 @@ textarea.flexa-extra-control {
 }
 
 .flexa-extra-totals__value {
+    white-space: nowrap;
+}
+
+/* Itemized price breakdown */
+.flexa-extra-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15em;
+    margin-bottom: 0.35em;
+    padding-bottom: 0.35em;
+    border-bottom: 1px dashed #e5e7eb;
+    font-size: 0.9em;
+    color: #6b7280;
+}
+
+.flexa-extra-breakdown[hidden] {
+    display: none;
+}
+
+.flexa-extra-breakdown__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+}
+
+.flexa-extra-breakdown__label {
+    overflow-wrap: anywhere;
+}
+
+.flexa-extra-breakdown__amount {
     white-space: nowrap;
 }
 
@@ -388,4 +446,14 @@ textarea.flexa-extra-control {
 .flexa-extra-cart-fee .woocommerce-Price-amount,
 .flexa-extra-cart-fee bdi {
     color: inherit;
+}
+
+/* --- Edit options in cart (classic cart line link) --- */
+.flexa-extra-edit {
+    margin-top: 0.35em;
+}
+
+.flexa-extra-edit-link {
+    font-size: 0.82em;
+    text-decoration: underline;
 }

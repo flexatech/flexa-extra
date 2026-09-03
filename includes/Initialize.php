@@ -22,5 +22,6 @@ final class Initialize {
         \Flexa\Extra\Frontend\Validator::get_instance();
         \Flexa\Extra\Cart\CartHandler::get_instance();
         \Flexa\Extra\Cart\PriceCalculator::get_instance();
+        \Flexa\Extra\Cart\StockManager::get_instance();
     }
 }

@@ -9,9 +9,14 @@ use PHPUnit\Framework\TestCase;
 final class FieldTypeTest extends TestCase {
 
     public function test_known_free_types_are_valid(): void {
-        foreach ( array( 'text', 'textarea', 'number', 'checkbox', 'radio', 'dropdown', 'swatch', 'button', 'heading' ) as $type ) {
+        foreach ( array( 'text', 'textarea', 'number', 'date_picker', 'color_picker', 'checkbox', 'radio', 'dropdown', 'swatch', 'button', 'heading' ) as $type ) {
             $this->assertTrue( FieldType::is_valid( $type ), "$type should be valid" );
         }
+    }
+
+    public function test_removed_pro_types_are_no_longer_valid(): void {
+        $this->assertFalse( FieldType::is_valid( 'file_upload' ) );
+        $this->assertFalse( FieldType::is_valid( 'image_upload' ) );
     }
 
     public function test_unknown_type_is_invalid(): void {
@@ -24,16 +29,12 @@ final class FieldTypeTest extends TestCase {
         $this->assertFalse( FieldType::is_choice( 'text' ) );
 
         $this->assertTrue( FieldType::is_input( 'number' ) );
+        $this->assertTrue( FieldType::is_input( 'date_picker' ) );
+        $this->assertTrue( FieldType::is_input( 'color_picker' ) );
         $this->assertFalse( FieldType::is_input( 'radio' ) );
 
         $this->assertTrue( FieldType::is_display( 'heading' ) );
         $this->assertFalse( FieldType::is_display( 'number' ) );
-    }
-
-    public function test_pro_types_are_flagged(): void {
-        $this->assertTrue( FieldType::is_pro( 'date_picker' ) );
-        $this->assertTrue( FieldType::is_pro( 'file_upload' ) );
-        $this->assertFalse( FieldType::is_pro( 'text' ) );
     }
 
     public function test_catalog_entries_have_required_shape(): void {
@@ -41,7 +42,6 @@ final class FieldTypeTest extends TestCase {
             $this->assertArrayHasKey( 'type', $entry );
             $this->assertArrayHasKey( 'label', $entry );
             $this->assertArrayHasKey( 'group', $entry );
-            $this->assertArrayHasKey( 'pro', $entry );
             $this->assertContains( $entry['group'], array( 'input', 'choice', 'display' ) );
             $this->assertTrue( FieldType::is_valid( $entry['type'] ) );
         }

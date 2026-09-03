@@ -17,6 +17,7 @@ abstract class IntegrationTestCase extends WP_UnitTestCase {
     private const META_FIELDS    = '_flexa_extra_fields';
     private const META_TARGETING = '_flexa_extra_targeting';
     private const META_STATUS    = '_flexa_extra_status';
+    private const META_ACTIONS   = '_flexa_extra_actions';
 
     protected function setUp(): void {
         parent::setUp();
@@ -67,6 +68,7 @@ abstract class IntegrationTestCase extends WP_UnitTestCase {
         update_post_meta( $post_id, self::META_FIELDS, $data['fields'] );
         update_post_meta( $post_id, self::META_TARGETING, $data['targeting'] );
         update_post_meta( $post_id, self::META_STATUS, $data['status'] ? 1 : 0 );
+        update_post_meta( $post_id, self::META_ACTIONS, $data['actions'] );
 
         OptionSetResolver::flush_cache();
 

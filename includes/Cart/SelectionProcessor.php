@@ -124,6 +124,37 @@ class SelectionProcessor {
             );
         }
 
+        // Set-level fee / discount actions, evaluated against the same value
+        // snapshot the conditional-logic engine uses.
+        foreach ( self::applicable_actions( $product ) as $action ) {
+            if ( ! self::action_applies( $action, $values ) ) {
+                continue;
+            }
+
+            $price     = isset( $action['price'] ) && is_array( $action['price'] ) ? $action['price'] : array();
+            $magnitude = abs( self::price_amount( $price, $base ) );
+            if ( 0.0 === $magnitude ) {
+                continue;
+            }
+
+            $is_discount = OptionSetSchema::ACTION_DISCOUNT === ( $action['kind'] ?? OptionSetSchema::ACTION_FEE );
+            $amount      = $is_discount ? -$magnitude : $magnitude;
+            $label       = '' !== (string) ( $action['label'] ?? '' )
+                ? (string) $action['label']
+                : ( $is_discount ? __( 'Discount', 'flexa-extra' ) : __( 'Fee', 'flexa-extra' ) );
+
+            $total += $amount;
+
+            $lines[] = array(
+                'field_id' => 'action:' . (string) ( $action['id'] ?? '' ),
+                'label'    => $label,
+                'type'     => 'action',
+                'display'  => '',
+                'amount'   => $amount,
+                'swatches' => array(),
+            );
+        }
+
         return array(
             'selections' => $selections,
             'lines'      => $lines,
@@ -141,12 +172,52 @@ class SelectionProcessor {
         $fields = array();
         foreach ( OptionSetResolver::for_product( $product ) as $set ) {
             foreach ( $set['fields'] as $field ) {
-                if ( is_array( $field ) && isset( $field['id'], $field['type'] ) && ! FieldType::is_pro( (string) $field['type'] ) ) {
+                if ( is_array( $field ) && isset( $field['id'], $field['type'] ) ) {
                     $fields[] = $field;
                 }
             }
         }
         return $fields;
+    }
+
+    /**
+     * Flat list of every set-level action across the product's option sets.
+     *
+     * @return list<array<string,mixed>>
+     */
+    private static function applicable_actions( WC_Product $product ): array {
+        $actions = array();
+        foreach ( OptionSetResolver::for_product( $product ) as $set ) {
+            foreach ( $set['actions'] as $action ) {
+                if ( is_array( $action ) && isset( $action['id'] ) ) {
+                    $actions[] = $action;
+                }
+            }
+        }
+        return $actions;
+    }
+
+    /**
+     * True when an action's condition rules match. Empty rules always apply.
+     *
+     * @param array<string,mixed> $action
+     * @param array<string,mixed> $values
+     */
+    private static function action_applies( array $action, array $values ): bool {
+        $rules = isset( $action['rules'] ) && is_array( $action['rules'] ) ? $action['rules'] : array();
+        if ( empty( $rules ) ) {
+            return true;
+        }
+
+        $results = array();
+        foreach ( $rules as $rule ) {
+            if ( is_array( $rule ) ) {
+                $results[] = self::rule_passes( $rule, $values );
+            }
+        }
+
+        $match_all = isset( $action['match'] ) && 'all' === $action['match'];
+        return $match_all ? ! in_array( false, $results, true ) : in_array( true, $results, true );
     }
 
     /**
@@ -191,6 +262,32 @@ class SelectionProcessor {
             return $errors;
         }
 
+        // Min / max number of options for a multi-select choice field. Enforced
+        // only once at least one option is chosen (an untouched optional field
+        // returned above); a required field's emptiness is caught by the guard.
+        if ( FieldType::is_choice( $field['type'] ) && ! empty( $field['multiple'] ) ) {
+            $count = is_array( $value ) ? count( $value ) : 1;
+            $min   = self::count_constraint( $field, 'minSelect' );
+            $max   = self::count_constraint( $field, 'maxSelect' );
+
+            if ( null !== $min && $count < $min ) {
+                $errors[] = sprintf(
+                    /* translators: 1: field label, 2: minimum number of options. */
+                    _n( 'Please choose at least %2$d option for "%1$s".', 'Please choose at least %2$d options for "%1$s".', $min, 'flexa-extra' ),
+                    $label,
+                    $min
+                );
+            }
+            if ( null !== $max && $count > $max ) {
+                $errors[] = sprintf(
+                    /* translators: 1: field label, 2: maximum number of options. */
+                    _n( 'Please choose at most %2$d option for "%1$s".', 'Please choose at most %2$d options for "%1$s".', $max, 'flexa-extra' ),
+                    $label,
+                    $max
+                );
+            }
+        }
+
         if ( FieldType::TEXT === $field['type'] && is_string( $value ) ) {
             $format = isset( $field['textFormat'] ) ? (string) $field['textFormat'] : OptionSetSchema::TEXT_PLAIN;
 
@@ -219,6 +316,15 @@ class SelectionProcessor {
         }
 
         return $errors;
+    }
+
+    /**
+     * A selection-count bound from the field, or null when unset.
+     *
+     * @param array<string,mixed> $field
+     */
+    private static function count_constraint( array $field, string $key ): ?int {
+        return isset( $field[ $key ] ) && is_numeric( $field[ $key ] ) ? max( 0, (int) $field[ $key ] ) : null;
     }
 
     private static function regex_matches( string $pattern, string $value ): bool {

@@ -1,6 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import {
   AlignLeft,
+  CalendarDays,
   CheckSquare,
   ChevronDownSquare,
   CircleDot,
@@ -8,6 +9,7 @@ import {
   Heading,
   MousePointerClick,
   Palette,
+  Pipette,
   Plus,
   Type,
   type LucideIcon,
@@ -22,6 +24,8 @@ const ICONS: Record<string, LucideIcon> = {
   text: Type,
   textarea: AlignLeft,
   number: Hash,
+  date_picker: CalendarDays,
+  color_picker: Pipette,
   checkbox: CheckSquare,
   radio: CircleDot,
   dropdown: ChevronDownSquare,
@@ -85,22 +89,14 @@ function PaletteButton({ entry, onAdd }: { entry: FieldCatalogEntry; onAdd: () =
   return (
     <button
       type="button"
-      disabled={entry.pro}
       onClick={onAdd}
       className={cn(
         'group hover:border-primary hover:bg-muted/60 flex w-full items-center gap-2 rounded-md border border-transparent px-2 py-1.5 text-left text-sm transition-colors',
-        entry.pro && 'cursor-not-allowed opacity-50',
       )}
     >
       <Icon className="text-muted-foreground group-hover:text-primary h-4 w-4 shrink-0" />
       <span className="min-w-0 flex-1 truncate">{entry.label}</span>
-      {entry.pro ? (
-        <span className="bg-warning/15 text-warning rounded px-1.5 py-0.5 text-[10px] font-semibold">
-          {__('Pro', 'flexa-extra')}
-        </span>
-      ) : (
-        <Plus className="text-muted-foreground h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-100" />
-      )}
+      <Plus className="text-muted-foreground h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-100" />
     </button>
   );
 }

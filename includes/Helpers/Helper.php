@@ -63,6 +63,7 @@ class Helper {
                 'enabled'            => true,
                 'showExtraSubtotal'  => true,
                 'showTotalPrice'     => true,
+                'showPriceBreakdown' => true,
                 'showValueInMiniCart' => true,
             ],
             'display'  => [
@@ -115,6 +116,7 @@ class Helper {
                 'enabled'             => isset( $general['enabled'] ) ? rest_sanitize_boolean( $general['enabled'] ) : $defaults['general']['enabled'],
                 'showExtraSubtotal'   => isset( $general['showExtraSubtotal'] ) ? rest_sanitize_boolean( $general['showExtraSubtotal'] ) : $defaults['general']['showExtraSubtotal'],
                 'showTotalPrice'      => isset( $general['showTotalPrice'] ) ? rest_sanitize_boolean( $general['showTotalPrice'] ) : $defaults['general']['showTotalPrice'],
+                'showPriceBreakdown'  => isset( $general['showPriceBreakdown'] ) ? rest_sanitize_boolean( $general['showPriceBreakdown'] ) : $defaults['general']['showPriceBreakdown'],
                 'showValueInMiniCart' => isset( $general['showValueInMiniCart'] ) ? rest_sanitize_boolean( $general['showValueInMiniCart'] ) : $defaults['general']['showValueInMiniCart'],
             ],
             'display'  => [

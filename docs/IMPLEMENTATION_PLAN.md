@@ -2,7 +2,7 @@
 
 > Kế hoạch phân pha, **core-first**, để đưa `flexa-extra` từ *foundation + admin shell*
 > (đã xong) thành một plugin Extra Product Options hoàn chỉnh cho WooCommerce,
-> ngang tính năng YayExtra Lite và mở đường cho các tính năng Pro.
+> ngang tính năng YayExtra Lite. Plugin là bản free hoàn chỉnh, không có tầng Pro/license.
 >
 > Tham chiếu phân tích nghiệp vụ gốc: `../yayextra/PHAN-TICH-CHUC-NANG.md`.
 > Quy ước code: skill **flexa-plugin-conventions** (PHP/TS) + **flexa-plugin-ui** (admin).
@@ -46,11 +46,11 @@ builder → render frontend → tính giá → cart/order.
 
 **Mục tiêu:** định nghĩa "một option set là gì", "một field là gì", validate được cả 2 phía.
 
-- [x] `includes/Fields/FieldType.php` — registry các loại field lõi (Free):
-      `text` (text/email/url/regex), `textarea`, `number`, `checkbox`, `radio`, `dropdown`,
-      `swatch`, `button`, `heading` (display-only). Chừa chỗ Pro:
-      `date_picker`, `file_upload`, `image_upload`, `color_picker`. Kèm `catalog()` cho palette builder
-      + filters `flexa_extra/field/types|catalog`.
+- [x] `includes/Fields/FieldType.php` — registry các loại field (tất cả đều free):
+      `text` (text/email/url/regex), `textarea`, `number`, `date_picker`, `color_picker`,
+      `checkbox`, `radio`, `dropdown`, `swatch`, `button`, `heading` (display-only).
+      Kèm `catalog()` cho palette builder + filters `flexa_extra/field/types|catalog`.
+      (`file_upload`/`image_upload` đã bị loại bỏ hoàn toàn — tránh mặt bảo mật upload.)
 - [x] Thuộc tính field: `label`, `name`, `required`, `placeholder`, `default`, `tooltip`,
       `min/max/step`, `price` (none | fixed | percent) trên field & trên từng choice, `logic` (điều kiện hiển thị).
 - [x] `includes/Fields/OptionSetSchema.php` — sanitizer đầy đủ: fields + choices + price + logic + targeting
@@ -108,7 +108,7 @@ giá/logic đi kèm dưới dạng **JSON island** trong container để JS tín
       cache theo request. Filter `flexa_extra/resolver/applicable_sets`.
 - [x] `includes/Frontend/FieldRenderer.php` — render từng field per-type (heading/text/textarea/number/
       checkbox/radio/dropdown/swatch/button), escape đầy đủ. **Hợp đồng input: `flexa_extra[<field_id>]`**
-      (`[]` cho multi). Pro field bị chặn render (`FieldType::is_pro`). Price hint server-side (no-JS).
+      (`[]` cho multi). Price hint server-side (no-JS).
 - [x] `includes/Frontend/ProductRenderer.php` — hook `woocommerce_before/after_add_to_cart_button`
       theo `settings.display.position`; container + JSON island + khối totals; enqueue asset có điều kiện
       (`is_product()` hoặc `advanced.loadScriptsAllPages`), localize `window.flexaExtraFront`.
@@ -116,7 +116,7 @@ giá/logic đi kèm dưới dạng **JSON island** trong container để JS tín
 - [x] Asset frontend riêng `assets/frontend/flexa-extra.{js,css}` (vanilla, không dependency) —
       tính lại giá live client-side (fixed + % giá sản phẩm), format tiền theo currency settings.
 - [x] Conditional logic chạy ở client (ẩn/hiện field realtime; field ẩn bị `disabled` để không post/không tính giá).
-- [x] `FieldType::is_pro()` helper; `ScriptName` + `RegisterFacade` đăng ký handle frontend;
+- [x] `ScriptName` + `RegisterFacade` đăng ký handle frontend;
       `Initialize` boot `ProductRenderer`.
 - [ ] *(Hoãn sang Pha 5)* Live preview trong builder — renderer là PHP nên không tái dùng trực tiếp trong
       builder React; gom vào pha UX/Style.
@@ -147,7 +147,11 @@ CartHandler + PriceCalculator + order meta đều đi qua đây. Cart item chỉ
 - [x] `includes/Cart/PriceCalculator.php` — `woocommerce_before_calculate_totals`; set giá **tuyệt đối** `base + extra`
       (không cộng dồn qua nhiều lượt), filter `flexa_extra/cart/item_extra`. Hỗ trợ fixed + % giá.
 - [x] Lưu lựa chọn vào order item meta; hiển thị ở order/email/admin order (meta_data readable + hidden `_flexa_extra`).
-- [ ] *(Hoãn)* Edit-in-cart; kiểm tra tồn kho theo option value (schema chưa có stock-per-option) — để Pha 6.
+- [x] Kiểm tra tồn kho theo option value — **2026-09-03**. `stock:?int` mỗi choice (null=vô hạn);
+      `Cart\StockManager` chặn oversell khi add-to-cart (tính cả cart reservations), giảm ở
+      `woocommerce_reduce_order_stock` + hoàn ở `woocommerce_restore_order_stock` (guard meta
+      `_flexa_extra_stock_reduced`), counter nằm trong post meta `_flexa_extra_fields`. FieldRenderer
+      disable option hết hàng. *(Edit-in-cart vẫn hoãn.)*
 - [x] Hook mở rộng: `flexa_extra/cart/item_extra` (+ đã có `flexa_extra/resolver/applicable_sets`).
 
 **Xong khi:** ✅ thêm vào giỏ có phụ phí đúng, giá không thể chỉnh từ client (server recompute), order lưu đủ; `php -l` sạch.
@@ -183,19 +187,53 @@ với fallback nên vẫn chạy standalone. Class modifier (`--swatch-{sm|md|lg
 
 ---
 
-## Pha 6 — Nâng cao (định hướng Pro / khác biệt hóa)
+## Pha 6 — Nâng cao (khác biệt hóa, vẫn free)
 
 Ưu tiên theo 5 đề xuất trong bản phân tích yayextra:
 
 - [ ] **Formula pricing**: field công thức tham chiếu field số khác (`{width}*{height}*unit`),
       parser sandbox không `eval`.
-- [ ] **Template library**: option set dựng sẵn (áo in tên, gói quà...) — nhập 1 chạm.
+- [x] **Template library** — 2026-09-03. Nút "Start from a template" ở màn Option Sets mở modal
+      (`PresetPicker`) chọn 1 trong 6 preset dựng sẵn (gift wrapping, engraving, size & colour,
+      installation service, warranty, product add-ons). Preset định nghĩa client-side
+      (`apps/admin/src/lib/fields/presets.ts`) dựng qua chính các factory `createField/createChoice`
+      nên mỗi lần tạo có ID mới + shape hợp lệ; chọn xong POST qua `createOptionSet` (server vẫn
+      `sanitize`) rồi điều hướng vào builder. Preset chỉ là option set nháp bình thường, không khoá gì.
+- [x] **Itemized price breakdown** — 2026-09-03. Trang sản phẩm liệt kê từng option đã chọn
+      (và fee/discount cấp set) kèm giá riêng, cập nhật live phía trên "extra subtotal". Bật/tắt qua
+      setting `general.showPriceBreakdown` (mặc định bật). Server chỉ thêm khung `[data-role="breakdown"]`
+      rỗng trong `render_totals`; `flexa-extra.js` `recalculate()` dựng mảng `lines[]` (label option/field
+      + amount, mirror `SelectionProcessor` line) rồi render bằng `textContent` (an toàn XSS), subtotal =
+      tổng lines. Cart/checkout/order vốn đã itemize sẵn (`CartHandler::format_line_value`). Không đổi REST.
 - [ ] **REST API công khai + cache** cho headless / tích hợp.
 - [ ] **Live preview nâng cao + tính giá server-side realtime** (AJAX/REST) chống lệch giá.
 - [ ] **Analytics add-on**: thống kê option nào bán chạy, doanh thu phụ phí.
-- [ ] Field Pro: date/time picker, file/image upload (chú ý bảo mật mime + kích thước), color picker.
-- [ ] Import/Export option set (JSON).
-- [ ] Pro split: namespace `Flexa\ExtraPro\` → `src-pro/`, gate bằng `flexa_extra/pro/is_licensed`.
+- [x] ~~date picker, color picker~~ → đã làm thành field free (Pha 1 mở rộng, 2026-09-03).
+- [x] ~~Import/Export option set (JSON)~~ + **Duplicate** option set (server-side, tạo bản nháp) — 2026-09-03.
+      REST: `POST /option-sets/{id}/duplicate`, `POST /option-sets/import`; export là client-side tải JSON
+      (envelope `{plugin,type,version,items}`). Import nhận envelope / 1 set / list; đều qua `OptionSetSchema::sanitize`.
+- [x] **Conditional fee/discount (action) cấp option-set** — 2026-09-03. Mảng `actions[]` (meta
+      `_flexa_extra_actions`): mỗi action `{kind: fee|discount, price: fixed|percent, match, rules[]}`,
+      rule tái dùng operator của conditional logic (rules rỗng = luôn áp dụng). `SelectionProcessor`
+      cộng/trừ vào total + tạo line `type:action`; `PriceCalculator` kẹp giá ≥ 0. Tab "Fees & discounts"
+      trong builder (ActionsPanel). JS storefront tính realtime qua island `sets[].actions`.
+- [x] **Edit options in cart** — 2026-09-03. `Cart\EditContext` (view detect từ `?flexa_edit=<key>` vào
+      cart của chính shopper, không cần nonce; đọc selections để prefill). `FieldRenderer::render($field,
+      $product, $selected)` prefill server-side (input + choice checked/selected, override default; `null` =
+      không edit). `ProductRenderer` chèn hidden `flexa_edit` + `wp_nonce_field` trong form. `CartHandler`:
+      link "Edit options" ở `woocommerce_cart_item_name` (classic cart), prefill quantity
+      (`woocommerce_quantity_input_args`), đổi nút thành "Update cart", và **replace** trên
+      `woocommerce_add_to_cart` (verify nonce): key khác → `remove_cart_item(old)`; key trùng (WC gộp) →
+      `set_quantity` về đúng số lượng edit. `EditFlowTest` (4 test: prefill, replace, giữ 1 dòng khi trùng,
+      bỏ qua khi thiếu nonce). Chưa hỗ trợ block cart + variation attribute prefill.
+- [x] **Min/max số lựa chọn (multi-select)** — 2026-09-03. Field choice `multiple` mang `minSelect`/
+      `maxSelect` (nullable int trong `_flexa_extra_fields`; `OptionSetSchema::sanitize_count`).
+      `SelectionProcessor::validate_field` chặn khi count < min hoặc > max (chỉ khi đã chọn ≥1 hoặc field
+      required — optional rỗng bỏ qua), dùng `_n`. `FieldRenderer::select_hint` hiện "Choose N to M
+      options". `flexa-extra.js` disable checkbox chưa chọn khi chạm max. Admin: Inspector 2 ô Min/Max
+      choices (hiện khi checkbox hoặc multiple=true), zod `minSelect/maxSelect`. `SelectFlowTest` (max
+      chặn, min chặn, hint render) + unit `SelectionProcessorTest` (4) + `OptionSetSchemaTest`. **Xong
+      toàn bộ parity YayExtra Lite.**
 
 ---
 
@@ -230,7 +268,7 @@ với fallback nên vẫn chạy standalone. Class modifier (`--swatch-{sm|md|lg
 - [x] `readme.txt` (WP.org), `docs/HOOKS.md` (11 hook: 3 action + 8 filter), `CHANGELOG.md`.
 
 **Còn lại trước khi tag public:** phpcs reconciliation 1 lượt (short array, slash hook — giữ style scaffold);
-kiểm thử block cart + theme phổ biến bằng tay. Pha 6 (Pro/nâng cao) chưa làm.
+kiểm thử block cart + theme phổ biến bằng tay. Pha 6 (nâng cao) chưa làm.
 
 ---
 
@@ -255,7 +293,7 @@ kiểm thử block cart + theme phổ biến bằng tay. Pha 6 (Pro/nâng cao) c
 | 3 | Frontend Render Engine | ✅ Done |
 | 4 | Pricing & Cart Engine | ✅ Done |
 | 5 | UX & Style hiển thị | ✅ Done |
-| 6 | Nâng cao / Pro | ⬜ |
+| 6 | Nâng cao (vẫn free) | ⬜ |
 | 7 | Chất lượng & phát hành | ✅ Done |
 
 **Đường tới hạng "dùng được thật" (MVP bán hàng):** hết **Pha 4**.
