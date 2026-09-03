@@ -14,10 +14,10 @@ import {
   Type,
   type LucideIcon,
 } from 'lucide-react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import { useDraggable } from '@dnd-kit/core';
 
-import { OptionSet, FieldType } from '@/lib/schema/option-set';
-import { createField, FieldCatalogEntry, getFieldCatalog } from '@/lib/fields/registry';
+import { FieldType } from '@/lib/schema/option-set';
+import { FieldCatalogEntry, getFieldCatalog } from '@/lib/fields/registry';
 import { cn } from '@/lib/utils';
 
 const ICONS: Record<string, LucideIcon> = {
@@ -41,21 +41,12 @@ const GROUP_LABELS: Record<string, string> = {
 };
 
 interface Props {
-  onSelectField: (id: string) => void;
+  onAddField: (type: FieldType) => void;
 }
 
-export function FieldPalette({ onSelectField }: Props) {
-  const { control } = useFormContext<OptionSet>();
-  const { append } = useFieldArray({ control, name: 'fields', keyName: '_rhfId' });
-
+export function FieldPalette({ onAddField }: Props) {
   const catalog = getFieldCatalog();
   const groups = ['input', 'choice', 'display'] as const;
-
-  const addField = (type: FieldType) => {
-    const field = createField(type);
-    append(field);
-    onSelectField(field.id);
-  };
 
   return (
     <aside className="border-border bg-card h-fit rounded-xl border p-3">
@@ -73,7 +64,7 @@ export function FieldPalette({ onSelectField }: Props) {
               </p>
               <div className="space-y-1">
                 {entries.map((entry) => (
-                  <PaletteButton key={entry.type} entry={entry} onAdd={() => addField(entry.type)} />
+                  <PaletteButton key={entry.type} entry={entry} onAdd={() => onAddField(entry.type)} />
                 ))}
               </div>
             </div>
@@ -86,12 +77,21 @@ export function FieldPalette({ onSelectField }: Props) {
 
 function PaletteButton({ entry, onAdd }: { entry: FieldCatalogEntry; onAdd: () => void }) {
   const Icon = ICONS[entry.type] ?? Type;
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: `palette-${entry.type}`,
+    data: { source: 'palette', type: entry.type },
+  });
+
   return (
     <button
+      ref={setNodeRef}
       type="button"
       onClick={onAdd}
+      {...attributes}
+      {...listeners}
       className={cn(
         'group hover:border-primary hover:bg-muted/60 flex w-full items-center gap-2 rounded-md border border-transparent px-2 py-1.5 text-left text-sm transition-colors',
+        isDragging && 'opacity-40',
       )}
     >
       <Icon className="text-muted-foreground group-hover:text-primary h-4 w-4 shrink-0" />

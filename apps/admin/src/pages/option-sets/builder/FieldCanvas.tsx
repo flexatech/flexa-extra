@@ -1,76 +1,129 @@
 import { __ } from '@wordpress/i18n';
-import {
-  DndContext,
-  PointerSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from '@dnd-kit/core';
+import { useDroppable } from '@dnd-kit/core';
 import {
   SortableContext,
   useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { AnimatePresence, motion } from 'framer-motion';
 import { GripVertical, LayoutGrid, Trash2 } from 'lucide-react';
-import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { Field, OptionSet } from '@/lib/schema/option-set';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
+type DisplayItem =
+  | { kind: 'field'; field: Field; index: number }
+  | { kind: 'placeholder'; label: string };
+
 interface Props {
   selectedId: string | null;
   onSelect: (id: string | null) => void;
+  move: (from: number, to: number) => void;
+  remove: (index?: number | number[]) => void;
+  placeholderIndex?: number | null;
+  placeholderLabel?: string | null;
 }
 
-export function FieldCanvas({ selectedId, onSelect }: Props) {
+export function FieldCanvas({
+  selectedId,
+  onSelect,
+  move,
+  remove,
+  placeholderIndex,
+  placeholderLabel,
+}: Props) {
   const { control } = useFormContext<OptionSet>();
-  const { move, remove } = useFieldArray({ control, name: 'fields', keyName: '_rhfId' });
   const watched = (useWatch({ control, name: 'fields' }) ?? []) as Field[];
+  const { setNodeRef, isOver } = useDroppable({ id: 'canvas' });
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
-
-  const onDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-    const from = watched.findIndex((f) => f.id === active.id);
-    const to = watched.findIndex((f) => f.id === over.id);
-    if (from !== -1 && to !== -1) move(from, to);
-  };
+  const showPlaceholder = placeholderIndex !== null && placeholderIndex !== undefined && !!placeholderLabel;
 
   if (watched.length === 0) {
     return (
-      <div className="border-border text-muted-foreground flex min-h-[320px] flex-col items-center justify-center rounded-xl border border-dashed text-center">
+      <div
+        ref={setNodeRef}
+        className={cn(
+          'border-border text-muted-foreground flex min-h-[320px] flex-col items-center justify-center rounded-xl border border-dashed text-center transition-colors',
+          isOver && 'border-primary bg-primary/5 text-primary',
+        )}
+      >
         <LayoutGrid className="mb-3 h-8 w-8" />
         <p className="text-sm font-medium">{__('No fields yet', 'flexa-extra')}</p>
-        <p className="mt-1 max-w-xs text-xs">
-          {__('Pick a field type from the left to start building this option set.', 'flexa-extra')}
+        <p className={cn('mt-1 max-w-xs text-xs', isOver && 'text-primary/70')}>
+          {isOver
+            ? __('Drop to add', 'flexa-extra')
+            : __('Pick a field type from the left to start building this option set.', 'flexa-extra')}
         </p>
       </div>
     );
   }
 
+  const displayItems: DisplayItem[] = [];
+  watched.forEach((field, index) => {
+    if (showPlaceholder && index === placeholderIndex) {
+      displayItems.push({ kind: 'placeholder', label: placeholderLabel! });
+    }
+    displayItems.push({ kind: 'field', field, index });
+  });
+  if (showPlaceholder && placeholderIndex === watched.length) {
+    displayItems.push({ kind: 'placeholder', label: placeholderLabel! });
+  }
+
   return (
-    <div className="space-y-2">
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-        <SortableContext items={watched.map((f) => f.id)} strategy={verticalListSortingStrategy}>
-          {watched.map((field, index) => (
-            <SortableFieldCard
-              key={field.id}
-              id={field.id}
-              data={field}
-              selected={selectedId === field.id}
-              onSelect={() => onSelect(field.id)}
-              onRemove={() => {
-                remove(index);
-                if (selectedId === field.id) onSelect(null);
-              }}
-            />
-          ))}
-        </SortableContext>
-      </DndContext>
+    <div ref={setNodeRef} className="space-y-2">
+      <SortableContext items={watched.map((f) => f.id)} strategy={verticalListSortingStrategy}>
+        <AnimatePresence initial={false}>
+          {displayItems.map((item) => {
+            if (item.kind === 'placeholder') {
+              return (
+                <motion.div
+                  key="placeholder"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.14, ease: 'easeOut' }}
+                  style={{ overflow: 'hidden' }}
+                >
+                  <PlaceholderCard label={item.label} />
+                </motion.div>
+              );
+            }
+
+            return (
+              <motion.div
+                key={item.field.id}
+                initial={{ opacity: 0, height: 0, overflow: 'hidden' }}
+                animate={{ opacity: 1, height: 'auto', transitionEnd: { overflow: 'visible' } }}
+                exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
+                transition={{ duration: 0.2, ease: 'easeInOut' }}
+              >
+                <SortableFieldCard
+                  id={item.field.id}
+                  data={item.field}
+                  selected={selectedId === item.field.id}
+                  onSelect={() => onSelect(item.field.id)}
+                  onRemove={() => {
+                    remove(item.index);
+                    if (selectedId === item.field.id) onSelect(null);
+                  }}
+                />
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </SortableContext>
+    </div>
+  );
+}
+
+function PlaceholderCard({ label }: { label: string }) {
+  return (
+    <div className="border-primary/50 bg-primary/5 flex items-center gap-2 rounded-lg border border-dashed px-3 py-2.5">
+      <div className="h-4 w-4 shrink-0" />
+      <p className="text-primary/60 min-w-0 flex-1 truncate text-sm font-medium">{label}</p>
     </div>
   );
 }

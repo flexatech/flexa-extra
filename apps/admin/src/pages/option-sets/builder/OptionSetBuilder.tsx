@@ -1,12 +1,23 @@
 import { useEffect, useMemo, useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider, useForm } from 'react-hook-form';
-import { Loader2 } from 'lucide-react';
+import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import { GripVertical, Loader2 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragOverEvent,
+  type DragStartEvent,
+} from '@dnd-kit/core';
 
-import { OptionSet, optionSetSchema } from '@/lib/schema/option-set';
-import { emptyTargeting } from '@/lib/fields/registry';
+import { FieldType, OptionSet, optionSetSchema } from '@/lib/schema/option-set';
+import { createField, emptyTargeting, getFieldCatalog } from '@/lib/fields/registry';
 import { ActionsPanel } from './ActionsPanel';
 import {
   useCreateOptionSetMutation,
@@ -43,13 +54,18 @@ export default function OptionSetBuilder() {
 
   const [view, setView] = useState<BuilderView>('fields');
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [activePaletteType, setActivePaletteType] = useState<FieldType | null>(null);
+  const [placeholderIndex, setPlaceholderIndex] = useState<number | null>(null);
 
   const form = useForm<OptionSet>({
     resolver: zodResolver(optionSetSchema),
     defaultValues: blankOptionSet(),
   });
 
-  // Hydrate the form when an existing set finishes loading.
+  const fieldArray = useFieldArray({ control: form.control, name: 'fields', keyName: '_rhfId' });
+
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+
   useEffect(() => {
     if (data) {
       form.reset({
@@ -86,6 +102,57 @@ export default function OptionSetBuilder() {
     [isNew],
   );
 
+  const handleDragStart = (event: DragStartEvent) => {
+    if (event.active.data.current?.source === 'palette') {
+      setActivePaletteType(event.active.data.current.type as FieldType);
+    }
+  };
+
+  const handleDragOver = (event: DragOverEvent) => {
+    if (event.active.data.current?.source !== 'palette' || !event.over) {
+      setPlaceholderIndex(null);
+      return;
+    }
+    const currentFields = form.getValues('fields');
+    const overIndex = currentFields.findIndex((f) => f.id === String(event.over!.id));
+    setPlaceholderIndex(overIndex !== -1 ? overIndex : currentFields.length);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    setActivePaletteType(null);
+    setPlaceholderIndex(null);
+
+    if (active.data.current?.source === 'palette') {
+      if (!over) return;
+      const type = active.data.current.type as FieldType;
+      const field = createField(type);
+      const currentFields = form.getValues('fields');
+      const overIndex = currentFields.findIndex((f) => f.id === String(over.id));
+      if (overIndex !== -1) {
+        fieldArray.insert(overIndex, field);
+      } else {
+        fieldArray.append(field);
+      }
+      setSelectedId(field.id);
+    } else {
+      // Canvas → canvas reorder
+      if (!over || active.id === over.id) return;
+      const currentFields = form.getValues('fields');
+      const from = currentFields.findIndex((f) => f.id === String(active.id));
+      const to = currentFields.findIndex((f) => f.id === String(over.id));
+      if (from !== -1 && to !== -1) fieldArray.move(from, to);
+    }
+  };
+
+  const overlayLabel = useMemo(
+    () =>
+      activePaletteType
+        ? (getFieldCatalog().find((e) => e.type === activePaletteType)?.label ?? activePaletteType)
+        : null,
+    [activePaletteType],
+  );
+
   if (!isNew && isLoading) {
     return (
       <div className="mt-20 flex items-center justify-center">
@@ -106,12 +173,48 @@ export default function OptionSetBuilder() {
         />
 
         {view === 'fields' && (
-          <div className="mt-5 grid grid-cols-[220px_1fr_340px] gap-5">
-            <FieldPalette onSelectField={setSelectedId} />
-            <FieldCanvas selectedId={selectedId} onSelect={setSelectedId} />
-            <Inspector selectedId={selectedId} onDeleted={() => setSelectedId(null)} />
-          </div>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnd={handleDragEnd}
+          >
+            <div className="mt-5 grid grid-cols-[220px_1fr_340px] gap-5">
+              <FieldPalette
+                onAddField={(type) => {
+                  const field = createField(type);
+                  fieldArray.append(field);
+                  setSelectedId(field.id);
+                }}
+              />
+              <FieldCanvas
+                selectedId={selectedId}
+                onSelect={setSelectedId}
+                move={fieldArray.move}
+                remove={fieldArray.remove}
+                placeholderIndex={placeholderIndex}
+                placeholderLabel={overlayLabel}
+              />
+              <Inspector selectedId={selectedId} onDeleted={() => setSelectedId(null)} />
+            </div>
+
+            <DragOverlay dropAnimation={null}>
+              {activePaletteType && overlayLabel ? (
+                <div className="bg-card border-primary ring-primary/20 flex w-[300px] cursor-grabbing items-center gap-2 rounded-lg border px-3 py-2.5 opacity-90 shadow-lg ring-2">
+                  <GripVertical className="text-muted-foreground h-4 w-4 shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{overlayLabel}</p>
+                    <p className="text-muted-foreground text-xs capitalize">
+                      {activePaletteType.replace('_', ' ')}
+                    </p>
+                  </div>
+                </div>
+              ) : null}
+            </DragOverlay>
+          </DndContext>
         )}
+
         {view === 'assignment' && (
           <div className="mt-5">
             <AssignmentPanel />
