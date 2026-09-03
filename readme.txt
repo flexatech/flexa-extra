@@ -100,6 +100,10 @@ human-readable source is included in this package under `apps/admin/src/`
 The storefront assets in `assets/frontend/` are plain, unminified JS/CSS and need
 no build step.
 
+== External services ==
+
+This plugin does not connect to any external services. All data is stored locally in your WordPress database.
+
 == Changelog ==
 
 = 1.0.0 =

@@ -52,7 +52,7 @@ final class Settings {
             self::PAGE_SLUG,
             [ $this, 'render_page' ],
             'dashicons-admin-generic',
-            80
+            81
         );
     }
 

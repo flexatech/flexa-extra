@@ -230,7 +230,10 @@ final class ProductRenderer {
         );
         foreach ( $colors as $var => $key ) {
             if ( ! empty( $style[ $key ] ) ) {
-                $vars[ $var ] = (string) $style[ $key ];
+                $sanitized = sanitize_hex_color( (string) $style[ $key ] );
+                if ( $sanitized ) {
+                    $vars[ $var ] = $sanitized;
+                }
             }
         }
 
