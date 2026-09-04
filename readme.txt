@@ -1,4 +1,4 @@
-=== Flexa Extra - Extra Product Options for WooCommerce ===
+=== Flexa Extra ===
 Contributors: flexatech
 Tags: woocommerce, product options, extra product options, product addons, personalization
 Requires at least: 5.0
@@ -10,7 +10,7 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Add customizable extra options and personalization fields to WooCommerce products: text, choices, swatches, buttons, date and colour pickers, with optional per-option fees.
+Extra product options for WooCommerce: text, choices, swatches, buttons, date and colour pickers, plus optional per-option fees priced server-side.
 
 == Description ==
 
