@@ -6,7 +6,7 @@ Tested up to: 7.1
 Requires PHP: 7.4
 WC requires at least: 6.0.0
 WC tested up to: 11.0.0
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,10 +106,17 @@ This plugin does not connect to any external services. All data is stored locall
 
 == Changelog ==
 
+= 1.0.1 =
+* Security: escape swatch image URLs for the CSS `url()` context on the product page and in the cart, preventing CSS injection through crafted URLs.
+* Removed the "Tested up to" line from the main plugin file so compatibility is declared only in readme.txt.
+
 = 1.0.0 =
 * Initial release: option-set builder with text, number, date picker, colour picker, choice, swatch and button fields; storefront render engine; server-authoritative pricing/cart engine; UX & style settings; and a two-tier automated test suite.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Hardens swatch image output against CSS injection. Recommended update.
 
 = 1.0.0 =
 Initial release.
