@@ -244,7 +244,17 @@ class FieldRenderer {
 
         $swatch = '';
         if ( '' !== $image ) {
-            $swatch = '<span class="flexa-extra-swatch__chip" style="background-image:url(' . esc_url( $image ) . ')"></span>';
+            // esc_url() targets the HTML/URL context and leaves CSS-significant
+            // characters (parentheses, quotes, whitespace) intact, so strip those
+            // before dropping the URL into a CSS url() to prevent CSS injection.
+            $safe_url = str_replace(
+                array( '(', ')', '"', "'", ' ', "\t", "\r", "\n" ),
+                '',
+                esc_url_raw( $image )
+            );
+            $swatch = '' !== $safe_url
+                ? '<span class="flexa-extra-swatch__chip" style="background-image:url(&quot;' . esc_attr( $safe_url ) . '&quot;)"></span>'
+                : '<span class="flexa-extra-swatch__chip"></span>';
         } elseif ( '' !== $color ) {
             $swatch = '<span class="flexa-extra-swatch__chip" style="background-color:' . esc_attr( $color ) . '"></span>';
         } else {

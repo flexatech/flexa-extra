@@ -85,7 +85,10 @@ final class CartHandler {
                     }
 
                     if ( '' !== $swatch['image'] ) {
-                        $rules[ $class ] = '.' . $class . '{background-image:url(' . esc_url( $swatch['image'] ) . ')}';
+                        $url = $this->safe_css_url( $swatch['image'] );
+                        if ( '' !== $url ) {
+                            $rules[ $class ] = '.' . $class . '{background-image:url("' . $url . '")}';
+                        }
                     } else {
                         $color = sanitize_hex_color( $swatch['color'] );
                         if ( null !== $color ) {
@@ -379,7 +382,8 @@ final class CartHandler {
         }
 
         if ( '' !== $swatch['image'] ) {
-            $style = 'background-image:url(' . esc_url( $swatch['image'] ) . ')';
+            $url   = $this->safe_css_url( $swatch['image'] );
+            $style = '' !== $url ? 'background-image:url("' . $url . '")' : '';
             $title = '' !== $swatch['label'] ? $swatch['label'] : $swatch['image'];
         } else {
             $style = 'background-color:' . $swatch['color'];
@@ -389,6 +393,20 @@ final class CartHandler {
         return '<span class="flexa-extra-cart-swatch ' . esc_attr( $class ) . '"'
             . ' style="' . esc_attr( $style ) . '"'
             . ' title="' . esc_attr( $title ) . '"></span>';
+    }
+
+    /**
+     * A URL safe to drop inside a CSS `url()` context.
+     *
+     * `esc_url()`/`esc_attr()` target the HTML/URL context and leave
+     * CSS-significant characters (parentheses, quotes, whitespace) intact, so a
+     * crafted image URL could close `url(...)` early and inject further CSS.
+     * Strip those characters after URL-sanitising; the caller wraps the result
+     * in double quotes. Returns '' when nothing usable remains.
+     */
+    private function safe_css_url( string $url ): string {
+        $url = esc_url_raw( $url );
+        return str_replace( [ '(', ')', '"', "'", ' ', "\t", "\r", "\n" ], '', $url );
     }
 
     /**
