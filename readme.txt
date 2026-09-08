@@ -6,7 +6,7 @@ Tested up to: 7.1
 Requires PHP: 7.4
 WC requires at least: 6.0.0
 WC tested up to: 11.0.0
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -136,6 +136,11 @@ This plugin does not connect to any external services. All data is stored locall
 
 == Changelog ==
 
+= 1.1.1 =
+* Fixed: YayExtra import brought nothing over. Field types (and per-option names) are stored by YayExtra as `{ value, label }` pairs, not the flat `fieldType` key the converter expected, so every field was skipped and each set dropped as empty. The real saved shape is now read, with the older flat form still accepted.
+* Fixed: conditional product assignment is now migrated from YayExtra instead of falling back to "all products". Category and tag names are resolved to term IDs and each "is one of" list becomes one targeting rule per term; anything that cannot be mapped is reported per set.
+* Fixed: plain button fields no longer import as colour swatches. Colour and image are now carried only for swatch field types, per option according to its swatch type.
+
 = 1.1.0 =
 * Import option sets from YayExtra and ThemeHigh "Extra Product Options" (free): auto-detected, added switched off through the schema sanitizer, with a per-set report of anything that could not be mapped 1:1.
 * Headless read API: two open, read-only REST routes (`/public/config` and `/public/product/{id}`) so a decoupled front end can render the configurator and compute the subtotal. Closable with the `flexa_extra/public_api/enabled` filter.
@@ -161,6 +166,9 @@ This plugin does not connect to any external services. All data is stored locall
 * Initial release: option-set builder with text, number, date picker, colour picker, choice, swatch and button fields; storefront render engine; server-authoritative pricing/cart engine; UX & style settings; and a two-tier automated test suite.
 
 == Upgrade Notice ==
+
+= 1.1.1 =
+Fixes the YayExtra importer, which previously brought nothing over and ignored product assignment. Recommended if you import from YayExtra.
 
 = 1.1.0 =
 Big feature release: import from YayExtra/ThemeHigh, analytics, headless read API, a Gutenberg block, live builder preview, conditional fees/discounts, per-option stock, and more. No breaking changes.

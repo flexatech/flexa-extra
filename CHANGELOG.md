@@ -3,7 +3,7 @@
 All notable changes to Flexa Extra are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [1.1.1] - 2026-09-08
 
 ### Fixed
 - **YayExtra import brought nothing over.** The converter read each field's type
