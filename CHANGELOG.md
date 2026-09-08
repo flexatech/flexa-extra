@@ -3,9 +3,38 @@
 All notable changes to Flexa Extra are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [1.1.0] - 2026-09-08
 
 ### Added
+- **Import from other plugins**: a new Import screen brings option sets over from
+  YayExtra and from ThemeHigh "Extra Product Options" (free). Each source is
+  detected automatically with a count of what it would import. Everything is
+  added switched off (published but inactive, like a duplicated set) and routed
+  through the same schema sanitizer the builder uses, so it shows in the Option
+  Sets list for review but nothing goes live until you turn it on. Field types,
+  per-option prices,
+  swatches and product assignment map across where they have an equivalent;
+  anything that does not (file uploads, cross-plugin conditional logic) is
+  reported per set so you know what to re-create by hand.
+- **Headless read API**: two open, read-only REST routes for decoupled storefronts.
+  `GET /flexa-extra/v1/public/config` returns the presentation config (currency,
+  labels, style, i18n); `GET /flexa-extra/v1/public/product/{id}` returns the option
+  sets for a product with their fields, prices, and logic, plus the same config, so a
+  front end can render the configurator and compute the live subtotal in one request.
+  It exposes only what the on-page JSON island already ships, respects the plugin's
+  enabled toggle, and can be closed with the `flexa_extra/public_api/enabled` filter.
+  Add-to-cart and the authoritative price recompute stay server-side.
+- **Sales analytics**: an Analytics screen ranks which options and choices shoppers
+  pick and the add-on revenue they bring, filterable by date range and order status.
+  It reads a structured per-option report written to each order at checkout, is
+  HPOS-safe, and counts only orders placed after the feature shipped.
+- **Gutenberg configurator block**: place a "Flexa Extra Configurator" block on any
+  page or post to show an option set with live pricing (for landing or "build your
+  own" pages). It is display-only and does not add to the cart, since cart submission
+  needs the product form.
+- **Live preview in the builder**: a Preview panel renders your option set exactly as
+  the storefront will, updating as you edit fields, prices, and conditions, so you can
+  check show/hide logic and the running subtotal without leaving the editor.
 - **First-run quick-start guide**: on activation you land on a short welcome that
   points at the template gallery, so the fastest path to a first option set is
   the default one. It reuses the normal builder (no separate wizard), is
@@ -16,7 +45,8 @@ All notable changes to Flexa Extra are documented here. This project adheres to
   shopper picks, above the extra subtotal. Toggle it under General settings. The
   cart, checkout, and order line already itemize the same charges.
 - **Template library**: a "Start from a template" picker on the Option Sets
-  screen creates a ready-made draft you can edit before publishing. Six starters
+  screen creates a ready-made set, switched off, that you can edit before turning
+  it on. Six starters
   ship with the plugin: gift wrapping & message, engraving/personalization, size
   & colour, installation service, warranty/protection plan, and product add-ons.
   Each one is a normal option set, so nothing is locked once created.
@@ -41,10 +71,24 @@ All notable changes to Flexa Extra are documented here. This project adheres to
   means unlimited.
 - **Date picker and colour picker** field types (free): native date/colour inputs
   with an optional default value, flowing through cart and order like any input.
-- **Duplicate option set**: one-click server-side copy (created as a draft).
+- **Duplicate option set**: one-click server-side copy, created switched off.
 - **Import / Export option sets**: export a single set or all sets to a portable
   JSON file, and import them back (accepts the export envelope, a single set, or a
   bare list). Import re-creates fresh sets through the schema sanitizer.
+
+### Fixed
+- Admin dropdowns no longer crowd their text against the arrow: selects now draw a
+  consistent chevron with room reserved for it, at every width.
+
+### Developer
+- Migration sources are pluggable: add your own with the
+  `flexa_extra/migration/sources` filter, and hook each imported set with
+  `flexa_extra/migration/imported`. Converters are pure array-to-array maps with
+  unit tests (`tests/Unit/YayExtraSourceTest.php`, `ThemeHighSourceTest.php`).
+- Added a Vitest unit suite for the builder preview engine
+  (`apps/admin/src/lib/preview/engine.ts`), pinning the pricing and conditional-logic
+  behaviour it mirrors from the storefront. Run with `pnpm test` in `apps/admin`.
+- Roadmap for unbuilt work moved to `docs/BACKLOG.md`.
 
 ## [1.0.0] - 2026-08-19
 

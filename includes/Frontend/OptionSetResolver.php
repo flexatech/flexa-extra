@@ -89,6 +89,42 @@ class OptionSetResolver {
     }
 
     /**
+     * Load one option set by id in the normalized render shape, ignoring product
+     * targeting. Returns null unless it is published, active, and has fields.
+     * Used by the configurator block, which targets a set explicitly rather than
+     * resolving by product.
+     *
+     * @return array{id:int,name:string,fields:list<mixed>,actions:list<mixed>}|null
+     */
+    public static function get_set( int $post_id ): ?array {
+        if ( $post_id <= 0 || CustomPostType::POST_TYPE !== get_post_type( $post_id ) ) {
+            return null;
+        }
+        if ( 'publish' !== get_post_status( $post_id ) ) {
+            return null;
+        }
+        if ( '1' !== (string) get_post_meta( $post_id, self::META_STATUS, true ) ) {
+            return null;
+        }
+
+        $fields = get_post_meta( $post_id, self::META_FIELDS, true );
+        $fields = is_array( $fields ) ? $fields : array();
+        if ( empty( $fields ) ) {
+            return null;
+        }
+
+        $actions = get_post_meta( $post_id, self::META_ACTIONS, true );
+        $actions = is_array( $actions ) ? $actions : array();
+
+        return array(
+            'id'      => $post_id,
+            'name'    => get_the_title( $post_id ),
+            'fields'  => array_values( $fields ),
+            'actions' => array_values( $actions ),
+        );
+    }
+
+    /**
      * Ids of every active, published option set.
      *
      * @return list<int>

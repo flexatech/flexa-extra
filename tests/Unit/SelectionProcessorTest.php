@@ -104,6 +104,40 @@ final class SelectionProcessorTest extends TestCase {
         $this->assertSame( 'A, C', $result['lines'][0]['display'] );
     }
 
+    public function test_choice_line_carries_per_option_breakdown_for_analytics(): void {
+        OptionSetFactory::register(
+            1,
+            array(
+                'name'      => 'Add-ons',
+                'status'    => true,
+                'targeting' => array( 'mode' => 'all' ),
+                'fields'    => array(
+                    array(
+                        'type'    => 'checkbox',
+                        'id'      => 'addons',
+                        'label'   => 'Add-ons',
+                        'options' => array(
+                            OptionSetFactory::choice( 'a', 'A', OptionSetFactory::price( 'fixed', 5.0 ) ),
+                            OptionSetFactory::choice( 'b', 'B', OptionSetFactory::price( 'fixed', 7.0 ) ),
+                            OptionSetFactory::choice( 'c', 'C', OptionSetFactory::price( 'fixed', 9.0 ) ),
+                        ),
+                    ),
+                ),
+            )
+        );
+
+        $result  = SelectionProcessor::process( $this->product(), array( 'addons' => array( 'a', 'c' ) ) );
+        $options = $result['lines'][0]['options'];
+
+        // The report meta (and thus analytics) is fed from this per-option list.
+        $this->assertCount( 2, $options );
+        $this->assertSame( 'a', $options[0]['option_id'] );
+        $this->assertSame( 'A', $options[0]['label'] );
+        $this->assertSame( 5.0, $options[0]['amount'] );
+        $this->assertSame( 'c', $options[1]['option_id'] );
+        $this->assertSame( 9.0, $options[1]['amount'] );
+    }
+
     /**
      * A three-option checkbox with optional min/max selection bounds.
      *

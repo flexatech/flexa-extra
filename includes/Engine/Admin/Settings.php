@@ -72,5 +72,8 @@ final class Settings {
         wp_enqueue_media();
         wp_enqueue_script( ScriptName::PAGE_SETTINGS );
         wp_enqueue_style( ScriptName::STYLE_SETTINGS );
+        // Storefront CSS powers the builder's live preview so it matches the
+        // real product page 1:1 (scoped to .flexa-extra-* selectors).
+        wp_enqueue_style( ScriptName::STYLE_FRONTEND );
     }
 }

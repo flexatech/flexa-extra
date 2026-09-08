@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { __ } from '@wordpress/i18n';
-import { Bolt, LayoutGrid, ShoppingBag } from 'lucide-react';
+import { BarChart3, Bolt, DownloadCloud, LayoutGrid, ShoppingBag } from 'lucide-react';
 import { useMatch, useNavigate } from 'react-router-dom';
 
 import { cn } from '@/lib/utils';
@@ -9,6 +9,8 @@ import { HeaderNavMenuItem, HeaderNavMenuList } from '@/components/ui/navmenu-he
 
 const NAV_ITEMS = [
   { path: '/option-sets/*', to: '/option-sets', icon: LayoutGrid, label: __('Option Sets', 'flexa-extra') },
+  { path: '/analytics/*', to: '/analytics', icon: BarChart3, label: __('Analytics', 'flexa-extra') },
+  { path: '/import/*', to: '/import', icon: DownloadCloud, label: __('Import', 'flexa-extra') },
   { path: '/settings/*', to: '/settings', icon: Bolt, label: __('Settings', 'flexa-extra') },
 ];
 

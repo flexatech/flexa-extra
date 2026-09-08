@@ -23,6 +23,14 @@ Fires after an option set is created or updated and its meta is written.
 | `$post_id` | `int` | Option-set post ID |
 | `$data` | `array{name:string,status:bool,fields:array,targeting:array}` | Sanitized payload |
 
+### `flexa_extra/migration/imported`
+Fires after a set imported from another plugin is created (published but inactive).
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `$post_id` | `int` | New option-set post ID |
+| `$data` | `array{name:string,status:bool,fields:array,targeting:array,actions:array}` | Sanitized payload |
+
 ### `flexa_extra/settings/updated`
 Fires after the plugin settings option is saved.
 
@@ -63,6 +71,12 @@ Filter the sanitized option-set payload before it is persisted. Use this to add
 and validate custom field keys.
 
 `apply_filters( 'flexa_extra/option_set/sanitize', array $result, array $input )`
+
+### `flexa_extra/migration/sources`
+Filter the list of import sources shown on the Import screen. Add your own by
+returning an extra instance of `Flexa\Extra\Migration\AbstractMigrationSource`.
+
+`apply_filters( 'flexa_extra/migration/sources', array $sources )`
 
 ### `flexa_extra/resolver/applicable_sets`
 Filter which option sets apply to a product before rendering. Return value is

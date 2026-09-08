@@ -20,6 +20,14 @@ final class CartHandler {
 
     private const KEY = 'flexa_extra';
 
+    /**
+     * Hidden, structured order-item meta powering the option analytics report:
+     * one entry per selected option / priced input, each carrying its field,
+     * option, per-unit surcharge and the line quantity. Written going forward
+     * only — orders placed before this shipped won't have it.
+     */
+    public const META_REPORT = '_flexa_extra_report';
+
     protected function __construct() {
         add_filter( 'woocommerce_add_cart_item_data', [ $this, 'add_cart_item_data' ], 10, 3 );
         add_filter( 'woocommerce_get_cart_item_from_session', [ $this, 'get_cart_item_from_session' ], 10, 2 );
@@ -192,6 +200,54 @@ final class CartHandler {
 
         // Hidden machine-readable copy for integrations.
         $item->add_meta_data( '_flexa_extra', $values[ self::KEY ]['selections'] ?? array(), true );
+
+        // Structured analytics report: one row per selected option / priced input.
+        $report = $this->build_report( $lines, (int) ( $values['quantity'] ?? 1 ) );
+        if ( ! empty( $report ) ) {
+            $item->add_meta_data( self::META_REPORT, $report, true );
+        }
+    }
+
+    /**
+     * Flatten recomputed lines into per-option analytics rows.
+     *
+     * @param list<array{field_id:string,label:string,type:string,display:string,amount:float,swatches:list<array{label:string,color:string,image:string}>,options:list<array{option_id:string,label:string,amount:float}>}> $lines
+     * @param int                                                                                                                                                                                                              $quantity
+     * @return list<array{field:string,field_label:string,type:string,option:string,name:string,amount:float,qty:int}>
+     */
+    private function build_report( array $lines, int $quantity ): array {
+        $quantity = max( 1, $quantity );
+        $report   = array();
+
+        foreach ( $lines as $line ) {
+            if ( ! empty( $line['options'] ) ) {
+                foreach ( $line['options'] as $option ) {
+                    $report[] = array(
+                        'field'       => $line['field_id'],
+                        'field_label' => $line['label'],
+                        'type'        => $line['type'],
+                        'option'      => $option['option_id'],
+                        'name'        => $option['label'],
+                        'amount'      => (float) $option['amount'],
+                        'qty'         => $quantity,
+                    );
+                }
+                continue;
+            }
+
+            // Priced free-form input, or a set-level fee/discount line.
+            $report[] = array(
+                'field'       => $line['field_id'],
+                'field_label' => $line['label'],
+                'type'        => $line['type'],
+                'option'      => '',
+                'name'        => $line['label'],
+                'amount'      => (float) $line['amount'],
+                'qty'         => $quantity,
+            );
+        }
+
+        return $report;
     }
 
     /**
@@ -309,7 +365,7 @@ final class CartHandler {
      * Recompute display lines from the stored selections against current defs.
      *
      * @param array<string,mixed> $cart_item
-     * @return list<array{field_id:string,label:string,type:string,display:string,amount:float,swatches:list<array{label:string,color:string,image:string}>}>
+     * @return list<array{field_id:string,label:string,type:string,display:string,amount:float,swatches:list<array{label:string,color:string,image:string}>,options:list<array{option_id:string,label:string,amount:float}>}>
      */
     private function recompute_lines( array $cart_item ): array {
         if ( ! isset( $cart_item[ self::KEY ] ) ) {

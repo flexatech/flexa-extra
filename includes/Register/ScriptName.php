@@ -18,4 +18,7 @@ class ScriptName {
     public const STYLE_FRONTEND = 'flexa-extra-frontend';
 
     public const PAGE_FRONTEND = 'flexa-extra-frontend';
+
+    // Block editor script for the configurator block (plain wp.* globals, no build).
+    public const BLOCK_EDITOR = 'flexa-extra-configurator-editor';
 }

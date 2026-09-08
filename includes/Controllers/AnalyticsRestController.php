@@ -1,0 +1,206 @@
+<?php
+namespace Flexa\Extra\Controllers;
+
+defined( 'ABSPATH' ) || exit;
+
+use Flexa\Extra\Cart\CartHandler;
+use Flexa\Extra\Utils\SingletonTrait;
+use WP_REST_Request;
+use WP_REST_Response;
+
+/**
+ * Read-only option analytics.
+ *
+ *   GET /flexa-extra/v1/analytics?from=Y-m-d&to=Y-m-d&status=completed,processing
+ *
+ * Aggregates the structured {@see CartHandler::META_REPORT} order-item meta into
+ * "which options sell, and for how much revenue". HPOS-safe: orders are read
+ * through {@see wc_get_orders()} rather than raw SQL, and item meta lives in the
+ * same table under both storage engines. Reports cover orders placed after the
+ * report meta shipped; older orders simply don't contribute.
+ */
+final class AnalyticsRestController extends BaseRestController {
+    use SingletonTrait;
+
+    /** Hard ceiling on orders scanned per request; surfaced to the client. */
+    private const MAX_ORDERS = 5000;
+
+    protected function __construct() {
+        register_rest_route(
+            $this->namespace,
+            '/analytics',
+            [
+                [
+                    'methods'             => 'GET',
+                    'callback'            => [ $this, 'report' ],
+                    'permission_callback' => [ $this, 'permission_callback' ],
+                ],
+            ]
+        );
+    }
+
+    public function report( WP_REST_Request $request ): WP_REST_Response {
+        if ( ! function_exists( 'wc_get_orders' ) ) {
+            return $this->error( __( 'WooCommerce is not active.', 'flexa-extra' ), 400 );
+        }
+
+        $to_ts   = $this->day_bound( (string) $request->get_param( 'to' ), 'now', true );
+        $from_ts = $this->day_bound( (string) $request->get_param( 'from' ), '-29 days', false );
+        if ( $from_ts > $to_ts ) {
+            [ $from_ts, $to_ts ] = [ $to_ts, $from_ts ];
+        }
+
+        $statuses = $this->parse_statuses( (string) $request->get_param( 'status' ) );
+
+        $orders = wc_get_orders(
+            [
+                'limit'        => self::MAX_ORDERS,
+                'status'       => $statuses,
+                'type'         => 'shop_order',
+                'date_created' => $from_ts . '...' . $to_ts,
+                'orderby'      => 'date',
+                'order'        => 'DESC',
+                'return'       => 'objects',
+            ]
+        );
+        $orders = is_array( $orders ) ? $orders : [];
+
+        $options    = [];
+        $fields     = [];
+        $revenue    = 0.0;
+        $selections = 0;
+        $orders_hit = 0;
+
+        foreach ( $orders as $order ) {
+            $order_had_options = false;
+
+            foreach ( $order->get_items() as $item ) {
+                $report = $item->get_meta( CartHandler::META_REPORT, true );
+                if ( ! is_array( $report ) ) {
+                    continue;
+                }
+
+                foreach ( $report as $row ) {
+                    if ( ! is_array( $row ) ) {
+                        continue;
+                    }
+
+                    $order_had_options = true;
+
+                    $field   = isset( $row['field'] ) ? (string) $row['field'] : '';
+                    $option  = isset( $row['option'] ) ? (string) $row['option'] : '';
+                    $type    = isset( $row['type'] ) ? (string) $row['type'] : '';
+                    $name    = isset( $row['name'] ) ? (string) $row['name'] : $field;
+                    $flabel  = isset( $row['field_label'] ) ? (string) $row['field_label'] : $field;
+                    $qty     = isset( $row['qty'] ) ? max( 1, (int) $row['qty'] ) : 1;
+                    $line    = ( isset( $row['amount'] ) ? (float) $row['amount'] : 0.0 ) * $qty;
+
+                    $revenue    += $line;
+                    $selections += $qty;
+
+                    $okey = $field . '|' . $option;
+                    if ( ! isset( $options[ $okey ] ) ) {
+                        $options[ $okey ] = [
+                            'field'       => $field,
+                            'field_label' => $flabel,
+                            'option'      => $option,
+                            'name'        => $name,
+                            'type'        => $type,
+                            'count'       => 0,
+                            'revenue'     => 0.0,
+                        ];
+                    }
+                    $options[ $okey ]['count']   += $qty;
+                    $options[ $okey ]['revenue'] += $line;
+
+                    if ( ! isset( $fields[ $field ] ) ) {
+                        $fields[ $field ] = [
+                            'field'   => $field,
+                            'label'   => $flabel,
+                            'type'    => $type,
+                            'count'   => 0,
+                            'revenue' => 0.0,
+                        ];
+                    }
+                    $fields[ $field ]['count']   += $qty;
+                    $fields[ $field ]['revenue'] += $line;
+                }
+            }
+
+            if ( $order_had_options ) {
+                $orders_hit++;
+            }
+        }
+
+        $options = array_values( $options );
+        $fields  = array_values( $fields );
+        usort( $options, static fn( $a, $b ) => $b['count'] <=> $a['count'] );
+        usort( $fields, static fn( $a, $b ) => $b['count'] <=> $a['count'] );
+
+        return $this->success(
+            [
+                'range'   => [
+                    'from' => gmdate( 'Y-m-d', $from_ts ),
+                    'to'   => gmdate( 'Y-m-d', $to_ts ),
+                ],
+                'totals'  => [
+                    'orders'     => $orders_hit,
+                    'selections' => $selections,
+                    'revenue'    => round( $revenue, wc_get_price_decimals() ),
+                ],
+                'options' => $options,
+                'fields'  => $fields,
+                'scanned' => [
+                    'orders' => count( $orders ),
+                    'capped' => count( $orders ) >= self::MAX_ORDERS,
+                    'max'    => self::MAX_ORDERS,
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Normalise a Y-m-d input to a day boundary timestamp. `$end` pins to the
+     * end of the day so the range is inclusive; falls back to `$default`.
+     */
+    private function day_bound( string $value, string $default, bool $end ): int {
+        $ts = '' !== $value ? strtotime( $value ) : false;
+        if ( false === $ts ) {
+            $ts = strtotime( $default );
+        }
+        $ts = false === $ts ? time() : $ts;
+
+        $suffix = $end ? ' 23:59:59' : ' 00:00:00';
+        $bound  = strtotime( gmdate( 'Y-m-d', $ts ) . $suffix );
+
+        return false === $bound ? $ts : $bound;
+    }
+
+    /**
+     * Parse a comma-separated status filter into WooCommerce order statuses.
+     * Empty / "any" means paid-and-fulfilled statuses (the useful default).
+     *
+     * @return list<string>
+     */
+    private function parse_statuses( string $raw ): array {
+        $raw = trim( $raw );
+        if ( '' === $raw || 'any' === $raw ) {
+            return [ 'completed', 'processing' ];
+        }
+
+        $valid = array_keys( wc_get_order_statuses() ); // e.g. wc-completed.
+        $out   = [];
+        foreach ( explode( ',', $raw ) as $status ) {
+            $status = sanitize_key( trim( $status ) );
+            if ( '' === $status ) {
+                continue;
+            }
+            $prefixed = 0 === strpos( $status, 'wc-' ) ? $status : 'wc-' . $status;
+            if ( in_array( $prefixed, $valid, true ) ) {
+                $out[] = substr( $prefixed, 3 );
+            }
+        }
+
+        return empty( $out ) ? [ 'completed', 'processing' ] : $out;
+    }
+}

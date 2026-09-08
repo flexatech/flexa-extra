@@ -303,8 +303,122 @@ kiểm thử block cart + theme phổ biến bằng tay. Pha 6 (nâng cao) chưa
 | 3 | Frontend Render Engine | ✅ Done |
 | 4 | Pricing & Cart Engine | ✅ Done |
 | 5 | UX & Style hiển thị | ✅ Done |
-| 6 | Nâng cao (vẫn free) | ⬜ |
+| 6 | Nâng cao (vẫn free) | ✅ Done (một phần: template library + itemized breakdown + onboarding) |
 | 7 | Chất lượng & phát hành | ✅ Done |
+| 8 | Vượt Pro — Differentiators kỹ thuật | ✅ Done (live preview + analytics + Gutenberg block + public REST read) |
+| 9 | Vượt Pro — Pricing engine nâng cao | ⬜ |
+| 10 | Vượt Pro — Field types mở rộng + file upload | ⬜ |
+| 11 | Vượt Pro — Logic/targeting + layout nâng cao | ⬜ |
 
 **Đường tới hạng "dùng được thật" (MVP bán hàng):** hết **Pha 4**.
 Pha 1→4 là core bắt buộc; Pha 5→7 làm plugin bóng bẩy & sẵn sàng release.
+Pha 8→11 là **giai đoạn vượt ThemeHigh Pro** (xem mục dưới).
+
+> Các mục còn `[ ]` (Pha 9/10/11 + phần hoãn) đã gom thành to-do ngắn gọn ở
+> `docs/BACKLOG.md` để phiên sau làm tiếp mà không cần đọc lại cả plan.
+
+---
+
+## 8–11. Roadmap vượt ThemeHigh "Extra Product Options" Pro (2026-09-08)
+
+> **Mục tiêu ưu tiên: khác biệt kỹ thuật** (không chỉ đếm feature). Tận dụng lợi thế
+> kiến trúc React + PSR-4 + test suite của Flexa để bỏ xa về *chất lượng*, đồng thời
+> đóng nốt gap parity. Thứ tự dưới đây đặt **Differentiators (Pha 8) lên trước**.
+
+### Baseline đã ngang Pro (KHÔNG cần làm lại — dễ tưởng nhầm là thiếu)
+
+- ✅ **Conditional show/hide logic** — operators `is / is_not / empty / not_empty`, match any/all;
+  đánh giá cả frontend (`assets/frontend/flexa-extra.js` `isVisible`/`rulePasses`) lẫn server mirror
+  (`Cart/SelectionProcessor.php:341` `field_is_visible`). Pro khoá sau paywall; Flexa đã free.
+- ✅ **Percent pricing** — `OptionSetSchema::PRICE_PERCENT`, tính trên base ở `SelectionProcessor.php:447`
+  (`price_amount`). Flexa hiện: `none / fixed / percent`.
+- ✅ **Conditional fee/discount actions** (set-level `_flexa_extra_actions`), min/max choices, per-option
+  stock, edit-in-cart, duplicate, import/export, template library, onboarding.
+
+### Gap thật còn lại so với Pro
+
+| Hạng mục | ThemeHigh Pro | Flexa |
+|---|---|---|
+| Field types | 28 | 11 |
+| File upload | ✅ | ❌ (đã bỏ; **quyết định 2026-09-08: đưa lại, làm an toàn**) |
+| Pricing methods | 7 | 2 (fixed, %) |
+| Logic operators | +in/not_in, >, <, qty, user role, variation | is/is_not/empty/not_empty |
+| Section layout | default/tabs/accordion | 1 layout |
+| Validators | custom + confirm | required + regex |
+
+---
+
+### Pha 8 — Differentiators kỹ thuật (ưu tiên #1, Pro KHÔNG có)
+
+- [x] **Live preview realtime trong builder (2026-09-08).** Nút "Preview" ở `BuilderHeader` mở drawer
+      docked bên phải (`OptionSetBuilder`, `lg:` only). `PreviewPanel.tsx` đọc `fields`/`actions` live qua
+      `useWatch`, render đúng markup + class storefront (`flexa-extra-*`) với selection state cục bộ; áp
+      conditional show/hide, price hint per-option, breakdown + subtotal/total realtime khi sửa field.
+      Engine thuần `lib/preview/engine.ts` **mirror** `assets/frontend/flexa-extra.js` (isVisible/rulePasses/
+      actionApplies/priceFor/formatMoney) + `FieldRenderer.php` (choice_value/price_hint) — giữ lockstep.
+      Fidelity: enqueue `ScriptName::STYLE_FRONTEND` trên trang builder (`Engine\Admin\Settings`); container
+      class + CSS custom props (swatch size/shape, button colors) mirror `ProductRenderer`. tsc + build xanh,
+      phpstan L6 sạch, unit 63 xanh. .pot đã regenerate (2026-09-08). **Còn:** chưa có JS test runner
+      nên engine chưa có unit test (đã ghi chú nghĩa vụ mirror trong comment).
+- [x] **Analytics option/choice (2026-09-08).** Trang admin "Analytics" (nav + route `/analytics`):
+      thẻ tổng (đơn có option / số lần chọn / doanh thu add-on) + bảng option xếp theo lượt chọn & doanh
+      thu, lọc khoảng ngày (7/30/90) + trạng thái đơn. Nguồn dữ liệu: meta order-item **có cấu trúc mới**
+      `_flexa_extra_report` (`CartHandler::META_REPORT`, 1 dòng/option đã chọn kèm amount + qty), sinh lúc
+      checkout từ `CartHandler::build_report()`; `SelectionProcessor` thêm key `options` per-choice vào line
+      (non-breaking, đã cập nhật @return). REST `AnalyticsRestController` GET `/analytics` tổng hợp qua
+      `wc_get_orders` (HPOS-safe), cap `MAX_ORDERS=5000` + báo `scanned.capped` (no silent cap). Chỉ tính đơn
+      sau khi tính năng ra (honest). tsc+build xanh, phpstan L6 sạch, unit **64** (thêm test per-option
+      breakdown). .pot đã regenerate (2026-09-08, 375 chuỗi).
+- [x] **Gutenberg block (2026-09-08)** — làm dạng **configurator hiển thị** (quyết định do ràng buộc:
+      field phải nằm trong `<form class="cart">` mới submit; block ở vùng nội dung nằm ngoài form nên
+      không nối add-to-cart được — hook hiện tại vẫn lo phần cart, cả trong block theme). Block
+      `flexa-extra/configurator` (dynamic, render PHP): chọn 1 option set theo ID + optional base product
+      cho % pricing, render tương tác + tính giá live trên bất kỳ trang/post (landing / "build your own").
+      `assets/blocks/configurator/{block.json,index.js}` (editor JS thuần `wp.*`, không cần build);
+      `Frontend\ConfiguratorBlock` đăng ký + render qua `ProductRenderer::render_configurator()` (tái dùng
+      FieldRenderer + engine frontend, enqueue lazy `enqueue_frontend()` 1-lần); `OptionSetResolver::get_set()`
+      load 1 set theo id. phpstan sạch, unit **66** (thêm get_set + stub get_post_type/status). Ghi rõ
+      "display only, không vào giỏ".
+- [x] **Public REST API (read)** cho headless/decoupled — `Controllers\PublicRestController` (đăng ký trong
+      `Engine\RestAPI`). Hai route mở (read-only, không cần auth):
+      `GET /public/config` (currency + display labels + style + i18n) và
+      `GET /public/product/{id}` (`productId`, `productPrice` giá hiển thị, `sets[{id,name,fields,actions}]`,
+      kèm `config` để headless render + tính subtotal đúng như storefront). Chỉ phơi đúng phần đã nằm sẵn
+      trong JSON island on-page (không rò rỉ thêm). `Helper::get_public_config()` là subset public-safe của
+      settings. Đóng được bằng filter `flexa_extra/public_api/enabled` (mặc định mở). Tôn trọng
+      `general.enabled` (tắt plugin → `sets` rỗng). phpstan sạch, unit **66** (REST + currency phủ ở suite
+      integration theo quy ước repo; logic resolver đã có unit qua `for_product`/`get_set`). .pot **377**.
+
+### Pha 9 — Pricing engine nâng cao (vượt Pro ở formula)
+
+- [ ] **Dynamic per-unit** (`price × quantity`): giá option nhân số lượng sản phẩm / số nhập ở field
+      number. Chạm `SelectionProcessor::process` (đã có `$base`, thêm `$qty`) + JS mirror.
+- [ ] **Character-count pricing** (khắc chữ...): phí theo độ dài text/textarea.
+- [ ] **Formula pricing an toàn** — **điểm vượt Pro** (Pro bắt dev tự code). Safe expression evaluator:
+      whitelist `+ - * / ( )`, biến `qty`, `base`, `{field_id}`; **KHÔNG `eval`** (shunting-yard/AST,
+      đúng "Nguyên tắc xuyên suốt #4"). UI nhập + validate. PHP evaluator mới + JS mirror + unit test kỹ.
+- [ ] Mở `priceSchema` enum (`dynamic`, `char_count`, `formula`) — đồng bộ zod ↔ `OptionSetSchema` ↔
+      `price_amount`.
+
+### Pha 10 — Field types mở rộng + file upload
+
+- [ ] **Input types nhẹ (ROI cao):** `email`, `url`, `tel`, `password`, `hidden`, `range/slider`,
+      `time_picker`, `datetime`. Chủ yếu native input + validation, tái dùng pipeline. Thêm ở
+      `Fields/FieldType.php` (single source) → `registry.ts` factory → `FieldRenderer.php` → sanitizer.
+- [ ] **Multiselect** (dropdown nhiều lựa chọn) — gần free, mở rộng `dropdown` + `maxSelect` đã có.
+- [ ] **File upload (an toàn) — quyết định 2026-09-08 làm lại.** Upload server-side: nonce, mime
+      allowlist, giới hạn size, lưu thành attachment (hoặc thư mục ngoài webroot); giá trị vào cart/order
+      meta dạng URL/attachment id. Cập nhật security review + integration test riêng. Gap đơn lẻ lớn nhất.
+
+### Pha 11 — Logic/targeting nâng cao + layout
+
+- [ ] Operators logic thêm: `contains`, `greater`, `less` (mở `rulePasses` + server mirror + zod enum).
+- [ ] Targeting assignment thêm điều kiện: **user role**, **cart quantity**, **product variation**
+      (`Frontend/OptionSetResolver::condition_matches`).
+- [ ] **Section layout** `tabs` / `accordion` (setting cấp set → class container + JS toggle), tận dụng
+      Style tab đã có.
+- [ ] **Confirm/custom validators** (regex field-level đã có; thêm "confirm field" pattern).
+
+**Nguyên tắc mỗi pha (không đổi):** PHPStan L6 sạch (`composer analyse`), unit + integration test,
+cập nhật `languages/flexa-extra.pot`, giữ dev/prod parity, rebuild bundle `pnpm build` sau khi sửa
+`apps/admin`, single-source field types ở `Fields/FieldType.php`.

@@ -218,6 +218,20 @@ if ( ! function_exists( 'get_the_title' ) ) {
     }
 }
 
+if ( ! function_exists( 'get_post_type' ) ) {
+    function get_post_type( $id ) {
+        return isset( $GLOBALS['fx_sets'][ $id ] )
+            ? \Flexa\Extra\Engine\Admin\CustomPostType::POST_TYPE
+            : false;
+    }
+}
+
+if ( ! function_exists( 'get_post_status' ) ) {
+    function get_post_status( $id ) {
+        return isset( $GLOBALS['fx_sets'][ $id ] ) ? 'publish' : false;
+    }
+}
+
 if ( ! function_exists( 'has_term' ) ) {
     function has_term( $term, $taxonomy, $product_id ) {
         $terms = $GLOBALS['fx_product_terms'][ $product_id ][ $taxonomy ] ?? array();

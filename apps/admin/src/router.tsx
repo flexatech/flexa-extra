@@ -4,6 +4,8 @@ import AppLayout from './AppLayout';
 import NotFoundPage from './pages/NotFound';
 import OptionSets from './pages/option-sets/OptionSets';
 import OptionSetBuilder from './pages/option-sets/builder/OptionSetBuilder';
+import Analytics from './pages/analytics/Analytics';
+import Migration from './pages/migration/Migration';
 import Settings from './pages/settings/Settings';
 
 const baseRoutes: RouteObject[] = [
@@ -22,6 +24,14 @@ const baseRoutes: RouteObject[] = [
   {
     path: 'option-sets/:id',
     element: <OptionSetBuilder />,
+  },
+  {
+    path: 'analytics',
+    element: <Analytics />,
+  },
+  {
+    path: 'import',
+    element: <Migration />,
   },
   {
     path: 'settings',

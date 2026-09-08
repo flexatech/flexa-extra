@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "flexa-extra/configurator",
+  "version": "1.0.0",
+  "title": "Flexa Extra – Options configurator",
+  "category": "widgets",
+  "icon": "forms",
+  "description": "Show an interactive option-set configurator with live price on any page. Display only: selections are not added to the cart.",
+  "textdomain": "flexa-extra",
+  "keywords": ["woocommerce", "product options", "addons", "configurator", "flexa"],
+  "attributes": {
+    "optionSetId": { "type": "number", "default": 0 },
+    "productId": { "type": "number", "default": 0 }
+  },
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "editorScript": "flexa-extra-configurator-editor"
+}

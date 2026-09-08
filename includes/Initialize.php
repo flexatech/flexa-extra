@@ -20,6 +20,7 @@ final class Initialize {
         \Flexa\Extra\Register\RegisterFacade::get_instance();
         \Flexa\Extra\Engine\RestAPI::get_instance();
         \Flexa\Extra\Frontend\ProductRenderer::get_instance();
+        \Flexa\Extra\Frontend\ConfiguratorBlock::get_instance();
         \Flexa\Extra\Frontend\Validator::get_instance();
         \Flexa\Extra\Cart\CartHandler::get_instance();
         \Flexa\Extra\Cart\PriceCalculator::get_instance();

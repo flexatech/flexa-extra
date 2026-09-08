@@ -18,6 +18,7 @@ import {
 
 import { FieldType, OptionSet, optionSetSchema } from '@/lib/schema/option-set';
 import { createField, emptyTargeting, getFieldCatalog } from '@/lib/fields/registry';
+import { cn } from '@/lib/utils';
 import { ActionsPanel } from './ActionsPanel';
 import {
   useCreateOptionSetMutation,
@@ -29,6 +30,7 @@ import { FieldPalette } from './FieldPalette';
 import { FieldCanvas } from './FieldCanvas';
 import { Inspector } from './Inspector';
 import { AssignmentPanel } from './AssignmentPanel';
+import { PreviewPanel } from './PreviewPanel';
 
 type BuilderView = 'fields' | 'assignment' | 'actions';
 
@@ -53,6 +55,7 @@ export default function OptionSetBuilder() {
   const updateMutation = useUpdateOptionSetMutation(id ?? 0);
 
   const [view, setView] = useState<BuilderView>('fields');
+  const [showPreview, setShowPreview] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activePaletteType, setActivePaletteType] = useState<FieldType | null>(null);
   const [placeholderIndex, setPlaceholderIndex] = useState<number | null>(null);
@@ -163,13 +166,21 @@ export default function OptionSetBuilder() {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={onSubmit} className="mx-auto mt-6 max-w-[1400px] px-6 pb-16">
+      <form
+        onSubmit={onSubmit}
+        className={cn(
+          'mx-auto mt-6 max-w-[1400px] px-6 pb-16 transition-[padding]',
+          showPreview && 'lg:pr-[480px]',
+        )}
+      >
         <BuilderHeader
           heading={heading}
           view={view}
           onViewChange={setView}
           isSaving={isSaving}
           onBack={() => navigate('/option-sets')}
+          showPreview={showPreview}
+          onTogglePreview={() => setShowPreview((v) => !v)}
         />
 
         {view === 'fields' && (
@@ -226,6 +237,12 @@ export default function OptionSetBuilder() {
           </div>
         )}
       </form>
+
+      {showPreview && (
+        <aside className="bg-background fixed top-0 right-0 z-40 hidden h-full w-[460px] overflow-y-auto border-l p-4 shadow-xl lg:block">
+          <PreviewPanel />
+        </aside>
+      )}
     </FormProvider>
   );
 }

@@ -27,7 +27,7 @@ class SelectionProcessor {
      *
      * @return array{
      *     selections:array<string,mixed>,
-     *     lines:list<array{field_id:string,label:string,type:string,display:string,amount:float,swatches:list<array{label:string,color:string,image:string}>}>,
+     *     lines:list<array{field_id:string,label:string,type:string,display:string,amount:float,swatches:list<array{label:string,color:string,image:string}>,options:list<array{option_id:string,label:string,amount:float}>}>,
      *     total:float,
      *     errors:list<string>
      * }
@@ -72,6 +72,7 @@ class SelectionProcessor {
             $amount   = 0.0;
             $display  = '';
             $swatches = array();
+            $picked   = array();
 
             if ( FieldType::is_choice( $type ) ) {
                 $selected = is_array( $value ) ? $value : array( $value );
@@ -102,7 +103,14 @@ class SelectionProcessor {
                         );
                     }
 
-                    $amount += self::price_amount( $option['price'], $base );
+                    $opt_amount = self::price_amount( $option['price'], $base );
+                    $amount    += $opt_amount;
+
+                    $picked[] = array(
+                        'option_id' => $option['id'],
+                        'label'     => $label,
+                        'amount'    => $opt_amount,
+                    );
                 }
                 $display = implode( ', ', $labels );
             } else {
@@ -121,6 +129,7 @@ class SelectionProcessor {
                 'display'  => $display,
                 'amount'   => $amount,
                 'swatches' => $swatches,
+                'options'  => $picked,
             );
         }
 
@@ -152,6 +161,7 @@ class SelectionProcessor {
                 'display'  => '',
                 'amount'   => $amount,
                 'swatches' => array(),
+                'options'  => array(),
             );
         }
 

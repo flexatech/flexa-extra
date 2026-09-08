@@ -42,6 +42,57 @@ class Helper {
     }
 
     /**
+     * Read-only presentation config for headless / decoupled storefronts.
+     *
+     * Exposes only what a front end needs to render the configurator and compute
+     * the same live subtotal the on-page storefront does: currency, display
+     * labels, style, and the handful of i18n strings the storefront script uses.
+     * This is a public-safe subset of {@see self::get_settings()} (no admin-only
+     * or advanced flags beyond the ones that affect rendering).
+     *
+     * @return array<string,mixed>
+     */
+    public static function get_public_config(): array {
+        $settings = self::get_settings();
+        $currency = self::get_js_config()['currency_settings'];
+
+        $config = [
+            'enabled'  => ! empty( $settings['general']['enabled'] ),
+            'currency' => $currency,
+            'display'  => [
+                'position'           => (string) $settings['display']['position'],
+                'subtotalLabel'      => (string) $settings['display']['subtotalLabel'],
+                'totalPriceLabel'    => (string) $settings['display']['totalPriceLabel'],
+                'showExtraSubtotal'  => ! empty( $settings['general']['showExtraSubtotal'] ),
+                'showTotalPrice'     => ! empty( $settings['general']['showTotalPrice'] ),
+                'showPriceBreakdown' => ! empty( $settings['general']['showPriceBreakdown'] ),
+                'hideZeroSubtotal'   => ! empty( $settings['advanced']['hideZeroSubtotal'] ),
+            ],
+            'style'    => [
+                'swatchSize'       => (string) $settings['style']['swatchSize'],
+                'swatchShape'      => (string) $settings['style']['swatchShape'],
+                'showTooltips'     => ! empty( $settings['style']['showTooltips'] ),
+                'buttonBg'         => (string) $settings['style']['buttonBg'],
+                'buttonText'       => (string) $settings['style']['buttonText'],
+                'buttonActiveBg'   => (string) $settings['style']['buttonActiveBg'],
+                'buttonActiveText' => (string) $settings['style']['buttonActiveText'],
+            ],
+            'i18n'     => [
+                'required' => __( 'This field is required.', 'flexa-extra' ),
+                'fee'      => __( 'Fee', 'flexa-extra' ),
+                'discount' => __( 'Discount', 'flexa-extra' ),
+            ],
+        ];
+
+        /**
+         * Filter the public headless config payload.
+         *
+         * @param array<string,mixed> $config
+         */
+        return apply_filters( 'flexa_extra/public_config', $config );
+    }
+
+    /**
      * Stored settings merged over defaults.
      *
      * @return array<string,mixed>

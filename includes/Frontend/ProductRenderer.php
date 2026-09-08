@@ -21,6 +21,9 @@ use Flexa\Extra\Cart\EditContext;
 final class ProductRenderer {
     use SingletonTrait;
 
+    /** Guards the one-time enqueue + localize of the storefront asset. */
+    private static bool $enqueued = false;
+
     protected function __construct() {
         add_action( 'wp_enqueue_scripts', [ $this, 'maybe_enqueue' ] );
         add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_before' ] );
@@ -38,6 +41,22 @@ final class ProductRenderer {
         if ( ! $load_everywhere && ! is_product() ) {
             return;
         }
+
+        $this->enqueue_frontend();
+    }
+
+    /**
+     * Enqueue and localize the storefront pricing/logic asset exactly once per
+     * request. Called from the product page (wp_enqueue_scripts) and lazily by
+     * the configurator block when it renders on an arbitrary page.
+     */
+    public function enqueue_frontend(): void {
+        if ( self::$enqueued ) {
+            return;
+        }
+        self::$enqueued = true;
+
+        $settings = Helper::get_settings();
 
         wp_enqueue_style( ScriptName::STYLE_FRONTEND );
         wp_enqueue_script( ScriptName::PAGE_FRONTEND );
@@ -61,6 +80,77 @@ final class ProductRenderer {
                     'discount' => __( 'Discount', 'flexa-extra' ),
                 ],
             ]
+        );
+    }
+
+    /**
+     * Render a single option set as a standalone, interactive configurator for
+     * the Gutenberg block. Display only: the inputs live outside the add-to-cart
+     * form, so selections are not submitted to the cart — the block is meant for
+     * showcases / "build your own" marketing pages. An optional base product id
+     * gives percentage prices something to compute against.
+     */
+    public function render_configurator( int $set_id, int $product_id = 0 ): string {
+        $settings = Helper::get_settings();
+
+        $set = OptionSetResolver::get_set( $set_id );
+        if ( null === $set ) {
+            return '';
+        }
+
+        $product = $product_id > 0 ? wc_get_product( $product_id ) : null;
+        if ( ! $product instanceof \WC_Product ) {
+            // FieldRenderer only threads the product through; a bare instance is a
+            // safe context object when the block isn't bound to a real product.
+            $product    = new \WC_Product();
+            $product_id = 0;
+        }
+
+        $rendered = '';
+        foreach ( $set['fields'] as $field ) {
+            if ( is_array( $field ) ) {
+                $rendered .= FieldRenderer::render( $field, $product );
+            }
+        }
+        if ( '' === $rendered ) {
+            return '';
+        }
+
+        $fields_html = '<div class="flexa-extra-set" data-set-id="' . esc_attr( (string) $set['id'] ) . '">' . $rendered . '</div>';
+
+        $price  = $product_id > 0 ? (float) wc_get_price_to_display( $product ) : 0.0;
+        $island = wp_json_encode(
+            array(
+                'productId'    => $product_id,
+                'productPrice' => $price,
+                'sets'         => array(
+                    array(
+                        'id'      => $set['id'],
+                        'fields'  => $set['fields'],
+                        'actions' => $set['actions'],
+                    ),
+                ),
+            ),
+            JSON_HEX_TAG | JSON_HEX_AMP
+        );
+
+        $classes    = $this->container_classes( $settings ) . ' flexa-extra-fields--configurator';
+        $style_attr = $this->container_style( $settings );
+        $totals     = $this->render_totals( $settings );
+
+        $this->enqueue_frontend();
+
+        return sprintf(
+            '<div class="%1$s" data-product-id="%2$s" data-product-price="%3$s"%4$s>'
+                . '<script type="application/json" class="flexa-extra-data">%5$s</script>'
+                . '%6$s%7$s</div>',
+            esc_attr( $classes ),
+            esc_attr( (string) $product_id ),
+            esc_attr( (string) $price ),
+            '' !== $style_attr ? ' style="' . esc_attr( $style_attr ) . '"' : '',
+            $island ? $island : '{}',
+            $fields_html,
+            $totals
         );
     }
 

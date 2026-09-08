@@ -34,6 +34,30 @@ final class OptionSetResolverTest extends TestCase {
         $this->assertSame( 1, $sets[0]['id'] );
     }
 
+    public function test_get_set_loads_published_active_set_by_id(): void {
+        OptionSetFactory::register(
+            7,
+            array( 'name' => 'Configurator set', 'status' => true, 'targeting' => array( 'mode' => 'all' ), 'fields' => array( $this->text_field() ) )
+        );
+
+        $set = OptionSetResolver::get_set( 7 );
+
+        $this->assertNotNull( $set );
+        $this->assertSame( 7, $set['id'] );
+        $this->assertSame( 'Configurator set', $set['name'] );
+        $this->assertCount( 1, $set['fields'] );
+    }
+
+    public function test_get_set_returns_null_for_inactive_or_missing(): void {
+        OptionSetFactory::register(
+            8,
+            array( 'name' => 'Draft', 'status' => false, 'targeting' => array( 'mode' => 'all' ), 'fields' => array( $this->text_field() ) )
+        );
+
+        $this->assertNull( OptionSetResolver::get_set( 8 ) );  // inactive
+        $this->assertNull( OptionSetResolver::get_set( 999 ) ); // missing
+    }
+
     public function test_inactive_set_is_excluded(): void {
         OptionSetFactory::register(
             1,

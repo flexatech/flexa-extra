@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { ArrowLeft, Loader2, Save } from 'lucide-react';
+import { ArrowLeft, Eye, Loader2, Save } from 'lucide-react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { OptionSet } from '@/lib/schema/option-set';
@@ -16,9 +16,19 @@ interface Props {
   onViewChange: (view: BuilderView) => void;
   isSaving: boolean;
   onBack: () => void;
+  showPreview: boolean;
+  onTogglePreview: () => void;
 }
 
-export function BuilderHeader({ heading, view, onViewChange, isSaving, onBack }: Props) {
+export function BuilderHeader({
+  heading,
+  view,
+  onViewChange,
+  isSaving,
+  onBack,
+  showPreview,
+  onTogglePreview,
+}: Props) {
   const { register, control } = useFormContext<OptionSet>();
 
   return (
@@ -39,6 +49,16 @@ export function BuilderHeader({ heading, view, onViewChange, isSaving, onBack }:
         </div>
 
         <div className="flex shrink-0 items-center gap-4">
+          <Button
+            type="button"
+            variant={showPreview ? 'primary' : 'outline'}
+            size="sm"
+            onClick={onTogglePreview}
+            aria-pressed={showPreview}
+          >
+            <Eye className="h-4 w-4" />
+            {__('Preview', 'flexa-extra')}
+          </Button>
           <Controller
             control={control}
             name="status"
