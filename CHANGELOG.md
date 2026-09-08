@@ -3,6 +3,25 @@
 All notable changes to Flexa Extra are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+- **YayExtra import brought nothing over.** The converter read each field's type
+  from a `fieldType` key, but YayExtra stores it in `type` as a `{ value, label }`
+  pair. Every field came back typed as nothing, was skipped, and each set was
+  then dropped as having no importable fields. Field types, names (`nameOnCart`)
+  and the `swatches` type are now read from the shape YayExtra actually writes,
+  with the older flat `fieldType` still accepted.
+- **Conditional product assignment is migrated** instead of falling back to "all
+  products". YayExtra matches categories and tags by term name, so the names are
+  resolved to term IDs while reading, and each "is one of" list is expanded into
+  one targeting rule per term. Rules that cannot be mapped (product-name
+  conditions, terms missing from the site) are reported per set as before.
+- **Button fields no longer import as colour swatches.** YayExtra seeds every
+  option with a default swatch colour even when the field is a plain button, and
+  only the swatches field types ever render one; colour and image are now carried
+  only for swatches, and per option according to its `swatchesType`.
+
 ## [1.1.0] - 2026-09-08
 
 ### Added
