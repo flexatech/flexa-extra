@@ -5,7 +5,9 @@ defined( 'ABSPATH' ) || exit;
 
 use Flexa\Extra\Fields\FieldType;
 use Flexa\Extra\Fields\OptionSetSchema;
+use Flexa\Extra\Frontend\FieldRenderer;
 use Flexa\Extra\Frontend\OptionSetResolver;
+use Flexa\Extra\Pricing\FormulaEvaluator;
 use WC_Product;
 
 /**
@@ -24,6 +26,7 @@ class SelectionProcessor {
     /**
      * @param array<string,mixed> $raw   Raw POST values keyed by field id.
      * @param float|null          $base  Base price to compute percentages against (defaults to product price).
+     * @param int                 $qty   Line quantity, exposed to formula prices as `qty` (per-unit result).
      *
      * @return array{
      *     selections:array<string,mixed>,
@@ -32,7 +35,7 @@ class SelectionProcessor {
      *     errors:list<string>
      * }
      */
-    public static function process( WC_Product $product, array $raw, ?float $base = null ): array {
+    public static function process( WC_Product $product, array $raw, ?float $base = null, int $qty = 1 ): array {
         $base   = null === $base ? (float) $product->get_price() : $base;
         $fields = self::applicable_fields( $product );
 
@@ -41,6 +44,14 @@ class SelectionProcessor {
         foreach ( $fields as $field ) {
             $values[ $field['id'] ] = self::read_value( $field, $raw );
         }
+
+        // Evaluation context shared by every price_amount() call: base price, the
+        // line quantity, and each field's numeric value for {field_id} formula refs.
+        $ctx = array(
+            'base'   => $base,
+            'qty'    => (float) max( 1, $qty ),
+            'fields' => self::numeric_values( $values ),
+        );
 
         $selections = array();
         $lines      = array();
@@ -103,7 +114,7 @@ class SelectionProcessor {
                         );
                     }
 
-                    $opt_amount = self::price_amount( $option['price'], $base );
+                    $opt_amount = self::price_amount( $option['price'], $ctx );
                     $amount    += $opt_amount;
 
                     $picked[] = array(
@@ -113,10 +124,17 @@ class SelectionProcessor {
                     );
                 }
                 $display = implode( ', ', $labels );
+            } elseif ( FieldType::DATE_PICKER === $type && is_string( $value ) ) {
+                // Show the date in the field's resolved format (cart/order line),
+                // while the raw ISO value stays in $selections for storage/logic.
+                $display = FieldRenderer::format_date( $value, $field );
+                if ( isset( $field['price'] ) && is_array( $field['price'] ) ) {
+                    $amount += self::price_amount( $field['price'], $ctx );
+                }
             } else {
                 $display = is_array( $value ) ? implode( ', ', $value ) : (string) $value;
                 if ( isset( $field['price'] ) && is_array( $field['price'] ) ) {
-                    $amount += self::price_amount( $field['price'], $base );
+                    $amount += self::price_amount( $field['price'], $ctx );
                 }
             }
 
@@ -141,7 +159,7 @@ class SelectionProcessor {
             }
 
             $price     = isset( $action['price'] ) && is_array( $action['price'] ) ? $action['price'] : array();
-            $magnitude = abs( self::price_amount( $price, $base ) );
+            $magnitude = abs( self::price_amount( $price, $ctx ) );
             if ( 0.0 === $magnitude ) {
                 continue;
             }
@@ -313,6 +331,28 @@ class SelectionProcessor {
             }
         }
 
+        if ( FieldType::DATE_PICKER === $field['type'] && is_string( $value ) && '' !== $value ) {
+            $min      = isset( $field['minDate'] ) ? (string) $field['minDate'] : '';
+            $max      = isset( $field['maxDate'] ) ? (string) $field['maxDate'] : '';
+            $disabled = isset( $field['disabledDates'] ) && is_array( $field['disabledDates'] )
+                ? array_map( 'strval', $field['disabledDates'] )
+                : array();
+
+            // ISO dates (YYYY-MM-DD) compare correctly as strings.
+            if ( '' !== $min && $value < $min ) {
+                /* translators: 1: field label, 2: earliest allowed date. */
+                $errors[] = sprintf( __( '"%1$s" must be on or after %2$s.', 'flexa-extra' ), $label, $min );
+            }
+            if ( '' !== $max && $value > $max ) {
+                /* translators: 1: field label, 2: latest allowed date. */
+                $errors[] = sprintf( __( '"%1$s" must be on or before %2$s.', 'flexa-extra' ), $label, $max );
+            }
+            if ( in_array( $value, $disabled, true ) ) {
+                /* translators: %s: field label. */
+                $errors[] = sprintf( __( 'The date chosen for "%s" is not available.', 'flexa-extra' ), $label );
+            }
+        }
+
         if ( FieldType::NUMBER === $field['type'] && is_string( $value ) && is_numeric( $value ) ) {
             $number = (float) $value;
             if ( isset( $field['min'] ) && $number < (float) $field['min'] ) {
@@ -444,10 +484,18 @@ class SelectionProcessor {
     }
 
     /**
-     * @param array<string,mixed> $price
+     * @param array<string,mixed>                                     $price
+     * @param array{base:float,qty:float,fields:array<string,float>}  $ctx
      */
-    private static function price_amount( array $price, float $base ): float {
-        $type   = isset( $price['type'] ) ? (string) $price['type'] : OptionSetSchema::PRICE_NONE;
+    private static function price_amount( array $price, array $ctx ): float {
+        $type = isset( $price['type'] ) ? (string) $price['type'] : OptionSetSchema::PRICE_NONE;
+        $base = $ctx['base'];
+
+        if ( OptionSetSchema::PRICE_FORMULA === $type ) {
+            $formula = isset( $price['formula'] ) ? (string) $price['formula'] : '';
+            return FormulaEvaluator::evaluate( $formula, $ctx );
+        }
+
         $amount = isset( $price['amount'] ) ? (float) $price['amount'] : 0.0;
 
         if ( OptionSetSchema::PRICE_NONE === $type || 0.0 === $amount ) {
@@ -459,5 +507,20 @@ class SelectionProcessor {
         }
 
         return $amount;
+    }
+
+    /**
+     * Map each field's snapshot value to a float for formula `{field_id}` refs.
+     * Non-numeric or multi-value fields resolve to 0.
+     *
+     * @param array<string,mixed> $values
+     * @return array<string,float>
+     */
+    private static function numeric_values( array $values ): array {
+        $out = array();
+        foreach ( $values as $id => $value ) {
+            $out[ (string) $id ] = is_scalar( $value ) && is_numeric( $value ) ? (float) $value : 0.0;
+        }
+        return $out;
     }
 }

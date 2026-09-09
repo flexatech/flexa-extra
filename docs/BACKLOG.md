@@ -17,17 +17,17 @@ land in three places in lockstep: the PHP engine, the storefront
 
 ## Phase 9: Advanced pricing engine
 
-- **Dynamic per-unit** (`price × quantity`): multiply an option's price by the
-  product quantity or by a number field's value. Touches
-  `SelectionProcessor::process` (already has `$base`, add `$qty`) plus the JS mirror.
+- [x] **Formula pricing, safe (differentiator vs Pro)** — shipped in 1.2.0. A
+  hand-written recursive-descent evaluator (`includes/Pricing/FormulaEvaluator.php`,
+  no `eval`) over `+ - * / ( )` with `round/min/max` and variables `base`, `qty`,
+  `{field_id}`. `priceSchema` gained the `formula` type (+ `formula` string) in
+  lockstep across zod, `OptionSetSchema`, `SelectionProcessor::price_amount`, the
+  storefront `evalFormula`, and the preview `engine.ts`. `qty` is threaded from
+  `PriceCalculator` / `CartHandler`; the result is the per-unit surcharge. This
+  also covers **dynamic per-unit** (`base * qty` style) — `qty` is now a variable.
 - **Character-count pricing**: charge by the length of a text/textarea value
-  (engraving, custom labels).
-- **Formula pricing, safe (differentiator vs Pro)**: a whitelisted expression
-  evaluator over `+ - * / ( )` with variables `qty`, `base`, `{field_id}`. No
-  `eval`: shunting-yard or AST per principle #4. New PHP evaluator + JS mirror +
-  thorough unit tests, with a builder input and validation.
-- Open the `priceSchema` enum (`dynamic`, `char_count`, `formula`) and keep zod,
-  `OptionSetSchema`, and `price_amount` in sync.
+  (engraving, custom labels). Not yet done — would add a `length({field})`
+  function to the evaluator and expose text length in the field context.
 
 ## Phase 10: More field types + file upload
 

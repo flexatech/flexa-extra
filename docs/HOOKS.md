@@ -104,6 +104,53 @@ add_filter( 'flexa_extra/cart/item_extra', function ( $extra, $cart_item, $resul
 }, 10, 3 );
 ```
 
+## Styling
+
+Every field is wrapped in a `<div>` that carries stable class hooks so you can
+target fields from your theme or a custom stylesheet:
+
+| Class | Applies to |
+|-------|------------|
+| `flexa-extra-field` | Every field wrapper. |
+| `flexa-extra-field--<type>` | All fields of a type (`radio`, `dropdown`, `swatch`, `number`, ...). |
+| `flexa-extra-field--id-<field_id>` | One specific field. |
+
+The wrapper also exposes `data-field-id` and `data-field-type` attributes.
+
+You can add your own class(es) per field in the builder: select a field and fill
+the **CSS class** box in the Inspector (space-separated for multiple). They are
+appended to the wrapper as-is (each token sanitized with `sanitize_html_class()`).
+
+```css
+/* All swatch fields */
+.flexa-extra-field--swatch { margin-top: 1.5rem; }
+
+/* One field by its id */
+.flexa-extra-field--id-fld_ab12cd { border: 1px solid #ddd; padding: 1rem; }
+
+/* A custom class typed in the Inspector */
+.flexa-extra-field.highlight { background: #fffbe6; }
+```
+
+### Custom controls (checkbox, radio, colour)
+
+Checkboxes and radios keep the native `<input>` (visually hidden) and draw the
+visible control as a sibling `<span class="flexa-extra-choice__control">`; the
+colour field wraps the native `<input type="color">` in
+`.flexa-extra-colorpicker` with a `__swatch` and `__value` span. Restyle them
+without touching markup, for example to recolour the checked state:
+
+```css
+/* Checked checkbox/radio fill */
+.flexa-extra-choice input:checked + .flexa-extra-choice__control {
+    border-color: #0a7c3f;
+    background: #0a7c3f;
+}
+
+/* Colour field swatch size */
+.flexa-extra-colorpicker__swatch { width: 2em; height: 2em; }
+```
+
 ## Notes
 
 * The storefront input contract is `flexa_extra[<field_id>]` (with a `[]` suffix

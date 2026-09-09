@@ -6,7 +6,7 @@ Tested up to: 7.1
 Requires PHP: 7.4
 WC requires at least: 6.0.0
 WC tested up to: 11.0.0
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,6 +17,8 @@ Extra product options for WooCommerce: text, choices, swatches, buttons, date an
 Flexa Extra lets you attach extra option fields to WooCommerce products so shoppers can personalize what they buy and you can charge for it. Build an **Option Set** once, assign it to products (all, a hand-picked list, or by category/tag/price/stock conditions), and the fields appear on the product page with live price updates.
 
 Every price is recomputed on the server from your saved field definitions when the product is added to the cart — a client-submitted price is never trusted — so the amount a shopper pays always matches what you configured.
+
+📌 [**DEMO**](https://templates.sitebefy.com/templates/maison-verte/product/riviera-coral/)
 
 = Field types (free) =
 
@@ -31,7 +33,8 @@ Every price is recomputed on the server from your saved field definitions when t
 = Pricing =
 
 * Per-field or per-option surcharge
-* Fixed amount or a percentage of the product price
+* Fixed amount, a percentage of the product price, or a safe arithmetic formula
+* Formula prices use `base`, `qty` and other fields' values with `+ - * / ( )` and `round()`, `min()`, `max()` (no `eval`), for per-unit and volume-tiered pricing
 * Conditional fees and discounts applied to the item when selections match a rule
 
 = Inventory =
@@ -98,6 +101,10 @@ Yes. The plugin declares HPOS compatibility.
 
 Yes, see `docs/HOOKS.md` for the available actions and filters.
 
+= Can I style individual fields with my own CSS? =
+
+Yes. Each field is wrapped in a `<div>` with class hooks: `flexa-extra-field` on every wrapper, `flexa-extra-field--<type>` for all fields of a type, and `flexa-extra-field--id-<field_id>` for one specific field (plus `data-field-id` and `data-field-type` attributes). You can also add your own class per field in the builder: select the field and fill the "CSS class" box in the Inspector. See `docs/HOOKS.md` for examples.
+
 = Can I import from another options plugin? =
 
 Yes. The Import screen reads option sets from YayExtra and from ThemeHigh "Extra Product Options" (free) and re-creates them in Flexa Extra, switched off. They appear in the Option Sets list for review; the storefront ignores them until you turn each one on. Field types, per-option prices, swatches and product assignment are mapped where an equivalent exists; anything that cannot be mapped 1:1 is listed per set so you can re-create it. Keep the source plugin active during the import so its data is readable.
@@ -136,6 +143,15 @@ This plugin does not connect to any external services. All data is stored locall
 
 == Changelog ==
 
+= 1.2.0 =
+* Formula prices: a price can be a safe arithmetic formula (on field prices, per-option prices and fee/discount rules) using `base`, `qty` and other fields' values, the operators `+ - * / ( )`, and `round()`, `min()`, `max()`. The result is the per-unit surcharge, so `qty` is for volume tiers like `max(2, 10 - qty)` rather than a plain per-unit charge. Evaluated with a hand-written parser (never `eval`); a bad formula is worth 0 and never errors. The builder validates as you type.
+* Custom controls: checkboxes and radios now use clean custom-styled controls (with a subtle checked animation) instead of the raw browser widget, so they look consistent across browsers and themes. The colour field shows a swatch with its hex value and opens the colour picker on click. Selected values, validation, keyboard focus and form behaviour are unchanged, and the styling is scoped so it will not clash with your theme.
+* Date picker: the date field now opens a lightweight, localized calendar (month names, weekday order and first day of week follow your site language) instead of the raw browser control. Works with keyboard and touch, and the calendar styling is scoped so it will not clash with your theme.
+* Date field options: set an earliest and latest selectable date and a list of blocked dates. These are validated again on the server at add-to-cart. The stored value format (YYYY-MM-DD) is unchanged.
+* Date display format: chosen dates now show in your site's date format (Settings, General) on the product page and in the cart/order, with an optional per-field override. Previously the cart showed the raw YYYY-MM-DD value.
+* Per-field styling hooks: every field wrapper now carries `flexa-extra-field--<type>` and `flexa-extra-field--id-<field_id>` classes so you can target a field type or one specific field from CSS.
+* New "CSS class" box in the field Inspector to add your own class(es) to a field wrapper.
+
 = 1.1.1 =
 * Fixed: YayExtra import brought nothing over. Field types (and per-option names) are stored by YayExtra as `{ value, label }` pairs, not the flat `fieldType` key the converter expected, so every field was skipped and each set dropped as empty. The real saved shape is now read, with the older flat form still accepted.
 * Fixed: conditional product assignment is now migrated from YayExtra instead of falling back to "all products". Category and tag names are resolved to term IDs and each "is one of" list becomes one targeting rule per term; anything that cannot be mapped is reported per set.
@@ -166,6 +182,9 @@ This plugin does not connect to any external services. All data is stored locall
 * Initial release: option-set builder with text, number, date picker, colour picker, choice, swatch and button fields; storefront render engine; server-authoritative pricing/cart engine; UX & style settings; and a two-tier automated test suite.
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+Adds formula prices (safe arithmetic over base, quantity and other fields), custom-styled checkbox/radio/colour controls, a localized calendar for the date field (with earliest/latest and blocked dates), and per-field CSS class hooks. No breaking changes; stored values are unchanged.
 
 = 1.1.1 =
 Fixes the YayExtra importer, which previously brought nothing over and ignored product assignment. Recommended if you import from YayExtra.

@@ -42,7 +42,8 @@ final class PriceCalculator {
             }
 
             $base   = isset( $cart_item[ self::KEY ]['base'] ) ? (float) $cart_item[ self::KEY ]['base'] : (float) $product->get_price();
-            $result = SelectionProcessor::process( $product, (array) ( $cart_item[ self::KEY ]['selections'] ?? array() ), $base );
+            $qty    = (int) ( $cart_item['quantity'] ?? 1 );
+            $result = SelectionProcessor::process( $product, (array) ( $cart_item[ self::KEY ]['selections'] ?? array() ), $base, $qty );
 
             $extra = (float) apply_filters( 'flexa_extra/cart/item_extra', $result['total'], $cart_item, $result );
 

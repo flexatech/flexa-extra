@@ -78,6 +78,13 @@ export function Inspector({ selectedId }: Props) {
         <Input {...register(`${base}.tooltip` as const)} />
       </Labeled>
 
+      <Labeled
+        label={__('CSS class', 'flexa-extra')}
+        hint={__('Extra class(es) added to the field wrapper for custom styling.', 'flexa-extra')}
+      >
+        <Input {...register(`${base}.cssClass` as const)} placeholder="e.g. my-field highlight" />
+      </Labeled>
+
       {type === 'text' && (
         <>
           <Labeled label={__('Text format', 'flexa-extra')}>
@@ -128,6 +135,50 @@ export function Inspector({ selectedId }: Props) {
             />
           </Labeled>
         </div>
+      )}
+
+      {type === 'date_picker' && (
+        <>
+          <div className="grid grid-cols-2 gap-2">
+            <Labeled label={__('Earliest date', 'flexa-extra')}>
+              <Input type="date" {...register(`${base}.minDate` as const)} />
+            </Labeled>
+            <Labeled label={__('Latest date', 'flexa-extra')}>
+              <Input type="date" {...register(`${base}.maxDate` as const)} />
+            </Labeled>
+          </div>
+          <Labeled
+            label={__('Disabled dates', 'flexa-extra')}
+            hint={__('One date per line (YYYY-MM-DD). These dates cannot be selected.', 'flexa-extra')}
+          >
+            <Controller
+              control={control}
+              name={`${base}.disabledDates` as const}
+              render={({ field: f }) => (
+                <textarea
+                  className="border-input bg-background w-full rounded-md border px-3 py-2 text-sm"
+                  rows={3}
+                  placeholder={'2026-12-25\n2027-01-01'}
+                  value={(f.value ?? []).join('\n')}
+                  onChange={(e) =>
+                    f.onChange(
+                      e.target.value
+                        .split(/[\s,]+/)
+                        .map((s) => s.trim())
+                        .filter(Boolean),
+                    )
+                  }
+                />
+              )}
+            />
+          </Labeled>
+          <Labeled
+            label={__('Date format', 'flexa-extra')}
+            hint={__('PHP date format (e.g. F j, Y). Leave blank to use the site date format.', 'flexa-extra')}
+          >
+            <Input {...register(`${base}.dateFormat` as const)} placeholder="F j, Y" />
+          </Labeled>
+        </>
       )}
 
       {isInputType(type) && (

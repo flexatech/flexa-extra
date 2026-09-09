@@ -91,10 +91,11 @@ textarea.flexa-extra-control {
 }
 
 /* Keyboard focus ring on the visible choice surfaces (inputs are visually
- * hidden). :focus-within tracks the hidden input's focus. */
-.flexa-extra-choice:focus-within,
+ * hidden). :focus-within tracks the hidden input's focus. Checkbox/radio show
+ * the ring on their own control (see below), not the whole row. */
 .flexa-extra-button:focus-within,
-.flexa-extra-swatch:focus-within {
+.flexa-extra-swatch:focus-within,
+.flexa-extra-colorpicker:focus-within {
     outline: 2px solid #4f46e5;
     outline-offset: 2px;
     border-radius: 6px;
@@ -154,13 +155,151 @@ textarea.flexa-extra-control {
 .flexa-extra-choice {
     display: flex;
     align-items: center;
-    gap: 0.5em;
+    gap: 0.55em;
     cursor: pointer;
     font-size: 0.95em;
 }
 
+/* Hide the native checkbox/radio but keep it focusable and in the a11y tree;
+ * the custom control below mirrors its state via the adjacent-sibling selector
+ * (input:checked + .control), so no :has() is needed for wide browser support. */
+.flexa-extra-choice input[type="checkbox"],
+.flexa-extra-choice input[type="radio"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.flexa-extra-choice__control {
+    flex: none;
+    box-sizing: border-box;
+    width: 1.15em;
+    height: 1.15em;
+    border: 2px solid #c4c8d0;
+    background: #fff;
+    transition: border-color 0.12s, background 0.12s, box-shadow 0.12s;
+    position: relative;
+}
+
+/* Square for checkboxes, circle for radios. */
+.flexa-extra-choice input[type="checkbox"] + .flexa-extra-choice__control {
+    border-radius: 4px;
+}
+
+.flexa-extra-choice input[type="radio"] + .flexa-extra-choice__control {
+    border-radius: 50%;
+}
+
+.flexa-extra-choice:hover input:not(:disabled) + .flexa-extra-choice__control {
+    border-color: #4f46e5;
+}
+
+/* Checked state: filled control. */
+.flexa-extra-choice input:checked + .flexa-extra-choice__control {
+    border-color: #4f46e5;
+    background: #4f46e5;
+}
+
+/* Checkbox tick, drawn with a rotated border; scales/fades in when checked. */
+.flexa-extra-choice input[type="checkbox"] + .flexa-extra-choice__control::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    width: 0.28em;
+    height: 0.55em;
+    border: solid #fff;
+    border-width: 0 0.14em 0.14em 0;
+    transform: translate(-50%, -50%) rotate(45deg) scale(0);
+    transition: transform 0.14s ease;
+}
+
+.flexa-extra-choice input[type="checkbox"]:checked + .flexa-extra-choice__control::after {
+    transform: translate(-50%, -50%) rotate(45deg) scale(1);
+}
+
+/* Radio dot. */
+.flexa-extra-choice input[type="radio"] + .flexa-extra-choice__control::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background: #fff;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.14s ease;
+}
+
+.flexa-extra-choice input[type="radio"]:checked + .flexa-extra-choice__control::after {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Keyboard focus ring on the control itself. */
+.flexa-extra-choice input:focus-visible + .flexa-extra-choice__control {
+    outline: 2px solid #4f46e5;
+    outline-offset: 2px;
+}
+
+.flexa-extra-choice input:disabled + .flexa-extra-choice__control {
+    border-color: #e5e7eb;
+    background: #f3f4f6;
+}
+
 .flexa-extra-choice__label {
     flex: 1 1 auto;
+}
+
+/* Color picker: a themeable swatch + hex label; the native <input type=color>
+ * sits on top as an invisible, click/keyboard target that opens the OS picker. */
+.flexa-extra-colorpicker {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+    padding: 0.3em 0.7em 0.3em 0.4em;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    line-height: 1.3;
+}
+
+.flexa-extra-colorpicker input[type="color"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.flexa-extra-colorpicker__swatch {
+    flex: none;
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    background: #000;
+}
+
+.flexa-extra-colorpicker__value {
+    font-size: 0.9em;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+    color: #4b5563;
 }
 
 /* Buttons */
@@ -327,7 +466,9 @@ textarea.flexa-extra-control {
 
     .flexa-extra-button,
     .flexa-extra-swatch__chip,
-    .flexa-extra-control {
+    .flexa-extra-control,
+    .flexa-extra-choice__control,
+    .flexa-extra-choice__control::after {
         transition: none;
     }
 }
@@ -456,4 +597,178 @@ textarea.flexa-extra-control {
 .flexa-extra-edit-link {
     font-size: 0.82em;
     text-decoration: underline;
+}
+
+/* --- Date picker (progressive enhancement of <input type=date>) --- */
+.flexa-extra-datepicker {
+    position: relative;
+}
+
+.flexa-extra-datepicker__trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    text-align: left;
+    cursor: pointer;
+}
+
+.flexa-extra-datepicker__value {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.flexa-extra-datepicker__icon {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    color: #6b7280;
+}
+
+.flexa-extra-datepicker__trigger.is-placeholder {
+    color: #6b7280;
+}
+
+.flexa-extra-datepicker__popup {
+    position: absolute;
+    z-index: 50;
+    top: calc(100% + 4px);
+    left: 0;
+    width: 17.5em;
+    max-width: 92vw;
+    padding: 0.6em;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.14);
+    box-sizing: border-box;
+}
+
+.flexa-extra-datepicker__popup[hidden] {
+    display: none;
+}
+
+.flexa-extra-datepicker__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4em;
+    margin-bottom: 0.5em;
+}
+
+.flexa-extra-datepicker__title {
+    font-weight: 600;
+    font-size: 0.95em;
+    text-transform: capitalize;
+}
+
+.flexa-extra-datepicker__nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2em;
+    height: 2em;
+    padding: 0;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #fff;
+    font: inherit;
+    font-size: 1.05em;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.flexa-extra-datepicker__nav:hover {
+    background: #f3f4f6;
+}
+
+.flexa-extra-datepicker__weekdays,
+.flexa-extra-datepicker__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.flexa-extra-datepicker__weekday {
+    text-align: center;
+    font-size: 0.72em;
+    font-weight: 600;
+    color: #6b7280;
+    padding: 0.25em 0;
+    text-transform: capitalize;
+}
+
+.flexa-extra-datepicker__day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    min-height: 2em;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    font: inherit;
+    font-size: 0.9em;
+    color: inherit;
+    cursor: pointer;
+}
+
+.flexa-extra-datepicker__day.is-empty {
+    cursor: default;
+}
+
+.flexa-extra-datepicker__day:not(.is-empty):not(:disabled):hover {
+    background: #eef2ff;
+}
+
+.flexa-extra-datepicker__day.is-today {
+    box-shadow: inset 0 0 0 1px #4f46e5;
+}
+
+.flexa-extra-datepicker__day.is-selected {
+    background: #4f46e5;
+    color: #fff;
+}
+
+.flexa-extra-datepicker__day:disabled {
+    color: #cbd5e1;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+.flexa-extra-datepicker__day:focus-visible,
+.flexa-extra-datepicker__nav:focus-visible,
+.flexa-extra-datepicker__clear:focus-visible {
+    outline: 2px solid #4f46e5;
+    outline-offset: 1px;
+}
+
+.flexa-extra-datepicker__footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5em;
+}
+
+.flexa-extra-datepicker__clear {
+    padding: 0.3em 0.7em;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #fff;
+    font: inherit;
+    font-size: 0.85em;
+    cursor: pointer;
+}
+
+.flexa-extra-datepicker__clear:hover {
+    background: #f3f4f6;
+}
+
+/* Comfortable touch targets on small screens. */
+@media (max-width: 480px) {
+    .flexa-extra-datepicker__day {
+        min-height: 2.4em;
+    }
 }

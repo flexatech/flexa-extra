@@ -260,6 +260,80 @@ final class SelectionProcessorTest extends TestCase {
         $this->assertSame( array(), SelectionProcessor::process( $this->product(), array( 'qty' => '5' ) )['errors'] );
     }
 
+    public function test_date_min_max_and_disabled_dates_are_enforced(): void {
+        OptionSetFactory::register(
+            1,
+            array(
+                'name'      => 'Delivery',
+                'status'    => true,
+                'targeting' => array( 'mode' => 'all' ),
+                'fields'    => array(
+                    array(
+                        'type'          => 'date_picker',
+                        'id'            => 'deliver',
+                        'label'         => 'Delivery date',
+                        'minDate'       => '2026-06-01',
+                        'maxDate'       => '2026-06-30',
+                        'disabledDates' => array( '2026-06-15' ),
+                    ),
+                ),
+            )
+        );
+
+        // Before min, after max, and a specifically disabled date all fail.
+        $this->assertNotEmpty( SelectionProcessor::process( $this->product(), array( 'deliver' => '2026-05-31' ) )['errors'] );
+        $this->assertNotEmpty( SelectionProcessor::process( $this->product(), array( 'deliver' => '2026-07-01' ) )['errors'] );
+        $this->assertNotEmpty( SelectionProcessor::process( $this->product(), array( 'deliver' => '2026-06-15' ) )['errors'] );
+
+        // A date inside the window and not disabled passes.
+        $this->assertSame( array(), SelectionProcessor::process( $this->product(), array( 'deliver' => '2026-06-10' ) )['errors'] );
+    }
+
+    public function test_date_display_uses_field_format_override(): void {
+        OptionSetFactory::register(
+            1,
+            array(
+                'name'      => 'Delivery',
+                'status'    => true,
+                'targeting' => array( 'mode' => 'all' ),
+                'fields'    => array(
+                    array(
+                        'type'       => 'date_picker',
+                        'id'         => 'deliver',
+                        'label'      => 'Delivery date',
+                        'dateFormat' => 'd/m/Y',
+                    ),
+                ),
+            )
+        );
+
+        $result = SelectionProcessor::process( $this->product(), array( 'deliver' => '2026-06-10' ) );
+
+        // Line display is formatted; the stored selection stays raw ISO.
+        $this->assertSame( '10/06/2026', $result['lines'][0]['display'] );
+        $this->assertSame( '2026-06-10', $result['selections']['deliver'] );
+    }
+
+    public function test_date_display_falls_back_to_site_date_format(): void {
+        $GLOBALS['fx_options']['date_format'] = 'Y.m.d';
+        OptionSetFactory::register(
+            1,
+            array(
+                'name'      => 'Delivery',
+                'status'    => true,
+                'targeting' => array( 'mode' => 'all' ),
+                'fields'    => array(
+                    array( 'type' => 'date_picker', 'id' => 'deliver', 'label' => 'Delivery date' ),
+                ),
+            )
+        );
+
+        $result = SelectionProcessor::process( $this->product(), array( 'deliver' => '2026-06-10' ) );
+        unset( $GLOBALS['fx_options']['date_format'] );
+
+        $this->assertSame( '2026.06.10', $result['lines'][0]['display'] );
+    }
+
     public function test_hidden_field_is_neither_validated_nor_priced(): void {
         OptionSetFactory::register(
             1,
@@ -488,5 +562,60 @@ final class SelectionProcessorTest extends TestCase {
 
         $this->assertSame( 7.0, SelectionProcessor::process( $this->product(), array( 'color' => 'red' ) )['total'] );
         $this->assertSame( 0.0, SelectionProcessor::process( $this->product(), array( 'color' => 'blue' ) )['total'] );
+    }
+
+    public function test_formula_price_uses_base_and_quantity(): void {
+        OptionSetFactory::register(
+            1,
+            array(
+                'name'      => 'Formula',
+                'status'    => true,
+                'targeting' => array( 'mode' => 'all' ),
+                'fields'    => array(
+                    array(
+                        'type'  => 'number',
+                        'id'    => 'units',
+                        'label' => 'Units',
+                        'price' => array( 'type' => 'formula', 'formula' => 'base * 0.1 + qty * 2' ),
+                    ),
+                ),
+            )
+        );
+
+        // base 100 * 0.1 = 10, qty 3 * 2 = 6 → per-unit surcharge 16.
+        $result = SelectionProcessor::process( $this->product(), array( 'units' => '5' ), null, 3 );
+        $this->assertSame( array(), $result['errors'] );
+        $this->assertSame( 16.0, $result['total'] );
+
+        // qty defaults to 1 when not supplied.
+        $this->assertSame( 12.0, SelectionProcessor::process( $this->product(), array( 'units' => '5' ) )['total'] );
+    }
+
+    public function test_formula_price_reads_other_field_values(): void {
+        OptionSetFactory::register(
+            1,
+            array(
+                'name'      => 'Engraving',
+                'status'    => true,
+                'targeting' => array( 'mode' => 'all' ),
+                'fields'    => array(
+                    array(
+                        'type'  => 'number',
+                        'id'    => 'chars',
+                        'label' => 'Characters',
+                    ),
+                    array(
+                        'type'  => 'number',
+                        'id'    => 'engrave',
+                        'label' => 'Engrave',
+                        'price' => array( 'type' => 'formula', 'formula' => '{chars} * 1.5' ),
+                    ),
+                ),
+            )
+        );
+
+        // 8 characters * 1.5 = 12 on the engrave line.
+        $result = SelectionProcessor::process( $this->product(), array( 'chars' => '8', 'engrave' => '1' ) );
+        $this->assertSame( 12.0, $result['total'] );
     }
 }

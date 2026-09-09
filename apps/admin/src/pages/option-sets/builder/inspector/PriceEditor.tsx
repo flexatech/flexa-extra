@@ -2,6 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { Controller, type Path, useFormContext } from 'react-hook-form';
 
 import { OptionSet } from '@/lib/schema/option-set';
+import { isValidFormula } from '@/lib/preview/engine';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 
@@ -17,7 +18,10 @@ export function PriceEditor({ name, label }: Props) {
 
   const typePath = `${name}.type` as Path<OptionSet>;
   const amountPath = `${name}.amount` as Path<OptionSet>;
+  const formulaPath = `${name}.formula` as Path<OptionSet>;
   const priceType = watch(typePath) as string | undefined;
+  const formula = watch(formulaPath) as string | undefined;
+  const formulaValid = !formula || isValidFormula(formula);
 
   return (
     <div className="space-y-1.5">
@@ -35,11 +39,12 @@ export function PriceEditor({ name, label }: Props) {
                 { label: __('No charge', 'flexa-extra'), value: 'none' },
                 { label: __('Fixed', 'flexa-extra'), value: 'fixed' },
                 { label: __('Percent', 'flexa-extra'), value: 'percent' },
+                { label: __('Formula', 'flexa-extra'), value: 'formula' },
               ]}
             />
           )}
         />
-        {priceType && priceType !== 'none' && (
+        {priceType && priceType !== 'none' && priceType !== 'formula' && (
           <div className="relative flex-1">
             <span className="text-muted-foreground pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm">
               {priceType === 'percent' ? '%' : symbol}
@@ -52,7 +57,26 @@ export function PriceEditor({ name, label }: Props) {
             />
           </div>
         )}
+        {priceType === 'formula' && (
+          <Input
+            type="text"
+            className="flex-1 font-mono"
+            placeholder="base * 0.1 + {fld_id} * 5"
+            aria-invalid={!formulaValid}
+            {...register(formulaPath)}
+          />
+        )}
       </div>
+      {priceType === 'formula' && (
+        <p className={`text-xs ${formulaValid ? 'text-muted-foreground' : 'text-destructive'}`}>
+          {formulaValid
+            ? __(
+                'Variables: base (item price), qty (quantity), {field_id}. Operators + - * / ( ) and round(), min(), max(). Result is the per-unit surcharge.',
+                'flexa-extra'
+              )
+            : __('This formula cannot be parsed. Check the operators, brackets and field ids.', 'flexa-extra')}
+        </p>
+      )}
     </div>
   );
 }

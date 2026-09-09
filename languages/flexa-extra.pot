@@ -2,412 +2,22 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Flexa Extra – Extra Product Options For WooCommerce 1.1.0\n"
+"Project-Id-Version: Flexa Extra 1.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/flexa-extra\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-08T05:19:33+00:00\n"
+"POT-Creation-Date: 2026-09-09T09:53:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: flexa-extra\n"
 
-#. Plugin Name of the plugin
-#: flexa-extra.php
-msgid "Flexa Extra – Extra Product Options For WooCommerce"
-msgstr ""
-
-#. Plugin URI of the plugin
-#: flexa-extra.php
-msgid "https://wordpress.org/plugins/flexa-extra"
-msgstr ""
-
-#. Description of the plugin
-#: flexa-extra.php
-msgid "Add customizable extra options and personalization fields to WooCommerce products (text, checkbox, radio, dropdown, swatches, buttons, date and colour pickers) with optional extra fees."
-msgstr ""
-
-#. Author of the plugin
-#: flexa-extra.php
-msgid "FlexaTech"
-msgstr ""
-
-#. Author URI of the plugin
-#: flexa-extra.php
-msgid "https://profiles.wordpress.org/flexatech/"
-msgstr ""
-
-#: includes/Cart/CartHandler.php:282
-msgid "Edit options"
-msgstr ""
-
-#: includes/Cart/CartHandler.php:321
-msgid "Update cart"
-msgstr ""
-
-#: includes/Cart/SelectionProcessor.php:153
-#: includes/Frontend/ProductRenderer.php:80
-#: includes/Helpers/Helper.php:83
-#: js/main.js:3
-msgid "Discount"
-msgstr ""
-
-#: includes/Cart/SelectionProcessor.php:153
-#: includes/Frontend/ProductRenderer.php:79
-#: includes/Helpers/Helper.php:82
-#: js/main.js:3
-#: js/main.js:5
-msgid "Fee"
-msgstr ""
-
-#. translators: %s: field label.
-#: includes/Cart/SelectionProcessor.php:267
-msgid "\"%s\" is required."
-msgstr ""
-
-#. translators: 1: field label, 2: minimum number of options.
-#: includes/Cart/SelectionProcessor.php:286
-msgid "Please choose at least %2$d option for \"%1$s\"."
-msgid_plural "Please choose at least %2$d options for \"%1$s\"."
-msgstr[0] ""
-msgstr[1] ""
-
-#. translators: 1: field label, 2: maximum number of options.
-#: includes/Cart/SelectionProcessor.php:294
-msgid "Please choose at most %2$d option for \"%1$s\"."
-msgid_plural "Please choose at most %2$d options for \"%1$s\"."
-msgstr[0] ""
-msgstr[1] ""
-
-#. translators: %s: field label.
-#: includes/Cart/SelectionProcessor.php:306
-msgid "\"%s\" must be a valid email address."
-msgstr ""
-
-#. translators: %s: field label.
-#: includes/Cart/SelectionProcessor.php:309
-msgid "\"%s\" must be a valid URL."
-msgstr ""
-
-#. translators: %s: field label.
-#: includes/Cart/SelectionProcessor.php:312
-msgid "\"%s\" is not in the expected format."
-msgstr ""
-
-#. translators: 1: field label, 2: minimum value.
-#: includes/Cart/SelectionProcessor.php:320
-msgid "\"%1$s\" must be at least %2$s."
-msgstr ""
-
-#. translators: 1: field label, 2: maximum value.
-#: includes/Cart/SelectionProcessor.php:324
-msgid "\"%1$s\" must be at most %2$s."
-msgstr ""
-
-#. translators: %s: option label.
-#: includes/Cart/StockManager.php:150
-msgid "\"%s\" is out of stock."
-msgstr ""
-
-#. translators: 1: option label, 2: remaining quantity.
-#: includes/Cart/StockManager.php:154
-msgid "Only %2$d of \"%1$s\" is left in stock."
-msgid_plural "Only %2$d of \"%1$s\" are left in stock."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/Controllers/AnalyticsRestController.php:44
-#: includes/Controllers/PublicRestController.php:88
-msgid "WooCommerce is not active."
-msgstr ""
-
-#: includes/Controllers/BaseRestController.php:28
-msgid "You are not allowed to manage Flexa Extra."
-msgstr ""
-
-#: includes/Controllers/MigrationRestController.php:57
-msgid "Unknown import source."
-msgstr ""
-
-#: includes/Controllers/MigrationRestController.php:60
-msgid "No data was found for that plugin."
-msgstr ""
-
-#. translators: %d: number of option sets imported.
-#: includes/Controllers/MigrationRestController.php:70
-msgid "Imported %d option set (switched off for review)."
-msgid_plural "Imported %d option sets (switched off for review)."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/Controllers/OptionSetsRestController.php:125
-#: includes/Controllers/OptionSetsRestController.php:141
-#: includes/Controllers/OptionSetsRestController.php:194
-#: includes/Controllers/OptionSetsRestController.php:214
-msgid "Option set not found."
-msgstr ""
-
-#: includes/Controllers/OptionSetsRestController.php:133
-msgid "Could not create the option set."
-msgstr ""
-
-#: includes/Controllers/OptionSetsRestController.php:135
-msgid "Option set created."
-msgstr ""
-
-#. translators: %s: name of the option set being copied.
-#: includes/Controllers/OptionSetsRestController.php:146
-msgid "%s (copy)"
-msgstr ""
-
-#: includes/Controllers/OptionSetsRestController.php:151
-msgid "Could not duplicate the option set."
-msgstr ""
-
-#: includes/Controllers/OptionSetsRestController.php:153
-msgid "Option set duplicated."
-msgstr ""
-
-#: includes/Controllers/OptionSetsRestController.php:159
-msgid "No option sets were found in the imported file."
-msgstr ""
-
-#: includes/Controllers/OptionSetsRestController.php:174
-msgid "None of the option sets could be imported."
-msgstr ""
-
-#. translators: %d: number of option sets imported.
-#: includes/Controllers/OptionSetsRestController.php:185
-msgid "Imported %d option set."
-msgid_plural "Imported %d option sets."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/Controllers/OptionSetsRestController.php:208
-msgid "Option set updated."
-msgstr ""
-
-#: includes/Controllers/OptionSetsRestController.php:219
-msgid "Option set deleted."
-msgstr ""
-
-#: includes/Controllers/PublicRestController.php:72
-msgid "The Flexa Extra public API is disabled."
-msgstr ""
-
-#: includes/Controllers/PublicRestController.php:93
-msgid "Product not found."
-msgstr ""
-
-#: includes/Controllers/ResourcesRestController.php:65
-msgid "Unknown search type."
-msgstr ""
-
-#: includes/Controllers/ResourcesRestController.php:99
-msgid "Unknown resolve type."
-msgstr ""
-
-#: includes/Controllers/SettingsRestController.php:53
-msgid "Settings saved successfully"
-msgstr ""
-
-#. translators: %s: WooCommerce plugin installation link.
-#: includes/Engine/ActDeact.php:16
-msgid "Flexa Extra is enabled but not effective. It requires %s in order to work"
-msgstr ""
-
-#: includes/Engine/Admin/ActivationRedirect.php:119
-msgid "Flexa Extra is active. Build your first option set in a couple of minutes with the quick-start guide."
-msgstr ""
-
-#: includes/Engine/Admin/ActivationRedirect.php:121
-msgid "Start the guide"
-msgstr ""
-
-#: includes/Engine/Admin/ActivationRedirect.php:123
 #: js/main.js:1
-msgid "Dismiss"
-msgstr ""
-
+#: js/main.js:3
 #: includes/Engine/Admin/CustomPostType.php:29
-#: js/main.js:1
-#: js/main.js:3
 msgid "Option Sets"
-msgstr ""
-
-#: includes/Engine/Admin/CustomPostType.php:30
-msgid "Option Set"
-msgstr ""
-
-#: includes/Engine/Admin/Settings.php:41
-#: js/main.js:1
-#: js/main.js:15
-msgid "Settings"
-msgstr ""
-
-#: includes/Engine/Admin/Settings.php:49
-#: includes/Engine/Admin/Settings.php:50
-msgid "Flexa Extra"
-msgstr ""
-
-#: includes/Fields/FieldType.php:96
-msgid "Text"
-msgstr ""
-
-#: includes/Fields/FieldType.php:97
-msgid "Paragraph"
-msgstr ""
-
-#: includes/Fields/FieldType.php:98
-msgid "Number"
-msgstr ""
-
-#: includes/Fields/FieldType.php:99
-msgid "Date picker"
-msgstr ""
-
-#: includes/Fields/FieldType.php:100
-msgid "Color picker"
-msgstr ""
-
-#: includes/Fields/FieldType.php:101
-msgid "Checkboxes"
-msgstr ""
-
-#: includes/Fields/FieldType.php:102
-msgid "Radio buttons"
-msgstr ""
-
-#: includes/Fields/FieldType.php:103
-msgid "Dropdown"
-msgstr ""
-
-#: includes/Fields/FieldType.php:104
-msgid "Color / image swatch"
-msgstr ""
-
-#: includes/Fields/FieldType.php:105
-msgid "Buttons"
-msgstr ""
-
-#: includes/Fields/FieldType.php:106
-msgid "Heading / description"
-msgstr ""
-
-#: includes/Fields/OptionSetSchema.php:44
-#: js/main.js:3
-msgid "Untitled Option Set"
-msgstr ""
-
-#: includes/Frontend/FieldRenderer.php:91
-#: js/main.js:3
-msgid "Required"
-msgstr ""
-
-#: includes/Frontend/FieldRenderer.php:284
-msgid "Choose an option"
-msgstr ""
-
-#. translators: appended to a sold-out dropdown option.
-#: includes/Frontend/FieldRenderer.php:301
-msgid "(out of stock)"
-msgstr ""
-
-#. translators: %d: exact number of options to choose.
-#: includes/Frontend/FieldRenderer.php:451
-msgid "Choose exactly %d option."
-msgid_plural "Choose exactly %d options."
-msgstr[0] ""
-msgstr[1] ""
-
-#. translators: 1: minimum, 2: maximum number of options.
-#: includes/Frontend/FieldRenderer.php:454
-msgid "Choose between %1$d and %2$d options."
-msgstr ""
-
-#. translators: %d: minimum number of options to choose.
-#: includes/Frontend/FieldRenderer.php:458
-msgid "Choose at least %d option."
-msgid_plural "Choose at least %d options."
-msgstr[0] ""
-msgstr[1] ""
-
-#. translators: %d: maximum number of options to choose.
-#: includes/Frontend/FieldRenderer.php:461
-msgid "Choose up to %d option."
-msgid_plural "Choose up to %d options."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/Frontend/FieldRenderer.php:478
-msgid "Out of stock"
-msgstr ""
-
-#: includes/Frontend/ProductRenderer.php:78
-#: includes/Helpers/Helper.php:81
-msgid "This field is required."
-msgstr ""
-
-#: includes/Helpers/Helper.php:123
-#: js/main.js:15
-msgid "Extra subtotal:"
-msgstr ""
-
-#: includes/Helpers/Helper.php:124
-#: js/main.js:15
-msgid "Total price:"
-msgstr ""
-
-#: includes/Migration/ThemeHighSource.php:97
-msgid "Imported section"
-msgstr ""
-
-#. translators: 1: field label, 2: source field type.
-#: includes/Migration/ThemeHighSource.php:123
-#: includes/Migration/YayExtraSource.php:139
-msgid "Field \"%1$s\" has an unsupported type (%2$s) and was skipped."
-msgstr ""
-
-#. translators: 1: field label, 2: source field type.
-#: includes/Migration/ThemeHighSource.php:133
-msgid "Field \"%1$s\" (%2$s) was imported as the closest Flexa Extra type."
-msgstr ""
-
-#: includes/Migration/ThemeHighSource.php:180
-msgid "Yes"
-msgstr ""
-
-#: includes/Migration/ThemeHighSource.php:234
-msgid "Product conditions were flattened into a single \"match any\" list; review Product assignment."
-msgstr ""
-
-#: includes/Migration/YayExtraSource.php:103
-msgid "Show/hide actions and price rules were not migrated; re-create them under Fees & discounts or field logic."
-msgstr ""
-
-#: includes/Migration/YayExtraSource.php:107
-msgid "Imported option set"
-msgstr ""
-
-#. translators: %s: field label.
-#: includes/Migration/YayExtraSource.php:129
-msgid "File upload field \"%s\" was skipped (not supported)."
-msgstr ""
-
-#. translators: %s: field label.
-#: includes/Migration/YayExtraSource.php:149
-msgid "Time field \"%s\" was imported as a text field."
-msgstr ""
-
-#. translators: %s: field label.
-#: includes/Migration/YayExtraSource.php:157
-msgid "Conditional logic on \"%s\" was not migrated; set it again under the field's Logic."
-msgstr ""
-
-#: includes/Migration/YayExtraSource.php:249
-msgid "Conditional product assignment was imported as \"all products\"; review Product assignment."
 msgstr ""
 
 #: js/main.js:1
@@ -418,6 +28,12 @@ msgstr ""
 #: js/main.js:3
 #: js/main.js:9
 msgid "Import"
+msgstr ""
+
+#: js/main.js:1
+#: js/main.js:15
+#: includes/Engine/Admin/Settings.php:41
+msgid "Settings"
 msgstr ""
 
 #: js/main.js:1
@@ -718,6 +334,11 @@ msgid "Got it"
 msgstr ""
 
 #: js/main.js:1
+#: includes/Engine/Admin/ActivationRedirect.php:123
+msgid "Dismiss"
+msgstr ""
+
+#: js/main.js:1
 msgid "Failed to duplicate option set"
 msgstr ""
 
@@ -813,6 +434,18 @@ msgid "Percent"
 msgstr ""
 
 #: js/main.js:3
+msgid "Formula"
+msgstr ""
+
+#: js/main.js:3
+msgid "Variables: base (item price), qty (quantity), {field_id}. Operators + - * / ( ) and round(), min(), max(). Result is the per-unit surcharge."
+msgstr ""
+
+#: js/main.js:3
+msgid "This formula cannot be parsed. Check the operators, brackets and field ids."
+msgstr ""
+
+#: js/main.js:3
 msgid "(unnamed field)"
 msgstr ""
 
@@ -830,6 +463,21 @@ msgstr ""
 
 #: js/main.js:3
 msgid "No fees or discounts yet. Add one to adjust the price based on selections."
+msgstr ""
+
+#: js/main.js:3
+#: js/main.js:5
+#: includes/Cart/SelectionProcessor.php:171
+#: includes/Frontend/ProductRenderer.php:82
+#: includes/Helpers/Helper.php:82
+msgid "Fee"
+msgstr ""
+
+#: js/main.js:3
+#: includes/Cart/SelectionProcessor.php:171
+#: includes/Frontend/ProductRenderer.php:83
+#: includes/Helpers/Helper.php:83
+msgid "Discount"
 msgstr ""
 
 #: js/main.js:3
@@ -1021,11 +669,24 @@ msgid "Unique key stored with the order. Lowercase, no spaces."
 msgstr ""
 
 #: js/main.js:3
+#: includes/Frontend/FieldRenderer.php:101
+msgid "Required"
+msgstr ""
+
+#: js/main.js:3
 msgid "Placeholder"
 msgstr ""
 
 #: js/main.js:3
 msgid "Tooltip"
+msgstr ""
+
+#: js/main.js:3
+msgid "CSS class"
+msgstr ""
+
+#: js/main.js:3
+msgid "Extra class(es) added to the field wrapper for custom styling."
 msgstr ""
 
 #: js/main.js:3
@@ -1062,6 +723,30 @@ msgstr ""
 
 #: js/main.js:3
 msgid "Step"
+msgstr ""
+
+#: js/main.js:3
+msgid "Earliest date"
+msgstr ""
+
+#: js/main.js:3
+msgid "Latest date"
+msgstr ""
+
+#: js/main.js:3
+msgid "Disabled dates"
+msgstr ""
+
+#: js/main.js:3
+msgid "One date per line (YYYY-MM-DD). These dates cannot be selected."
+msgstr ""
+
+#: js/main.js:3
+msgid "Date format"
+msgstr ""
+
+#: js/main.js:3
+msgid "PHP date format (e.g. F j, Y). Leave blank to use the site date format."
 msgstr ""
 
 #: js/main.js:3
@@ -1237,6 +922,11 @@ msgid "Option set saved!"
 msgstr ""
 
 #: js/main.js:3
+#: includes/Fields/OptionSetSchema.php:45
+msgid "Untitled Option Set"
+msgstr ""
+
+#: js/main.js:3
 msgid "Edit Option Set"
 msgstr ""
 
@@ -1386,6 +1076,16 @@ msgstr[1] ""
 
 #: js/main.js:15
 msgid "Review in Option Sets"
+msgstr ""
+
+#: js/main.js:15
+#: includes/Helpers/Helper.php:123
+msgid "Extra subtotal:"
+msgstr ""
+
+#: js/main.js:15
+#: includes/Helpers/Helper.php:124
+msgid "Total price:"
 msgstr ""
 
 #: js/main.js:15
@@ -1658,4 +1358,461 @@ msgstr ""
 
 #: js/main.js:15
 msgid "An error occurred"
+msgstr ""
+
+#. Plugin Name of the plugin
+#: flexa-extra.php
+msgid "Flexa Extra – Extra Product Options For WooCommerce"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: flexa-extra.php
+msgid "https://wordpress.org/plugins/flexa-extra"
+msgstr ""
+
+#. Description of the plugin
+#: flexa-extra.php
+msgid "Add customizable extra options and personalization fields to WooCommerce products (text, checkbox, radio, dropdown, swatches, buttons, date and colour pickers) with optional extra fees."
+msgstr ""
+
+#. Author of the plugin
+#: flexa-extra.php
+msgid "FlexaTech"
+msgstr ""
+
+#. Author URI of the plugin
+#: flexa-extra.php
+msgid "https://profiles.wordpress.org/flexatech/"
+msgstr ""
+
+#: includes/Cart/CartHandler.php:282
+msgid "Edit options"
+msgstr ""
+
+#: includes/Cart/CartHandler.php:321
+msgid "Update cart"
+msgstr ""
+
+#. translators: %s: field label.
+#: includes/Cart/SelectionProcessor.php:285
+msgid "\"%s\" is required."
+msgstr ""
+
+#. translators: 1: field label, 2: minimum number of options.
+#: includes/Cart/SelectionProcessor.php:304
+msgid "Please choose at least %2$d option for \"%1$s\"."
+msgid_plural "Please choose at least %2$d options for \"%1$s\"."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: field label, 2: maximum number of options.
+#: includes/Cart/SelectionProcessor.php:312
+msgid "Please choose at most %2$d option for \"%1$s\"."
+msgid_plural "Please choose at most %2$d options for \"%1$s\"."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: field label.
+#: includes/Cart/SelectionProcessor.php:324
+msgid "\"%s\" must be a valid email address."
+msgstr ""
+
+#. translators: %s: field label.
+#: includes/Cart/SelectionProcessor.php:327
+msgid "\"%s\" must be a valid URL."
+msgstr ""
+
+#. translators: %s: field label.
+#: includes/Cart/SelectionProcessor.php:330
+msgid "\"%s\" is not in the expected format."
+msgstr ""
+
+#. translators: 1: field label, 2: earliest allowed date.
+#: includes/Cart/SelectionProcessor.php:344
+msgid "\"%1$s\" must be on or after %2$s."
+msgstr ""
+
+#. translators: 1: field label, 2: latest allowed date.
+#: includes/Cart/SelectionProcessor.php:348
+msgid "\"%1$s\" must be on or before %2$s."
+msgstr ""
+
+#. translators: %s: field label.
+#: includes/Cart/SelectionProcessor.php:352
+msgid "The date chosen for \"%s\" is not available."
+msgstr ""
+
+#. translators: 1: field label, 2: minimum value.
+#: includes/Cart/SelectionProcessor.php:360
+msgid "\"%1$s\" must be at least %2$s."
+msgstr ""
+
+#. translators: 1: field label, 2: maximum value.
+#: includes/Cart/SelectionProcessor.php:364
+msgid "\"%1$s\" must be at most %2$s."
+msgstr ""
+
+#. translators: %s: option label.
+#: includes/Cart/StockManager.php:150
+msgid "\"%s\" is out of stock."
+msgstr ""
+
+#. translators: 1: option label, 2: remaining quantity.
+#: includes/Cart/StockManager.php:154
+msgid "Only %2$d of \"%1$s\" is left in stock."
+msgid_plural "Only %2$d of \"%1$s\" are left in stock."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Controllers/AnalyticsRestController.php:44
+#: includes/Controllers/PublicRestController.php:88
+msgid "WooCommerce is not active."
+msgstr ""
+
+#: includes/Controllers/BaseRestController.php:28
+msgid "You are not allowed to manage Flexa Extra."
+msgstr ""
+
+#: includes/Controllers/MigrationRestController.php:57
+msgid "Unknown import source."
+msgstr ""
+
+#: includes/Controllers/MigrationRestController.php:60
+msgid "No data was found for that plugin."
+msgstr ""
+
+#. translators: %d: number of option sets imported.
+#: includes/Controllers/MigrationRestController.php:70
+msgid "Imported %d option set (switched off for review)."
+msgid_plural "Imported %d option sets (switched off for review)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Controllers/OptionSetsRestController.php:125
+#: includes/Controllers/OptionSetsRestController.php:141
+#: includes/Controllers/OptionSetsRestController.php:194
+#: includes/Controllers/OptionSetsRestController.php:214
+msgid "Option set not found."
+msgstr ""
+
+#: includes/Controllers/OptionSetsRestController.php:133
+msgid "Could not create the option set."
+msgstr ""
+
+#: includes/Controllers/OptionSetsRestController.php:135
+msgid "Option set created."
+msgstr ""
+
+#. translators: %s: name of the option set being copied.
+#: includes/Controllers/OptionSetsRestController.php:146
+msgid "%s (copy)"
+msgstr ""
+
+#: includes/Controllers/OptionSetsRestController.php:151
+msgid "Could not duplicate the option set."
+msgstr ""
+
+#: includes/Controllers/OptionSetsRestController.php:153
+msgid "Option set duplicated."
+msgstr ""
+
+#: includes/Controllers/OptionSetsRestController.php:159
+msgid "No option sets were found in the imported file."
+msgstr ""
+
+#: includes/Controllers/OptionSetsRestController.php:174
+msgid "None of the option sets could be imported."
+msgstr ""
+
+#. translators: %d: number of option sets imported.
+#: includes/Controllers/OptionSetsRestController.php:185
+msgid "Imported %d option set."
+msgid_plural "Imported %d option sets."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Controllers/OptionSetsRestController.php:208
+msgid "Option set updated."
+msgstr ""
+
+#: includes/Controllers/OptionSetsRestController.php:219
+msgid "Option set deleted."
+msgstr ""
+
+#: includes/Controllers/PublicRestController.php:72
+msgid "The Flexa Extra public API is disabled."
+msgstr ""
+
+#: includes/Controllers/PublicRestController.php:93
+msgid "Product not found."
+msgstr ""
+
+#: includes/Controllers/ResourcesRestController.php:65
+msgid "Unknown search type."
+msgstr ""
+
+#: includes/Controllers/ResourcesRestController.php:99
+msgid "Unknown resolve type."
+msgstr ""
+
+#: includes/Controllers/SettingsRestController.php:53
+msgid "Settings saved successfully"
+msgstr ""
+
+#. translators: %s: WooCommerce plugin installation link.
+#: includes/Engine/ActDeact.php:16
+msgid "Flexa Extra is enabled but not effective. It requires %s in order to work"
+msgstr ""
+
+#: includes/Engine/Admin/ActivationRedirect.php:119
+msgid "Flexa Extra is active. Build your first option set in a couple of minutes with the quick-start guide."
+msgstr ""
+
+#: includes/Engine/Admin/ActivationRedirect.php:121
+msgid "Start the guide"
+msgstr ""
+
+#: includes/Engine/Admin/CustomPostType.php:30
+msgid "Option Set"
+msgstr ""
+
+#: includes/Engine/Admin/Settings.php:49
+#: includes/Engine/Admin/Settings.php:50
+msgid "Flexa Extra"
+msgstr ""
+
+#: includes/Fields/FieldType.php:96
+msgid "Text"
+msgstr ""
+
+#: includes/Fields/FieldType.php:97
+msgid "Paragraph"
+msgstr ""
+
+#: includes/Fields/FieldType.php:98
+msgid "Number"
+msgstr ""
+
+#: includes/Fields/FieldType.php:99
+msgid "Date picker"
+msgstr ""
+
+#: includes/Fields/FieldType.php:100
+msgid "Color picker"
+msgstr ""
+
+#: includes/Fields/FieldType.php:101
+msgid "Checkboxes"
+msgstr ""
+
+#: includes/Fields/FieldType.php:102
+msgid "Radio buttons"
+msgstr ""
+
+#: includes/Fields/FieldType.php:103
+msgid "Dropdown"
+msgstr ""
+
+#: includes/Fields/FieldType.php:104
+msgid "Color / image swatch"
+msgstr ""
+
+#: includes/Fields/FieldType.php:105
+msgid "Buttons"
+msgstr ""
+
+#: includes/Fields/FieldType.php:106
+msgid "Heading / description"
+msgstr ""
+
+#: includes/Frontend/FieldRenderer.php:331
+msgid "Choose an option"
+msgstr ""
+
+#. translators: appended to a sold-out dropdown option.
+#: includes/Frontend/FieldRenderer.php:348
+msgid "(out of stock)"
+msgstr ""
+
+#. translators: %d: exact number of options to choose.
+#: includes/Frontend/FieldRenderer.php:533
+msgid "Choose exactly %d option."
+msgid_plural "Choose exactly %d options."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: minimum, 2: maximum number of options.
+#: includes/Frontend/FieldRenderer.php:536
+msgid "Choose between %1$d and %2$d options."
+msgstr ""
+
+#. translators: %d: minimum number of options to choose.
+#: includes/Frontend/FieldRenderer.php:540
+msgid "Choose at least %d option."
+msgid_plural "Choose at least %d options."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: maximum number of options to choose.
+#: includes/Frontend/FieldRenderer.php:543
+msgid "Choose up to %d option."
+msgid_plural "Choose up to %d options."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Frontend/FieldRenderer.php:560
+msgid "Out of stock"
+msgstr ""
+
+#: includes/Frontend/ProductRenderer.php:81
+#: includes/Helpers/Helper.php:81
+msgid "This field is required."
+msgstr ""
+
+#: includes/Frontend/ProductRenderer.php:84
+msgid "Choose date"
+msgstr ""
+
+#: includes/Frontend/ProductRenderer.php:85
+msgid "Clear"
+msgstr ""
+
+#: includes/Frontend/ProductRenderer.php:86
+msgid "Previous month"
+msgstr ""
+
+#: includes/Frontend/ProductRenderer.php:87
+msgid "Next month"
+msgstr ""
+
+#: includes/Migration/ThemeHighSource.php:97
+msgid "Imported section"
+msgstr ""
+
+#. translators: 1: field label, 2: source field type.
+#: includes/Migration/ThemeHighSource.php:123
+#: includes/Migration/YayExtraSource.php:234
+msgid "Field \"%1$s\" has an unsupported type (%2$s) and was skipped."
+msgstr ""
+
+#. translators: 1: field label, 2: source field type.
+#: includes/Migration/ThemeHighSource.php:133
+msgid "Field \"%1$s\" (%2$s) was imported as the closest Flexa Extra type."
+msgstr ""
+
+#: includes/Migration/ThemeHighSource.php:180
+msgid "Yes"
+msgstr ""
+
+#: includes/Migration/ThemeHighSource.php:234
+msgid "Product conditions were flattened into a single \"match any\" list; review Product assignment."
+msgstr ""
+
+#: includes/Migration/YayExtraSource.php:197
+msgid "Show/hide actions and price rules were not migrated; re-create them under Fees & discounts or field logic."
+msgstr ""
+
+#: includes/Migration/YayExtraSource.php:201
+msgid "Imported option set"
+msgstr ""
+
+#. translators: %s: field label.
+#: includes/Migration/YayExtraSource.php:224
+msgid "File upload field \"%s\" was skipped (not supported)."
+msgstr ""
+
+#. translators: %s: field label.
+#: includes/Migration/YayExtraSource.php:244
+msgid "Time field \"%s\" was imported as a text field."
+msgstr ""
+
+#. translators: %s: field label.
+#: includes/Migration/YayExtraSource.php:252
+msgid "Conditional logic on \"%s\" was not migrated; set it again under the field's Logic."
+msgstr ""
+
+#. translators: %s: the source condition type, e.g. "prod_name".
+#: includes/Migration/YayExtraSource.php:381
+msgid "Product condition \"%s\" has no equivalent and was not migrated; review Product assignment."
+msgstr ""
+
+#: includes/Migration/YayExtraSource.php:393
+msgid "A product condition covering several terms was split into one rule per term, which changes how it matches; review Product assignment."
+msgstr ""
+
+#. translators: %s: the category or tag name.
+#: includes/Migration/YayExtraSource.php:405
+msgid "Product condition term \"%s\" was not found on this site and was skipped."
+msgstr ""
+
+#: includes/Migration/YayExtraSource.php:420
+msgid "Conditional product assignment could not be migrated and was imported as \"all products\"; review Product assignment."
+msgstr ""
+
+#: assets/blocks/configurator/index.js:50
+msgid "Select an option set…"
+msgstr ""
+
+#. translators: %d: option set id.
+#: assets/blocks/configurator/index.js:59
+msgid "Renders option set #%d on the front end. Display only; selections are not added to the cart."
+msgstr ""
+
+#: assets/blocks/configurator/index.js:62
+msgid "Pick an option set in the block settings. Display only; this configurator is not wired to add-to-cart."
+msgstr ""
+
+#: assets/blocks/configurator/index.js:72
+msgid "Configurator"
+msgstr ""
+
+#: assets/blocks/configurator/index.js:74
+msgid "Option set"
+msgstr ""
+
+#: assets/blocks/configurator/index.js:82
+msgid "Base product ID (optional)"
+msgstr ""
+
+#: assets/blocks/configurator/index.js:83
+msgid "Used only so percentage prices have a base to compute against."
+msgstr ""
+
+#: assets/blocks/configurator/index.js:99
+msgid "Flexa Extra – Options configurator"
+msgstr ""
+
+#: assets/blocks/configurator/block.json
+msgctxt "block title"
+msgid "Flexa Extra – Options configurator"
+msgstr ""
+
+#: assets/blocks/configurator/block.json
+msgctxt "block description"
+msgid "Show an interactive option-set configurator with live price on any page. Display only: selections are not added to the cart."
+msgstr ""
+
+#: assets/blocks/configurator/block.json
+msgctxt "block keyword"
+msgid "woocommerce"
+msgstr ""
+
+#: assets/blocks/configurator/block.json
+msgctxt "block keyword"
+msgid "product options"
+msgstr ""
+
+#: assets/blocks/configurator/block.json
+msgctxt "block keyword"
+msgid "addons"
+msgstr ""
+
+#: assets/blocks/configurator/block.json
+msgctxt "block keyword"
+msgid "configurator"
+msgstr ""
+
+#: assets/blocks/configurator/block.json
+msgctxt "block keyword"
+msgid "flexa"
 msgstr ""

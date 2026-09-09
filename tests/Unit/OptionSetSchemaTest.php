@@ -131,6 +131,48 @@ final class OptionSetSchemaTest extends TestCase {
         $this->assertSame( '', $result['fields'][2]['default'] );
     }
 
+    public function test_date_picker_min_max_and_disabled_dates_are_sanitized(): void {
+        $result = OptionSetSchema::sanitize(
+            array(
+                'name'   => 'Set',
+                'fields' => array(
+                    array(
+                        'type'          => 'date_picker',
+                        'id'            => 'a',
+                        'label'         => 'A',
+                        'minDate'       => '2026-01-01',
+                        'maxDate'       => 'not-a-date',
+                        'disabledDates' => "2026-12-25, 2027-01-01\nbad-date 2026-12-25",
+                    ),
+                ),
+            )
+        );
+
+        $field = $result['fields'][0];
+        $this->assertSame( '2026-01-01', $field['minDate'] );
+        $this->assertSame( '', $field['maxDate'], 'Invalid max date collapses to empty.' );
+        // Invalid entries dropped, duplicates removed, order preserved.
+        $this->assertSame( array( '2026-12-25', '2027-01-01' ), $field['disabledDates'] );
+    }
+
+    public function test_date_picker_disabled_dates_accepts_array_input(): void {
+        $result = OptionSetSchema::sanitize(
+            array(
+                'name'   => 'Set',
+                'fields' => array(
+                    array(
+                        'type'          => 'date_picker',
+                        'id'            => 'a',
+                        'label'         => 'A',
+                        'disabledDates' => array( '2026-06-01', '99-99-99', '2026-06-02' ),
+                    ),
+                ),
+            )
+        );
+
+        $this->assertSame( array( '2026-06-01', '2026-06-02' ), $result['fields'][0]['disabledDates'] );
+    }
+
     public function test_checkbox_is_always_multiple(): void {
         $result = OptionSetSchema::sanitize(
             array(
