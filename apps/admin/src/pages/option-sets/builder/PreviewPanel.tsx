@@ -128,6 +128,16 @@ export function PreviewPanel() {
     }
   }
 
+  // Formula-price context: the preview evaluates at quantity 1, with each
+  // field's numeric value for {field_id} references (mirrors the storefront).
+  const numericValues: Record<string, number> = {};
+  for (const field of fields) {
+    const v = values[field.id];
+    const n = typeof v === 'string' ? parseFloat(v) : NaN;
+    numericValues[field.id] = Number.isFinite(n) ? n : 0;
+  }
+  const ctx = { base: productPrice, qty: 1, fields: numericValues };
+
   // Itemised breakdown lines (mirrors flexa-extra.js recalculate()).
   const lines: { label: string; amount: number }[] = [];
   for (const field of fields) {
@@ -140,13 +150,13 @@ export function PreviewPanel() {
       for (const id of selectedIds) {
         const opt = field.options.find((o) => o.id === id);
         if (!opt) continue;
-        const amount = priceFor(opt.price, productPrice);
+        const amount = priceFor(opt.price, productPrice, ctx);
         if (amount) {
           lines.push({ label: optionLabel(opt), amount });
         }
       }
     } else if (field.price && hasValue(values[field.id])) {
-      const amount = priceFor(field.price, productPrice);
+      const amount = priceFor(field.price, productPrice, ctx);
       if (amount) {
         lines.push({ label: field.label || field.id, amount });
       }
@@ -154,7 +164,7 @@ export function PreviewPanel() {
   }
   for (const action of actions) {
     if (!actionApplies(action, values)) continue;
-    const magnitude = Math.abs(priceFor(action.price, productPrice));
+    const magnitude = Math.abs(priceFor(action.price, productPrice, ctx));
     if (!magnitude) continue;
     const isDiscount = action.kind === 'discount';
     lines.push({
@@ -208,7 +218,9 @@ export function PreviewPanel() {
             return (
               <div
                 key={field.id}
-                className="flexa-extra-field"
+                className={`flexa-extra-field flexa-extra-field--${field.type}${
+                  field.id ? ` flexa-extra-field--id-${field.id}` : ''
+                }${field.cssClass ? ` ${field.cssClass}` : ''}`}
                 data-field-type={field.type}
                 hidden={!visible}
               >
@@ -309,14 +321,30 @@ function PreviewField({
           value={str}
           onChange={(e) => onChange(e.target.value)}
         />
+      ) : field.type === 'color_picker' ? (
+        <span className="flexa-extra-colorpicker">
+          <input
+            type="color"
+            value={str || '#000000'}
+            onChange={(e) => onChange(e.target.value)}
+          />
+          <span
+            className="flexa-extra-colorpicker__swatch"
+            aria-hidden="true"
+            style={{ background: str || '#000000' }}
+          />
+          <span className="flexa-extra-colorpicker__value" aria-hidden="true">
+            {(str || '#000000').toUpperCase()}
+          </span>
+        </span>
       ) : (
         <input
           type={inputType(field.type)}
           className="flexa-extra-control"
           placeholder={field.placeholder}
           value={str}
-          min={field.min ?? undefined}
-          max={field.max ?? undefined}
+          min={field.type === 'date_picker' ? (field.minDate || undefined) : (field.min ?? undefined)}
+          max={field.type === 'date_picker' ? (field.maxDate || undefined) : (field.max ?? undefined)}
           step={field.step ?? undefined}
           onChange={(e) => onChange(e.target.value)}
         />
@@ -425,6 +453,9 @@ function ChoiceField({
                       : undefined
                 }
               />
+            )}
+            {rowClass === 'flexa-extra-choice' && (
+              <span className="flexa-extra-choice__control" aria-hidden="true" />
             )}
             <span className={`${rowClass}__label`}>{optionLabel(opt)}</span>
             {hint && <span className="flexa-extra-price">{hint}</span>}

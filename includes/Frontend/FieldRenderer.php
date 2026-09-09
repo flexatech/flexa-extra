@@ -60,7 +60,17 @@ class FieldRenderer {
             return '';
         }
 
+        // Per-field wrapper classes: a stable type class plus a per-field-id class
+        // so developers can style all fields of a type, or one specific field.
         $classes = 'flexa-extra-field flexa-extra-field--' . sanitize_html_class( $type );
+        if ( '' !== $id ) {
+            $classes .= ' flexa-extra-field--id-' . sanitize_html_class( $id );
+        }
+        // Developer-supplied class(es) from the builder's "CSS class" field.
+        $custom = isset( $field['cssClass'] ) ? trim( (string) $field['cssClass'] ) : '';
+        if ( '' !== $custom ) {
+            $classes .= ' ' . $custom;
+        }
 
         $label_html = '';
         if ( FieldType::HEADING !== $type && ! $is_group && '' !== $label ) {
@@ -140,11 +150,45 @@ class FieldRenderer {
             }
             $control = sprintf( '<input type="number" %1$s value="%2$s"%3$s />', $common, esc_attr( $default ), $attrs );
         } elseif ( FieldType::DATE_PICKER === $type ) {
-            $control = sprintf( '<input type="date" %1$s value="%2$s" />', $common, esc_attr( $default ) );
+            // The native <input type="date"> stays the canonical control (posts
+            // YYYY-MM-DD, works with JS off). The storefront JS progressively
+            // enhances it into a scoped calendar UI, reading these attributes.
+            $date_attrs = '';
+            $min_date   = isset( $field['minDate'] ) ? (string) $field['minDate'] : '';
+            $max_date   = isset( $field['maxDate'] ) ? (string) $field['maxDate'] : '';
+            if ( '' !== $min_date ) {
+                $date_attrs .= ' min="' . esc_attr( $min_date ) . '"';
+            }
+            if ( '' !== $max_date ) {
+                $date_attrs .= ' max="' . esc_attr( $max_date ) . '"';
+            }
+            $disabled = isset( $field['disabledDates'] ) && is_array( $field['disabledDates'] )
+                ? implode( ',', array_map( 'strval', $field['disabledDates'] ) )
+                : '';
+            if ( '' !== $disabled ) {
+                $date_attrs .= ' data-disabled-dates="' . esc_attr( $disabled ) . '"';
+            }
+            // Resolved display format (field override, else the site date format)
+            // drives both the storefront calendar label and the cart line text.
+            $date_attrs .= ' data-date-format="' . esc_attr( self::resolve_date_format( $field ) ) . '"';
+            $control = sprintf( '<input type="date" %1$s value="%2$s"%3$s data-flexa-date="1" />', $common, esc_attr( $default ), $date_attrs );
         } elseif ( FieldType::COLOR_PICKER === $type ) {
             // Native color inputs must carry a valid hex value; fall back to black.
-            $color   = sanitize_hex_color( $default );
-            $control = sprintf( '<input type="color" %1$s value="%2$s" />', $common, esc_attr( null !== $color ? $color : '#000000' ) );
+            $color = sanitize_hex_color( $default );
+            $color = null !== $color ? $color : '#000000';
+            // The native <input type="color"> is kept as an invisible overlay so a
+            // click/keyboard opens the OS picker with no JS and no lost semantics;
+            // the swatch + hex label are the visible, themeable surface.
+            $control = sprintf(
+                '<span class="flexa-extra-colorpicker" data-flexa-color="1">'
+                    . '<input type="color" %1$s value="%2$s" />'
+                    . '<span class="flexa-extra-colorpicker__swatch" aria-hidden="true" style="background:%2$s"></span>'
+                    . '<span class="flexa-extra-colorpicker__value" aria-hidden="true">%3$s</span>'
+                    . '</span>',
+                $common,
+                esc_attr( $color ),
+                esc_html( strtoupper( $color ) )
+            );
         } else {
             $input_type = self::text_input_type( isset( $field['textFormat'] ) ? (string) $field['textFormat'] : OptionSetSchema::TEXT_PLAIN );
             $control    = sprintf( '<input type="%1$s" %2$s value="%3$s" />', esc_attr( $input_type ), $common, esc_attr( $default ) );
@@ -212,8 +256,11 @@ class FieldRenderer {
                     esc_attr( $out_class )
                 );
             } else {
+                // The native input stays (visually hidden) so semantics, keyboard
+                // and validation are unchanged; the control span is the custom
+                // checkbox/radio surface, styled from the sibling input's state.
                 $rows .= sprintf(
-                    '<label class="flexa-extra-choice%5$s" for="%1$s">%2$s<span class="flexa-extra-choice__label">%3$s</span>%4$s</label>',
+                    '<label class="flexa-extra-choice%5$s" for="%1$s">%2$s<span class="flexa-extra-choice__control" aria-hidden="true"></span><span class="flexa-extra-choice__label">%3$s</span>%4$s</label>',
                     esc_attr( $field_uid ),
                     $input,
                     esc_html( $label ),
@@ -354,6 +401,41 @@ class FieldRenderer {
 
         $formatted = html_entity_decode( wp_strip_all_tags( wc_price( abs( $amount ) ) ), ENT_COMPAT, 'UTF-8' );
         return $sign . $formatted;
+    }
+
+    /**
+     * The PHP date format for a date field: its own override, else the site's
+     * configured date format (Settings → General). Single source of truth so
+     * the calendar label and the cart/order line always agree.
+     *
+     * @param array<string,mixed> $field
+     */
+    public static function resolve_date_format( array $field ): string {
+        $override = isset( $field['dateFormat'] ) ? (string) $field['dateFormat'] : '';
+        if ( '' !== $override ) {
+            return $override;
+        }
+        $site = (string) get_option( 'date_format', 'F j, Y' );
+        return '' !== $site ? $site : 'F j, Y';
+    }
+
+    /**
+     * Format a stored ISO date (YYYY-MM-DD) for display, honoring the field's
+     * resolved format and the site locale. Non-ISO input is returned unchanged.
+     *
+     * @param array<string,mixed> $field
+     */
+    public static function format_date( string $iso, array $field ): string {
+        if ( 1 !== preg_match( '/^\d{4}-\d{2}-\d{2}$/', $iso ) ) {
+            return $iso;
+        }
+        // Noon UTC + a UTC formatting zone keeps a date-only value from ever
+        // shifting across a day boundary due to the site timezone.
+        $ts = strtotime( $iso . ' 12:00:00 UTC' );
+        if ( false === $ts ) {
+            return $iso;
+        }
+        return wp_date( self::resolve_date_format( $field ), $ts, new \DateTimeZone( 'UTC' ) );
     }
 
     private static function text_input_type( string $format ): string {

@@ -62,6 +62,7 @@ export function createField(type: FieldType): Field {
     placeholder: '',
     tooltip: '',
     default: '',
+    cssClass: '',
     logic: { enabled: false, action: 'show', match: 'any', rules: [] },
   };
 
@@ -74,7 +75,10 @@ export function createField(type: FieldType): Field {
   if (type === 'number') {
     return { ...base, min: null, max: null, step: null, price: noPrice() };
   }
-  if (type === 'date_picker' || type === 'color_picker') {
+  if (type === 'date_picker') {
+    return { ...base, price: noPrice(), minDate: '', maxDate: '', disabledDates: [], dateFormat: '' };
+  }
+  if (type === 'color_picker') {
     return { ...base, price: noPrice() };
   }
   if (isChoiceType(type)) {

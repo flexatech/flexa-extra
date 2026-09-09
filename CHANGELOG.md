@@ -3,6 +3,57 @@
 All notable changes to Flexa Extra are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2026-09-09
+
+### Added
+- **Formula prices.** A price can now be a safe arithmetic formula instead of a
+  fixed amount or percentage, on field prices, per-option prices and
+  fee/discount actions. Formulas use `base` (the item price), `qty` (the line
+  quantity) and `{field_id}` (another field's numeric value), the operators
+  `+ - * / ( )`, and the functions `round()`, `min()` and `max()`. The result is
+  the per-unit surcharge, so `base * qty` is not needed for a plain per-unit
+  charge (WooCommerce multiplies by quantity), but `qty` lets you write volume
+  tiers such as `max(2, 10 - qty)`. Evaluation is a hand-written parser (never
+  `eval`); a malformed formula is worth 0 and can never raise an error or a bogus
+  charge. The builder validates the formula as you type, and the storefront and
+  live preview mirror the server engine byte-for-behaviour
+  (`includes/Pricing/FormulaEvaluator.php`).
+- **Custom-styled checkbox, radio and colour controls on the storefront.**
+  Checkboxes and radios now render as clean custom controls (square tick / round
+  dot) with a subtle checked animation, instead of the browser's default widget,
+  so they look the same across Chrome, Firefox, Safari and mobile. The colour
+  field shows a themeable swatch with its hex value and opens the OS colour
+  picker on click. The native inputs are kept (visually hidden for choices, an
+  invisible overlay for colour), so values, validation, keyboard focus and form
+  semantics are unchanged; all styling is scoped to `.flexa-extra-*` and needs no
+  new dependency.
+- **Localized calendar for the date field.** The server-rendered
+  `<input type="date">` is progressively enhanced into a scoped, dependency-free
+  calendar UI (vanilla JS in `assets/frontend/flexa-extra.js`). Month/weekday
+  names and the first day of week come from `Intl.DateTimeFormat` using the site
+  locale (`determine_locale()`, passed as BCP-47). Keyboard + touch accessible;
+  CSS is fully namespaced. The native input stays the canonical control, so the
+  submitted/stored value format (`YYYY-MM-DD`) is unchanged and it still works
+  with JS disabled.
+- **Date field constraints.** New `minDate`, `maxDate` and `disabledDates`
+  options on the date field (builder Inspector), validated again server-side in
+  `Cart\SelectionProcessor` at add-to-cart.
+- **Date display format.** Selected dates render in the site date format
+  (`get_option('date_format')`) with an optional per-field `dateFormat` override,
+  applied consistently on the product page (calendar label) and in the cart/order
+  line. `FieldRenderer::resolve_date_format()` / `format_date()` are the single
+  source of truth (mirrored in JS by a small PHP-date-token formatter); the cart
+  previously showed the raw ISO value. Stored value stays `YYYY-MM-DD`.
+- **Per-field styling hooks.** Every field wrapper now carries
+  `flexa-extra-field--<type>` and `flexa-extra-field--id-<field_id>` classes (in
+  addition to the base `flexa-extra-field` and the `data-field-id` /
+  `data-field-type` attributes), so a theme can target a field type or one
+  specific field from CSS.
+- **"CSS class" field in the builder Inspector.** Add your own space-separated
+  class(es) to a field wrapper. Each token is sanitized with
+  `sanitize_html_class()` on save. Mirrored in the live preview and documented in
+  `docs/HOOKS.md`.
+
 ## [1.1.1] - 2026-09-08
 
 ### Fixed

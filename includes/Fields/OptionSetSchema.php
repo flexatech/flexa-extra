@@ -17,6 +17,7 @@ class OptionSetSchema {
     const PRICE_NONE    = 'none';
     const PRICE_FIXED   = 'fixed';
     const PRICE_PERCENT = 'percent';
+    const PRICE_FORMULA = 'formula';
 
     const TEXT_PLAIN = 'text';
     const TEXT_EMAIL = 'email';
@@ -97,6 +98,7 @@ class OptionSetSchema {
             'placeholder' => isset( $raw['placeholder'] ) ? sanitize_text_field( (string) $raw['placeholder'] ) : '',
             'tooltip'     => isset( $raw['tooltip'] ) ? sanitize_text_field( (string) $raw['tooltip'] ) : '',
             'default'     => isset( $raw['default'] ) ? sanitize_text_field( (string) $raw['default'] ) : '',
+            'cssClass'    => self::sanitize_css_classes( isset( $raw['cssClass'] ) ? (string) $raw['cssClass'] : '' ),
             'logic'       => self::sanitize_logic( isset( $raw['logic'] ) && is_array( $raw['logic'] ) ? $raw['logic'] : array() ),
         );
 
@@ -118,7 +120,12 @@ class OptionSetSchema {
         }
 
         if ( FieldType::DATE_PICKER === $type ) {
-            $field['default'] = self::sanitize_date( isset( $raw['default'] ) ? (string) $raw['default'] : '' );
+            $field['default']       = self::sanitize_date( isset( $raw['default'] ) ? (string) $raw['default'] : '' );
+            $field['minDate']       = self::sanitize_date( isset( $raw['minDate'] ) ? (string) $raw['minDate'] : '' );
+            $field['maxDate']       = self::sanitize_date( isset( $raw['maxDate'] ) ? (string) $raw['maxDate'] : '' );
+            $field['disabledDates'] = self::sanitize_date_list( $raw['disabledDates'] ?? '' );
+            // Optional PHP date-format override; blank = the site's date format.
+            $field['dateFormat']    = isset( $raw['dateFormat'] ) ? sanitize_text_field( (string) $raw['dateFormat'] ) : '';
         }
 
         // Input fields (text/textarea/number) can carry a flat price on the field itself.
@@ -198,16 +205,26 @@ class OptionSetSchema {
      */
     private static function sanitize_price( array $raw ): array {
         $type = isset( $raw['type'] ) ? sanitize_key( (string) $raw['type'] ) : self::PRICE_NONE;
-        if ( ! in_array( $type, array( self::PRICE_NONE, self::PRICE_FIXED, self::PRICE_PERCENT ), true ) ) {
+        if ( ! in_array( $type, array( self::PRICE_NONE, self::PRICE_FIXED, self::PRICE_PERCENT, self::PRICE_FORMULA ), true ) ) {
             $type = self::PRICE_NONE;
         }
 
         $amount = isset( $raw['amount'] ) ? (float) $raw['amount'] : 0.0;
 
-        return array(
+        $price = array(
             'type'   => $type,
-            'amount' => self::PRICE_NONE === $type ? 0.0 : $amount,
+            'amount' => self::PRICE_NONE === $type || self::PRICE_FORMULA === $type ? 0.0 : $amount,
         );
+
+        // The formula string is carried only for formula prices, so every other
+        // price stays the plain {type, amount} shape callers already expect. The
+        // stored text is display-sanitized; the evaluator is safe regardless.
+        if ( self::PRICE_FORMULA === $type ) {
+            $formula          = isset( $raw['formula'] ) ? (string) $raw['formula'] : '';
+            $price['formula'] = trim( sanitize_text_field( $formula ) );
+        }
+
+        return $price;
     }
 
     /**
@@ -326,6 +343,29 @@ class OptionSetSchema {
         );
     }
 
+    /**
+     * Normalize developer-supplied CSS class(es) on a field wrapper. Accepts a
+     * space-separated list; each token is run through sanitize_html_class() so
+     * only safe class names survive.
+     */
+    private static function sanitize_css_classes( string $value ): string {
+        $tokens = preg_split( '/\s+/', trim( $value ) );
+        if ( ! is_array( $tokens ) ) {
+            return '';
+        }
+        $classes = array();
+        foreach ( $tokens as $token ) {
+            if ( '' === $token ) {
+                continue;
+            }
+            $clean = sanitize_html_class( $token );
+            if ( '' !== $clean ) {
+                $classes[] = $clean;
+            }
+        }
+        return implode( ' ', array_unique( $classes ) );
+    }
+
     private static function sanitize_id( string $id ): string {
         $id = preg_replace( '/[^a-zA-Z0-9_\-]/', '', $id );
         return is_string( $id ) ? $id : '';
@@ -344,6 +384,32 @@ class OptionSetSchema {
             return null;
         }
         return is_numeric( $value ) ? (float) $value : null;
+    }
+
+    /**
+     * Normalize a list of disabled ISO dates. Accepts either an array or a
+     * comma/newline/space-separated string; each entry is validated as an ISO
+     * date and invalid entries are dropped. Returns a de-duplicated list.
+     *
+     * @param mixed $value
+     * @return list<string>
+     */
+    private static function sanitize_date_list( $value ): array {
+        if ( is_string( $value ) ) {
+            $parts = preg_split( '/[\s,]+/', trim( $value ) );
+            $value = is_array( $parts ) ? $parts : array();
+        }
+        if ( ! is_array( $value ) ) {
+            return array();
+        }
+        $dates = array();
+        foreach ( $value as $entry ) {
+            $date = self::sanitize_date( (string) $entry );
+            if ( '' !== $date ) {
+                $dates[] = $date;
+            }
+        }
+        return array_values( array_unique( $dates ) );
     }
 
     /**

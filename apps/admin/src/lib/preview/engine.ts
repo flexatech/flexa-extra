@@ -82,9 +82,263 @@ export function actionApplies(action: OptionSetAction, values: PreviewValues): b
   return action.match === 'all' ? results.every(Boolean) : results.some(Boolean);
 }
 
+export interface FormulaContext {
+  base: number;
+  qty: number;
+  fields: Record<string, number>;
+}
+
+interface FormulaToken {
+  type: 'number' | 'ident' | 'field' | 'op';
+  value: string;
+}
+
+/** Round half away from zero, matching PHP round() and the storefront. */
+function phpRound(value: number, precision: number): number {
+  const factor = Math.pow(10, precision || 0);
+  const x = value * factor;
+  const r = x >= 0 ? Math.floor(x + 0.5) : Math.ceil(x - 0.5);
+  return r / factor;
+}
+
+function tokenizeFormula(text: string): FormulaToken[] {
+  const tokens: FormulaToken[] = [];
+  const len = text.length;
+  let i = 0;
+  while (i < len) {
+    const ch = text.charAt(i);
+    if (ch === ' ' || ch === '\t' || ch === '\n' || ch === '\r') {
+      i++;
+      continue;
+    }
+    if ((ch >= '0' && ch <= '9') || ch === '.') {
+      let num = '';
+      while (i < len && ((text.charAt(i) >= '0' && text.charAt(i) <= '9') || text.charAt(i) === '.')) {
+        num += text.charAt(i);
+        i++;
+      }
+      if (!/^(\d+\.?\d*|\.\d+)$/.test(num)) {
+        throw new Error('number');
+      }
+      tokens.push({ type: 'number', value: num });
+      continue;
+    }
+    if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch === '_') {
+      let ident = '';
+      while (i < len) {
+        const c = text.charAt(i);
+        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c === '_') {
+          ident += c;
+          i++;
+        } else {
+          break;
+        }
+      }
+      tokens.push({ type: 'ident', value: ident.toLowerCase() });
+      continue;
+    }
+    if (ch === '{') {
+      let ref = '';
+      i++;
+      while (i < len && text.charAt(i) !== '}') {
+        ref += text.charAt(i);
+        i++;
+      }
+      if (i >= len) {
+        throw new Error('field ref');
+      }
+      i++;
+      tokens.push({ type: 'field', value: ref.trim() });
+      continue;
+    }
+    if ('+-*/(),'.indexOf(ch) !== -1) {
+      tokens.push({ type: 'op', value: ch });
+      i++;
+      continue;
+    }
+    throw new Error('char');
+  }
+  return tokens;
+}
+
+/** Parse + evaluate an already-tokenized formula. Throws on any malformed input. */
+function parseTokens(tokens: FormulaToken[], base: number, qty: number, fields: Record<string, number>): number {
+  let pos = 0;
+
+  const peek = (): FormulaToken | null => (pos < tokens.length ? tokens[pos] : null);
+  const isOp = (v: string): boolean => {
+    const t = peek();
+    return !!t && t.type === 'op' && t.value === v;
+  };
+
+  const parseExpression = (): number => {
+    let value = parseTerm();
+    while (isOp('+') || isOp('-')) {
+      const op = tokens[pos].value;
+      pos++;
+      const rhs = parseTerm();
+      value = op === '+' ? value + rhs : value - rhs;
+    }
+    return value;
+  };
+  const parseTerm = (): number => {
+    let value = parseFactor();
+    while (isOp('*') || isOp('/')) {
+      const op = tokens[pos].value;
+      pos++;
+      const rhs = parseFactor();
+      if (op === '*') {
+        value *= rhs;
+      } else {
+        value = rhs === 0 ? 0 : value / rhs;
+      }
+    }
+    return value;
+  };
+  const parseFactor = (): number => {
+    if (isOp('-')) {
+      pos++;
+      return -parseFactor();
+    }
+    if (isOp('+')) {
+      pos++;
+      return parseFactor();
+    }
+    return parsePrimary();
+  };
+  const parsePrimary = (): number => {
+    const tok = peek();
+    if (!tok) {
+      throw new Error('end');
+    }
+    if (tok.type === 'number') {
+      pos++;
+      return parseFloat(tok.value);
+    }
+    if (tok.type === 'field') {
+      pos++;
+      const f = fields[tok.value];
+      return typeof f === 'number' && Number.isFinite(f) ? f : 0;
+    }
+    if (tok.type === 'op' && tok.value === '(') {
+      pos++;
+      const v = parseExpression();
+      if (!isOp(')')) {
+        throw new Error('paren');
+      }
+      pos++;
+      return v;
+    }
+    if (tok.type === 'ident') {
+      const name = tok.value;
+      pos++;
+      if (isOp('(')) {
+        return callFunction(name, parseArguments());
+      }
+      if (name === 'base') {
+        return base;
+      }
+      if (name === 'qty') {
+        return qty;
+      }
+      throw new Error('ident');
+    }
+    throw new Error('token');
+  };
+  const parseArguments = (): number[] => {
+    pos++; // '('
+    const args: number[] = [];
+    if (isOp(')')) {
+      pos++;
+      return args;
+    }
+    args.push(parseExpression());
+    while (isOp(',')) {
+      pos++;
+      args.push(parseExpression());
+    }
+    if (!isOp(')')) {
+      throw new Error('call');
+    }
+    pos++;
+    return args;
+  };
+  const callFunction = (name: string, args: number[]): number => {
+    if (name === 'round') {
+      if (!args.length) {
+        throw new Error('round');
+      }
+      return phpRound(args[0], args.length > 1 ? Math.round(args[1]) : 0);
+    }
+    if (name === 'min') {
+      if (!args.length) {
+        throw new Error('min');
+      }
+      return Math.min(...args);
+    }
+    if (name === 'max') {
+      if (!args.length) {
+        throw new Error('max');
+      }
+      return Math.max(...args);
+    }
+    throw new Error('func');
+  };
+
+  const result = parseExpression();
+  if (pos !== tokens.length) {
+    throw new Error('trailing');
+  }
+  return result;
+}
+
+/**
+ * Safe recursive-descent formula evaluator. Mirrors PHP `Pricing\FormulaEvaluator`
+ * and the storefront `evalFormula`; returns 0 on any parse error. Never eval().
+ */
+export function evalFormula(formula: string | undefined, ctx: FormulaContext): number {
+  const text = (formula == null ? '' : String(formula)).trim();
+  if (!text) {
+    return 0;
+  }
+  const base = Number.isFinite(ctx.base) ? ctx.base : 0;
+  const qty = Number.isFinite(ctx.qty) ? ctx.qty : 1;
+  const fields = ctx.fields || {};
+  try {
+    const result = parseTokens(tokenizeFormula(text), base, qty, fields);
+    return Number.isFinite(result) ? result : 0;
+  } catch {
+    return 0;
+  }
+}
+
+/** Builder helper: is a formula syntactically valid? (Empty counts as invalid.) */
+export function isValidFormula(formula: string | undefined): boolean {
+  const text = (formula == null ? '' : String(formula)).trim();
+  if (!text) {
+    return false;
+  }
+  try {
+    parseTokens(tokenizeFormula(text), 0, 1, {});
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** Resolve a price rule to a currency amount against the sample product price. */
-export function priceFor(price: PriceRule | undefined, productPrice: number): number {
-  if (!price || price.type === 'none' || !price.amount) {
+export function priceFor(
+  price: PriceRule | undefined,
+  productPrice: number,
+  ctx?: FormulaContext
+): number {
+  if (!price || price.type === 'none') {
+    return 0;
+  }
+  if (price.type === 'formula') {
+    return evalFormula(price.formula, ctx ?? { base: productPrice, qty: 1, fields: {} });
+  }
+  if (!price.amount) {
     return 0;
   }
   if (price.type === 'percent') {

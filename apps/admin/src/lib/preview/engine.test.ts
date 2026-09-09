@@ -8,15 +8,18 @@ import type {
 import {
   actionApplies,
   choiceValue,
+  evalFormula,
   formatMoney,
   getCurrency,
   hasValue,
+  isValidFormula,
   isVisible,
   optionLabel,
   priceFor,
   priceHint,
   signedMoney,
   type Currency,
+  type FormulaContext,
 } from './engine';
 
 /**
@@ -264,4 +267,63 @@ describe('getCurrency', () => {
 it('priceFor treats a zero-amount percent rule as free', () => {
   const rule: PriceRule = { type: 'percent', amount: 0 };
   expect(priceFor(rule, 500)).toBe(0);
+});
+
+describe('evalFormula', () => {
+  const ctx = (over: Partial<FormulaContext> = {}): FormulaContext => ({
+    base: 100,
+    qty: 1,
+    fields: {},
+    ...over,
+  });
+
+  it('evaluates arithmetic with correct precedence and parentheses', () => {
+    expect(evalFormula('2 + 3 * 4', ctx())).toBe(14);
+    expect(evalFormula('(2 + 3) * 4', ctx())).toBe(20);
+    expect(evalFormula('10 / 4', ctx())).toBe(2.5);
+    expect(evalFormula('-5 + 2', ctx())).toBe(-3);
+  });
+
+  it('resolves base, qty and {field_id} variables', () => {
+    expect(evalFormula('base * 0.1', ctx({ base: 250 }))).toBe(25);
+    expect(evalFormula('base * qty', ctx({ base: 20, qty: 3 }))).toBe(60);
+    expect(evalFormula('{width} * {height}', ctx({ fields: { width: 4, height: 5 } }))).toBe(20);
+    // Missing / non-numeric field refs resolve to 0.
+    expect(evalFormula('{missing} + 7', ctx())).toBe(7);
+  });
+
+  it('supports round(), min() and max()', () => {
+    expect(evalFormula('round(2.345, 2)', ctx())).toBe(2.35);
+    expect(evalFormula('round(2.5)', ctx())).toBe(3);
+    expect(evalFormula('min(3, 8, 1)', ctx())).toBe(1);
+    expect(evalFormula('max(2, base)', ctx({ base: 5 }))).toBe(5);
+  });
+
+  it('returns 0 on empty, malformed or unknown input (never throws)', () => {
+    expect(evalFormula('', ctx())).toBe(0);
+    expect(evalFormula(undefined, ctx())).toBe(0);
+    expect(evalFormula('2 +', ctx())).toBe(0);
+    expect(evalFormula('2 3', ctx())).toBe(0);
+    expect(evalFormula('foo(2)', ctx())).toBe(0);
+    expect(evalFormula('nope', ctx())).toBe(0);
+    expect(evalFormula('1 / 0', ctx())).toBe(0); // Guarded division by zero.
+  });
+
+  it('isValidFormula flags parseable vs broken formulas', () => {
+    expect(isValidFormula('base * 0.1 + {x}')).toBe(true);
+    expect(isValidFormula('round(base, 2)')).toBe(true);
+    expect(isValidFormula('')).toBe(false);
+    expect(isValidFormula('2 +')).toBe(false);
+    expect(isValidFormula('base *')).toBe(false);
+    expect(isValidFormula('log(2)')).toBe(false);
+  });
+});
+
+it('priceFor evaluates a formula price against its context', () => {
+  const rule: PriceRule = { type: 'formula', amount: 0, formula: 'base * 0.2 + 3' };
+  expect(priceFor(rule, 50, { base: 50, qty: 1, fields: {} })).toBe(13);
+  // Falls back to a qty-1 context built from productPrice when none is passed.
+  expect(priceFor(rule, 50)).toBe(13);
+  // A broken formula is free, never an error.
+  expect(priceFor({ type: 'formula', amount: 0, formula: 'base *' }, 50)).toBe(0);
 });

@@ -27,8 +27,11 @@ export const CHOICE_TYPES: FieldType[] = ['checkbox', 'radio', 'dropdown', 'swat
 export const INPUT_TYPES: FieldType[] = ['text', 'textarea', 'number', 'date_picker', 'color_picker'];
 
 export const priceSchema = z.object({
-  type: z.enum(['none', 'fixed', 'percent']),
+  type: z.enum(['none', 'fixed', 'percent', 'formula']),
   amount: z.number(),
+  // Only meaningful when type === 'formula'; a safe arithmetic expression over
+  // base, qty, {field_id}, + - * / ( ) and round/min/max.
+  formula: z.string().optional(),
 });
 export type PriceRule = z.infer<typeof priceSchema>;
 
@@ -69,6 +72,8 @@ export const fieldSchema = z.object({
   placeholder: z.string(),
   tooltip: z.string(),
   default: z.string(),
+  // Extra CSS class(es) added to the field wrapper for developer styling.
+  cssClass: z.string().optional(),
   logic: logicSchema,
 
   // Text-only.
@@ -79,6 +84,13 @@ export const fieldSchema = z.object({
   min: z.number().nullable().optional(),
   max: z.number().nullable().optional(),
   step: z.number().nullable().optional(),
+
+  // Date-picker-only. ISO dates (YYYY-MM-DD); disabledDates is a list of ISO dates.
+  minDate: z.string().optional(),
+  maxDate: z.string().optional(),
+  disabledDates: z.array(z.string()).optional(),
+  // PHP date-format override for display; blank uses the site's date format.
+  dateFormat: z.string().optional(),
 
   // Input fields carry a flat price on the field itself.
   price: priceSchema.optional(),

@@ -381,7 +381,8 @@ final class CartHandler {
         }
 
         $base   = isset( $cart_item[ self::KEY ]['base'] ) ? (float) $cart_item[ self::KEY ]['base'] : null;
-        $result = SelectionProcessor::process( $product, (array) ( $cart_item[ self::KEY ]['selections'] ?? array() ), $base );
+        $qty    = (int) ( $cart_item['quantity'] ?? 1 );
+        $result = SelectionProcessor::process( $product, (array) ( $cart_item[ self::KEY ]['selections'] ?? array() ), $base, $qty );
 
         return $result['lines'];
     }

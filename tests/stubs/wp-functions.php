@@ -253,3 +253,12 @@ if ( ! function_exists( 'update_option' ) ) {
         return true;
     }
 }
+
+if ( ! function_exists( 'wp_date' ) ) {
+    function wp_date( $format, $timestamp = null, $timezone = null ) {
+        $timestamp = null === $timestamp ? time() : $timestamp;
+        $tz        = $timezone instanceof \DateTimeZone ? $timezone : new \DateTimeZone( 'UTC' );
+        $dt        = ( new \DateTimeImmutable( '@' . (int) $timestamp ) )->setTimezone( $tz );
+        return $dt->format( $format );
+    }
+}

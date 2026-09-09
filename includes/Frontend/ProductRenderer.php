@@ -74,10 +74,17 @@ final class ProductRenderer {
                     'subtotalLabel'     => (string) $settings['display']['subtotalLabel'],
                     'totalPriceLabel'   => (string) $settings['display']['totalPriceLabel'],
                 ],
+                // BCP-47 locale for the calendar UI (Intl.DateTimeFormat).
+                // WordPress stores locales as `vi_VN`; Intl wants `vi-VN`.
+                'locale'   => str_replace( '_', '-', determine_locale() ),
                 'i18n'     => [
-                    'required' => __( 'This field is required.', 'flexa-extra' ),
-                    'fee'      => __( 'Fee', 'flexa-extra' ),
-                    'discount' => __( 'Discount', 'flexa-extra' ),
+                    'required'      => __( 'This field is required.', 'flexa-extra' ),
+                    'fee'           => __( 'Fee', 'flexa-extra' ),
+                    'discount'      => __( 'Discount', 'flexa-extra' ),
+                    'chooseDate'    => __( 'Choose date', 'flexa-extra' ),
+                    'clearDate'     => __( 'Clear', 'flexa-extra' ),
+                    'previousMonth' => __( 'Previous month', 'flexa-extra' ),
+                    'nextMonth'     => __( 'Next month', 'flexa-extra' ),
                 ],
             ]
         );
