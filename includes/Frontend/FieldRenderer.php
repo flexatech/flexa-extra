@@ -429,13 +429,14 @@ class FieldRenderer {
         if ( 1 !== preg_match( '/^\d{4}-\d{2}-\d{2}$/', $iso ) ) {
             return $iso;
         }
-        // Noon UTC + a UTC formatting zone keeps a date-only value from ever
-        // shifting across a day boundary due to the site timezone.
+        // Noon UTC + formatting the timestamp as GMT keeps a date-only value from
+        // ever shifting across a day boundary due to the site timezone. date_i18n()
+        // (rather than wp_date(), which needs WP 5.3) keeps the WP 5.0 baseline.
         $ts = strtotime( $iso . ' 12:00:00 UTC' );
         if ( false === $ts ) {
             return $iso;
         }
-        return wp_date( self::resolve_date_format( $field ), $ts, new \DateTimeZone( 'UTC' ) );
+        return date_i18n( self::resolve_date_format( $field ), $ts, true );
     }
 
     private static function text_input_type( string $format ): string {

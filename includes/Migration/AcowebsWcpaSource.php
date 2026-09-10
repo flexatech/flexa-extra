@@ -67,11 +67,10 @@ final class AcowebsWcpaSource extends AbstractMigrationSource {
             // nothing readable even if rows linger; keep this defensive.
             $exists = get_posts(
                 [
-                    'post_type'        => self::POST_TYPE,
-                    'post_status'      => 'any',
-                    'numberposts'      => 1,
-                    'fields'           => 'ids',
-                    'suppress_filters' => true,
+                    'post_type'   => self::POST_TYPE,
+                    'post_status' => 'any',
+                    'numberposts' => 1,
+                    'fields'      => 'ids',
                 ]
             );
             if ( empty( $exists ) ) {
