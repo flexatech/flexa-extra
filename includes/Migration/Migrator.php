@@ -32,7 +32,7 @@ final class Migrator {
          */
         return apply_filters(
             'flexa_extra/migration/sources',
-            [ new YayExtraSource(), new ThemeHighSource() ]
+            [ new YayExtraSource(), new ThemeHighSource(), new WooProductAddonsSource(), new YithWapoSource() ]
         );
     }
 

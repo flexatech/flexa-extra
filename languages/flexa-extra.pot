@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Flexa Extra 1.2.1\n"
+"Project-Id-Version: Flexa Extra 1.3.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/flexa-extra\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-10T01:18:11+00:00\n"
+"POT-Creation-Date: 2026-09-10T02:12:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: flexa-extra\n"
@@ -1036,7 +1036,7 @@ msgid "Failed to load import sources."
 msgstr ""
 
 #: js/main.js:5
-msgid "No supported plugins were found on this site. Import sources appear here only once a plugin like YayExtra or ThemeHigh \"Extra Product Options\" has been installed and has data to bring over."
+msgid "No supported plugins were found on this site. Import sources appear here only once a plugin like YayExtra, ThemeHigh \"Extra Product Options\", WooCommerce Product Add-Ons or YITH WooCommerce Product Add-Ons has been installed and has data to bring over."
 msgstr ""
 
 #. translators: %d: number of option sets found.
@@ -1695,7 +1695,9 @@ msgstr ""
 
 #. translators: 1: field label, 2: source field type.
 #: includes/Migration/ThemeHighSource.php:123
+#: includes/Migration/WooProductAddonsSource.php:243
 #: includes/Migration/YayExtraSource.php:234
+#: includes/Migration/YithWapoSource.php:187
 msgid "Field \"%1$s\" has an unsupported type (%2$s) and was skipped."
 msgstr ""
 
@@ -1712,17 +1714,45 @@ msgstr ""
 msgid "Product conditions were flattened into a single \"match any\" list; review Product assignment."
 msgstr ""
 
+#: includes/Migration/WooProductAddonsSource.php:56
+msgid "Global add-ons"
+msgstr ""
+
+#. translators: %s: the product name.
+#: includes/Migration/WooProductAddonsSource.php:70
+msgid "Add-ons: %s"
+msgstr ""
+
+#: includes/Migration/WooProductAddonsSource.php:210
+msgid "Imported add-ons"
+msgstr ""
+
+#. translators: %s: field label.
+#: includes/Migration/WooProductAddonsSource.php:233
+#: includes/Migration/YayExtraSource.php:224
+msgid "File upload field \"%s\" was skipped (not supported)."
+msgstr ""
+
+#. translators: 1: field label, 2: source field type.
+#: includes/Migration/WooProductAddonsSource.php:253
+msgid "Field \"%1$s\" (%2$s) was imported as a plain number field; its price behaviour was not carried over."
+msgstr ""
+
+#: includes/Migration/WooProductAddonsSource.php:354
+msgid "A one-time \"flat fee\" price was imported as a per-unit amount; review it if you sell that product in quantities above one."
+msgstr ""
+
+#: includes/Migration/WooProductAddonsSource.php:380
+#: includes/Migration/YithWapoSource.php:338
+msgid "Category assignment was imported as product conditions; review Product assignment."
+msgstr ""
+
 #: includes/Migration/YayExtraSource.php:197
 msgid "Show/hide actions and price rules were not migrated; re-create them under Fees & discounts or field logic."
 msgstr ""
 
 #: includes/Migration/YayExtraSource.php:201
 msgid "Imported option set"
-msgstr ""
-
-#. translators: %s: field label.
-#: includes/Migration/YayExtraSource.php:224
-msgid "File upload field \"%s\" was skipped (not supported)."
 msgstr ""
 
 #. translators: %s: field label.
@@ -1751,6 +1781,16 @@ msgstr ""
 
 #: includes/Migration/YayExtraSource.php:420
 msgid "Conditional product assignment could not be migrated and was imported as \"all products\"; review Product assignment."
+msgstr ""
+
+#: includes/Migration/YithWapoSource.php:92
+#: includes/Migration/YithWapoSource.php:150
+msgid "Imported block"
+msgstr ""
+
+#. translators: 1: field label, 2: source field type.
+#: includes/Migration/YithWapoSource.php:173
+msgid "Field \"%1$s\" (%2$s) has no equivalent and was skipped."
 msgstr ""
 
 #: assets/blocks/configurator/index.js:50
