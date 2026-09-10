@@ -254,6 +254,34 @@ if ( ! function_exists( 'update_option' ) ) {
     }
 }
 
+if ( ! function_exists( 'get_term_meta' ) ) {
+    function get_term_meta( $term_id, $key = '', $single = false ) {
+        $meta = $GLOBALS['fx_term_meta'][ (int) $term_id ][ $key ] ?? '';
+        return $single ? $meta : ( '' === $meta ? array() : array( $meta ) );
+    }
+}
+
+if ( ! function_exists( 'update_term_meta' ) ) {
+    function update_term_meta( $term_id, $key, $value ) {
+        $GLOBALS['fx_term_meta'][ (int) $term_id ][ $key ] = $value;
+        return true;
+    }
+}
+
+if ( ! function_exists( 'delete_term_meta' ) ) {
+    function delete_term_meta( $term_id, $key ) {
+        unset( $GLOBALS['fx_term_meta'][ (int) $term_id ][ $key ] );
+        return true;
+    }
+}
+
+if ( ! function_exists( 'wp_get_attachment_image_url' ) ) {
+    function wp_get_attachment_image_url( $attachment_id, $size = 'thumbnail' ) {
+        $id = (int) $attachment_id;
+        return $id > 0 ? "https://example.test/wp-content/uploads/img-{$id}-{$size}.png" : false;
+    }
+}
+
 if ( ! function_exists( 'date_i18n' ) ) {
     function date_i18n( $format, $timestamp = false, $gmt = false ) {
         $timestamp = false === $timestamp ? time() : $timestamp;

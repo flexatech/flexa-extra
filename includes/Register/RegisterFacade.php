@@ -58,6 +58,23 @@ final class RegisterFacade {
             FLEXA_EXTRA_VERSION,
             true
         );
+
+        wp_register_style(
+            ScriptName::STYLE_VARIATIONS,
+            FLEXA_EXTRA_PLUGIN_URL . 'assets/frontend/flexa-extra-variations.css',
+            [],
+            FLEXA_EXTRA_VERSION
+        );
+
+        // Depends on jQuery: the WooCommerce variation form listens for jQuery
+        // `change` events, so the swatch click must re-trigger through jQuery.
+        wp_register_script(
+            ScriptName::PAGE_VARIATIONS,
+            FLEXA_EXTRA_PLUGIN_URL . 'assets/frontend/flexa-extra-variations.js',
+            [ 'jquery' ],
+            FLEXA_EXTRA_VERSION,
+            true
+        );
     }
 
     /**

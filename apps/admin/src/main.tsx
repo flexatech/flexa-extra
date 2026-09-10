@@ -29,6 +29,14 @@ const queryClient = new QueryClient({
 const container = document.getElementById('flexa-extra-admin-root');
 
 if (container) {
+  // A submenu can request an initial screen via data-initial-route. Honour it
+  // only on a fresh load (no hash yet) so it never fights in-app navigation.
+  const initialRoute = container.dataset.initialRoute;
+  const hash = window.location.hash.replace(/^#/, '');
+  if (initialRoute && (hash === '' || hash === '/')) {
+    window.location.hash = `#${initialRoute}`;
+  }
+
   createRoot(container).render(
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>

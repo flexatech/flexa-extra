@@ -3,6 +3,61 @@
 All notable changes to Flexa Extra are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [1.4.0] - 2026-09-10
+
+### Added
+- **Variation swatches.** Variable products can now show their attribute
+  dropdowns as colour, image or button swatches. A new **Variation Swatches**
+  admin screen lists every global attribute, lets you set the swatch type per
+  attribute (off / colour / image / button), and assign a colour or image to
+  each term. Term colour/image are stored under the same meta keys as Woo
+  Variation Swatches (`product_attribute_color`, `product_attribute_image`) for
+  lossless compatibility.
+  - Storefront overlay hooks `woocommerce_dropdown_variation_attribute_options_html`:
+    the native `<select>` is hidden but kept as the single source of truth, so a
+    swatch click sets the select's value and fires its change event and
+    WooCommerce's own variation form handles price, stock and gallery image. The
+    swatches mirror WooCommerce's selected + disabled state back (unavailable
+    combinations are dimmed), and support click plus keyboard (Space/Enter and
+    arrow keys).
+  - Size, shape and an optional hover tooltip are configured under Style
+    settings (`style.vswatchSize`, `style.vswatchShape`, `style.vswatchTooltip`).
+  - Limits: works only with global attributes (`pa_*`) that have terms; custom
+    product-level attributes have no term to attach to. When a dedicated swatches
+    plugin (Woo Variation Swatches) is active, Flexa Extra defers to it
+    automatically to avoid double rendering.
+  - New filters: `flexa_extra/variation_swatches/enabled` (also carries the
+    defer guard) and `flexa_extra/variation_swatches/item_html`. REST routes
+    under `/flexa-extra/v1/variation-swatches/*` back the admin screen.
+- **Swatch display, appearance and availability options.** The Variation
+  Swatches screen gained Display, Appearance, Availability and Shop pages tabs:
+  - Display: a "Show selected value" line ("Attribute: Value") with a
+    configurable separator, "Default to button" for attributes with no swatch
+    type, a loading spinner while the variation resolves, and "Limit visible
+    swatches" (`style.vswatchMaxVisible`) that folds the overflow behind a
+    "+N more" toggle while always keeping the selected swatch visible.
+  - Appearance: custom width, height and button font size (px), selected-ring
+    and unavailable-strike colours, and a registered image size for image
+    swatches (`style.vswatchWidth`, `vswatchHeight`, `vswatchFontSize`,
+    `vswatchTickColor`, `vswatchCrossColor`, `vswatchImageSize`).
+  - Availability: behaviour for unavailable / out-of-stock swatches
+    (`style.vswatchOosBehavior`: blur, hide or show as normal), "Clear on
+    reselect" (`vswatchClearOnReselect`), and "Show stock per swatch"
+    (`vswatchShowStock`) which reads WooCommerce's own variation data to show
+    "N left" on low stock or "Out of stock" when every matching variation is
+    sold out.
+  - Shop pages: optionally render swatches in the shop and category loop
+    (`style.vswatchShowOnArchive`), each linking to the product with that option
+    preselected. New filters `flexa_extra/variation_swatches/archive_hook` and
+    `/archive_hook_priority` control where they render.
+- **Flexa hub.** The Flexa menu landing page lists only the modules that ship in
+  this plugin for now (Product Options and Variation Swatches); the wider
+  flexatech ecosystem is hidden behind the `flexa_extra/hub/show_ecosystem` filter
+  (off by default) until more modules are ready, so store owners are not shown
+  suggestions for things that are not released yet. When the ecosystem is on,
+  not-installed modules are dimmed so the installed and active ones stand out
+  (a dimmed card lights back up on hover).
+
 ## [1.3.0] - 2026-09-10
 
 ### Added

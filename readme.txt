@@ -1,22 +1,22 @@
-=== Flexa Extra – Extra Product Options For WooCommerce ===
+=== Flexa Extra – Product Options & Variation Swatches for WooCommerce ===
 Contributors: flexatech
-Tags: woocommerce, product options, extra product options, product addons, personalization
+Tags: woocommerce, product options, variation swatches, product addons, personalization
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
 WC requires at least: 6.0.0
 WC tested up to: 11.0.0
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Extra product options for WooCommerce: text, choices, swatches, buttons, date and colour pickers, plus optional per-option fees priced server-side.
+Custom product options and variation swatches for WooCommerce: add fields with optional fees, and show attribute swatches, all priced server-side.
 
 == Description ==
 
 Flexa Extra lets you attach extra option fields to WooCommerce products so shoppers can personalize what they buy and you can charge for it. Build an **Option Set** once, assign it to products (all, a hand-picked list, or by category/tag/price/stock conditions), and the fields appear on the product page with live price updates.
 
-Every price is recomputed on the server from your saved field definitions when the product is added to the cart — a client-submitted price is never trusted — so the amount a shopper pays always matches what you configured.
+Every price is recomputed on the server from your saved field definitions when the product is added to the cart (a client-submitted price is never trusted), so the amount a shopper pays always matches what you configured.
 
 📌 [**DEMO**](https://templates.sitebefy.com/templates/maison-verte/product/riviera-coral/)
 
@@ -55,6 +55,17 @@ Every price is recomputed on the server from your saved field definitions when t
 = Store insights =
 
 * Analytics screen ranking which options and choices sell, and the add-on revenue they bring, filterable by date range and order status
+
+= Variation swatches =
+
+* Turn WooCommerce variation attribute dropdowns into colour, image or button swatches on variable products, with its own admin screen to assign a colour or image to each attribute term (no extra plugin required)
+* The native variation `<select>` stays in place (hidden) and remains the source of truth: clicking a swatch drives WooCommerce's own variation logic, so price, stock and gallery image update exactly as before, unavailable combinations are dimmed, and keyboard selection works
+* Size, shape, custom width/height, button font size, selected-ring and unavailable-strike colours, and an optional hover tooltip, all from the Style settings
+* Show the selected value as an "Attribute: Value" line, render attributes with no swatch type as buttons, and show a loading spinner while the variation updates
+* Choose how unavailable or out-of-stock swatches behave (dim and strike, hide, or show as normal), and optionally clear the choice by clicking the selected swatch again
+* Limit how many swatches show per attribute with a "+N more" toggle, and show per-swatch stock ("N left" on low stock, "Out of stock" when a combination is sold out)
+* Show swatches in the shop and category loop too: each links to the product with that option preselected
+* Only applies to global attributes (`pa_*`) that have terms; custom product-level attributes have no term to attach a colour/image to. If a dedicated plugin like Woo Variation Swatches is active, Flexa Extra steps aside automatically to avoid double rendering
 
 = Headless & integrations =
 
@@ -112,6 +123,10 @@ Yes. The Import screen reads option sets from YayExtra, ThemeHigh "Extra Product
 
 Yes. Two open, read-only REST routes (`/wp-json/flexa-extra/v1/public/config` and `/public/product/{id}`) return the option sets, prices, and logic a front end needs to render the configurator and compute the live subtotal. They expose only what the on-page configurator already ships, and you can close the API with the `flexa_extra/public_api/enabled` filter. Add-to-cart and the final price are always recomputed server-side.
 
+= How do the variation swatches work, and what are the limits? =
+
+On a variable product, Flexa Extra can replace each attribute dropdown with colour, image or button swatches. It hides the native `<select>` but keeps it as the source of truth, so clicking a swatch uses WooCommerce's own variation logic for price, stock and the product gallery. Assign colours/images per attribute term under **Flexa Extra → Variation Swatches**. It works only with global attributes (`pa_*`) that have terms; custom product-level attributes have no term to attach to. If a dedicated swatches plugin (for example Woo Variation Swatches) is active, Flexa Extra defers to it automatically to avoid rendering swatches twice.
+
 == Screenshots ==
 
 1. All your option fields on one product page: swatches, buttons, radio and checkbox choices, priced live.
@@ -141,6 +156,16 @@ no build step.
 This plugin does not connect to any external services. All data is stored locally in your WordPress database.
 
 == Changelog ==
+
+= 1.4.0 =
+* Variation swatches: turn WooCommerce variation attribute dropdowns into colour, image or button swatches on variable products, with a new **Variation Swatches** admin screen to assign a colour or image to each attribute term. The native `<select>` stays as the source of truth, so price, stock and gallery image update through WooCommerce's own logic; unavailable combinations are dimmed and keyboard selection works. Works with global attributes (`pa_*`) that have terms; if a dedicated swatches plugin like Woo Variation Swatches is active, Flexa Extra defers to it automatically.
+* Swatch display options: show the selected value as an "Attribute: Value" line, render attributes with no swatch type as buttons, and show a loading spinner while the variation updates.
+* Swatch appearance: custom width, height and button font size, plus selected-ring and unavailable-strike colours and a choice of registered image size for image swatches, on top of the existing size, shape and tooltip options.
+* Swatch availability: choose how unavailable or out-of-stock swatches behave (dim and strike, hide, or show as normal), and optionally clear the choice by clicking the selected swatch again.
+* Limit visible swatches: cap how many swatches show per attribute and fold the rest behind a "+N more" toggle (the selected swatch always stays visible).
+* Stock per swatch: show "N left" on low-stock swatches and "Out of stock" when every matching variation is sold out, read from WooCommerce's own variation data.
+* Shop and category swatches: optionally render swatches under products in the loop, each linking to the product with that option preselected.
+* Flexa hub: the Flexa menu landing page lists only the modules that ship in this plugin for now (Product Options and Variation Swatches). The wider flexatech ecosystem is kept hidden (behind a filter) until more modules are ready; when shown, not-installed modules are dimmed so the active ones stand out.
 
 = 1.3.0 =
 * Import from more plugins: the Import screen now also reads option sets from **WooCommerce Product Add-Ons**, **Acowebs "Custom Product Addons for WooCommerce"**, and **YITH WooCommerce Product Add-Ons** (free), alongside the existing YayExtra and ThemeHigh sources. Field types, per-option prices (fixed, percentage, and increase/decrease), swatches and product/category assignment are mapped where an equivalent exists; anything that cannot be mapped 1:1 is listed per set. As before, imported sets are added switched off for you to review before turning them on.
@@ -187,6 +212,9 @@ This plugin does not connect to any external services. All data is stored locall
 * Initial release: option-set builder with text, number, date picker, colour picker, choice, swatch and button fields; storefront render engine; server-authoritative pricing/cart engine; UX & style settings; and a two-tier automated test suite.
 
 == Upgrade Notice ==
+
+= 1.4.0 =
+Adds variation swatches for variable products (colour/image/button) with a new admin screen to assign colours and images to attribute terms. No breaking changes.
 
 = 1.3.0 =
 Adds three more import sources: WooCommerce Product Add-Ons, Acowebs "Custom Product Addons", and YITH WooCommerce Product Add-Ons (free). No breaking changes.

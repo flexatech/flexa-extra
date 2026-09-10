@@ -63,6 +63,61 @@ land in three places in lockstep: the PHP engine, the storefront
 - **Confirm / custom validators**: field-level regex already exists; add a
   "confirm field" pattern.
 
+## Variation swatches (follow-ups)
+
+The swatch module already matches Variation Swatches for WooCommerce v2.4.0 on
+the core feature set (color / image / button, selected-value label, custom
+size/colors, default-to-button, preloader, clear-on-reselect, OOS blur/hide/none,
+image size, tooltip, shop/archive swatches). What is left is niche or sits behind
+the competitor's PRO tier. Listed in build priority (highest value for the effort
+first):
+
+- [x] **Display limit "+N more"** (done 2026-09-10): `style.vswatchMaxVisible`
+  (0 = show all) caps swatches per attribute on the single-product overlay.
+  Overflow terms render with `flexa-extra-vswatch__item--overflow` (hidden), a
+  `flexa-extra-vswatch__more` "+N more" chip toggles `is-expanded` on the list.
+  The selected swatch is never folded away. Setting lives in the Display tab.
+  Archive/shop loop still shows all (link-based, no expand JS there yet).
+- [x] **Stock info per swatch** (done 2026-09-10): setting `style.vswatchShowStock`
+  adds a `flexa-extra-vswatch__stock` node to each swatch. The storefront script
+  reads WooCommerce's `product_variations` form data, matches each term against the
+  currently-selected other attributes, and writes "N left" (in stock, at or below
+  the global low-stock threshold) or "Out of stock" (every matching variation sold
+  out, node gets `--oos`). Strings and the threshold are localized only when the
+  setting is on. Works where WooCommerce prints the variation JSON (products under
+  the AJAX threshold); larger catalogs silently show nothing. Setting lives in the
+  Availability tab.
+- **True hide-OOS at the WC layer**: today unavailable swatches are only hidden with
+  CSS (`data-oos="hide"`). To remove them for real, filter on
+  `woocommerce_variation_is_active` so WooCommerce itself drops the combination.
+  Finishes the Availability tab that already exists.
+- **Swatches in the filter / layered-nav widget**: render swatches instead of
+  checkboxes in the shop filter (widget and the filter block). Largest of the four,
+  touches the layered-nav render path.
+- **Catalog mode**: hide add-to-cart and treat swatches as display-only. Small
+  set-level toggle, but niche.
+- **Migrate from "Variation Swatches for WooCommerce"** (getwooplugins, the plugin
+  we benchmarked against): a one-click importer so a store already running that
+  plugin adopts Flexa without re-assigning every swatch by hand. Mirror the
+  Product Options migration architecture (`includes/Migration/`,
+  `AbstractMigrationSource` + a pure, unit-testable `convert()`, wired through the
+  `flexa_extra/migration/sources` filter and the `/import` admin screen). Scope:
+  read that plugin's swatch config (its attribute swatch type per taxonomy, and
+  the per-term color / image / label term meta) and map it onto Flexa's swatch
+  assignment. Flexa already reuses the woo-variation-swatches term-meta keys, so
+  for the *original* woo-variation-swatches plugin the values may line up
+  one-to-one; getwooplugins uses its own keys, so confirm the actual meta keys and
+  the global-attribute type storage before writing the reader. Two migration
+  targets to keep separate: (a) the swatch *type/values* (term meta, global), and
+  (b) any per-product overrides. Ship an `is_available()` that fails safe when the
+  source plugin's tables/meta are absent. This complements, and is distinct from,
+  the Product Options migration sources in the "Migration follow-ups" section.
+- **Color API / external swatch source**: pull swatch colors from a shared palette
+  or a third-party source. Very niche, lowest priority.
+
+Linkable per-swatch URLs are partly covered already: archive swatches link to the
+product with the option preselected via a query arg.
+
 ## Deferred from earlier phases
 
 - **In-tab field position and template variants** (Phase 5): render inside a

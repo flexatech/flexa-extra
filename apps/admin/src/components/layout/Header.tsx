@@ -1,23 +1,45 @@
 import { useCallback } from 'react';
 import { __ } from '@wordpress/i18n';
-import { BarChart3, Bolt, DownloadCloud, LayoutGrid, ShoppingBag } from 'lucide-react';
-import { useMatch, useNavigate } from 'react-router-dom';
+import { BarChart3, Bolt, DownloadCloud, LayoutGrid, Palette, ShoppingBag } from 'lucide-react';
+import { useLocation, useNavigate, type To } from 'react-router-dom';
 
 import { cn } from '@/lib/utils';
 import { useScrolled } from '@/hooks/useScrolled';
 import { HeaderNavMenuItem, HeaderNavMenuList } from '@/components/ui/navmenu-header';
 
-const NAV_ITEMS = [
-  { path: '/option-sets/*', to: '/option-sets', icon: LayoutGrid, label: __('Option Sets', 'flexa-extra') },
-  { path: '/analytics/*', to: '/analytics', icon: BarChart3, label: __('Analytics', 'flexa-extra') },
-  { path: '/import/*', to: '/import', icon: DownloadCloud, label: __('Import', 'flexa-extra') },
-  { path: '/settings/*', to: '/settings', icon: Bolt, label: __('Settings', 'flexa-extra') },
+interface NavItem {
+  to: string;
+  icon: typeof LayoutGrid;
+  label: string;
+  isActive: (pathname: string) => boolean;
+}
+
+const SWATCHES_ROOT = '/variation-swatches';
+
+// The app has two areas, entered from the WP "Flexa" submenu. Each shows only
+// its own tabs so Product Options and Variation Swatches stay separate.
+const PRODUCT_NAV: NavItem[] = [
+  { to: '/option-sets', icon: LayoutGrid, label: __('Option Sets', 'flexa-extra'), isActive: (p) => p.startsWith('/option-sets') },
+  { to: '/analytics', icon: BarChart3, label: __('Analytics', 'flexa-extra'), isActive: (p) => p.startsWith('/analytics') },
+  { to: '/import', icon: DownloadCloud, label: __('Import', 'flexa-extra'), isActive: (p) => p.startsWith('/import') },
+  { to: '/settings', icon: Bolt, label: __('Settings', 'flexa-extra'), isActive: (p) => p.startsWith('/settings') },
+];
+
+const SWATCHES_NAV: NavItem[] = [
+  { to: SWATCHES_ROOT, icon: Palette, label: __('Swatches', 'flexa-extra'), isActive: (p) => p === SWATCHES_ROOT },
+  { to: `${SWATCHES_ROOT}/settings`, icon: Bolt, label: __('Settings', 'flexa-extra'), isActive: (p) => p.startsWith(`${SWATCHES_ROOT}/settings`) },
+  { to: `${SWATCHES_ROOT}/analytics`, icon: BarChart3, label: __('Analytics', 'flexa-extra'), isActive: (p) => p.startsWith(`${SWATCHES_ROOT}/analytics`) },
 ];
 
 export default function Header() {
   const navigate = useNavigate();
   const scrolled = useScrolled();
-  const handleNavClick = useCallback((to: string) => navigate(to), [navigate]);
+  const { pathname } = useLocation();
+  const handleNavClick = useCallback((to: To) => navigate(to), [navigate]);
+
+  const inSwatches = pathname.startsWith(SWATCHES_ROOT);
+  const items = inSwatches ? SWATCHES_NAV : PRODUCT_NAV;
+  const subtitle = inSwatches ? __('Variation Swatches', 'flexa-extra') : __('Extra Product Options', 'flexa-extra');
 
   const activeItemClass = 'text-primary border-primary hover:text-primary-accent';
 
@@ -35,28 +57,22 @@ export default function Header() {
         </div>
         <div className="flex flex-col">
           <span className="text-foreground text-sm font-semibold">Flexa Extra</span>
-          <span className="text-muted-foreground text-[10px]">
-            {__('Extra Product Options', 'flexa-extra')}
-          </span>
+          <span className="text-muted-foreground text-[10px]">{subtitle}</span>
         </div>
       </div>
 
       {/* Navigation */}
       <HeaderNavMenuList className="h-full flex-none justify-start gap-6">
-        {NAV_ITEMS.map(({ path, to, icon: Icon, label }) => {
-          // eslint-disable-next-line react-hooks/rules-of-hooks
-          const isActive = !!useMatch({ path });
-          return (
-            <HeaderNavMenuItem
-              key={to}
-              onClick={() => handleNavClick(to)}
-              className={cn('h-full font-semibold', isActive && activeItemClass)}
-            >
-              <Icon className="size-5" />
-              <span>{label}</span>
-            </HeaderNavMenuItem>
-          );
-        })}
+        {items.map(({ to, icon: Icon, label, isActive }) => (
+          <HeaderNavMenuItem
+            key={to}
+            onClick={() => handleNavClick(to)}
+            className={cn('h-full font-semibold', isActive(pathname) && activeItemClass)}
+          >
+            <Icon className="size-5" />
+            <span>{label}</span>
+          </HeaderNavMenuItem>
+        ))}
       </HeaderNavMenuList>
     </header>
   );

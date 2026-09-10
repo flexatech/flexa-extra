@@ -19,6 +19,11 @@ class ScriptName {
 
     public const PAGE_FRONTEND = 'flexa-extra-frontend';
 
+    // Variation-swatch storefront assets (overlay on the variation dropdown).
+    public const STYLE_VARIATIONS = 'flexa-extra-variations';
+
+    public const PAGE_VARIATIONS = 'flexa-extra-variations';
+
     // Block editor script for the configurator block (plain wp.* globals, no build).
     public const BLOCK_EDITOR = 'flexa-extra-configurator-editor';
 }

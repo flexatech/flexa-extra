@@ -12,6 +12,8 @@ declare global {
       settings?: SettingsFormData;
       field_catalog?: FieldCatalogEntry[];
       onboarding?: OnboardingState;
+      /** True when another swatches plugin is active and Flexa defers to it (Pha 5). */
+      variation_swatches_deferred?: boolean;
       currency_settings: {
         currency: string;
         symbol: string;

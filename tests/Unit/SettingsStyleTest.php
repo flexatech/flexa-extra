@@ -22,6 +22,40 @@ final class SettingsStyleTest extends TestCase {
         $this->assertTrue( $defaults['style']['showTooltips'] );
         $this->assertSame( '', $defaults['style']['buttonBg'] );
         $this->assertSame( '', $defaults['style']['buttonActiveText'] );
+        // Variation-swatch style (Pha 0).
+        $this->assertSame( 'md', $defaults['style']['vswatchSize'] );
+        $this->assertSame( 'circle', $defaults['style']['vswatchShape'] );
+        $this->assertTrue( $defaults['style']['vswatchTooltip'] );
+    }
+
+    public function test_valid_vswatch_values_pass_through(): void {
+        $out = Helper::sanitize_settings(
+            array(
+                'style' => array(
+                    'vswatchSize'    => 'lg',
+                    'vswatchShape'   => 'square',
+                    'vswatchTooltip' => false,
+                ),
+            )
+        );
+
+        $this->assertSame( 'lg', $out['style']['vswatchSize'] );
+        $this->assertSame( 'square', $out['style']['vswatchShape'] );
+        $this->assertFalse( $out['style']['vswatchTooltip'] );
+    }
+
+    public function test_invalid_vswatch_enums_fall_back_to_defaults(): void {
+        $out = Helper::sanitize_settings(
+            array(
+                'style' => array(
+                    'vswatchSize'  => 'gigantic',
+                    'vswatchShape' => 'triangle',
+                ),
+            )
+        );
+
+        $this->assertSame( 'md', $out['style']['vswatchSize'] );
+        $this->assertSame( 'circle', $out['style']['vswatchShape'] );
     }
 
     public function test_valid_style_values_pass_through(): void {

@@ -76,6 +76,9 @@ class Helper {
                 'buttonText'       => (string) $settings['style']['buttonText'],
                 'buttonActiveBg'   => (string) $settings['style']['buttonActiveBg'],
                 'buttonActiveText' => (string) $settings['style']['buttonActiveText'],
+                'vswatchSize'      => (string) $settings['style']['vswatchSize'],
+                'vswatchShape'     => (string) $settings['style']['vswatchShape'],
+                'vswatchTooltip'   => ! empty( $settings['style']['vswatchTooltip'] ),
             ],
             'i18n'     => [
                 'required' => __( 'This field is required.', 'flexa-extra' ),
@@ -132,6 +135,29 @@ class Helper {
                 'buttonText'       => '',
                 'buttonActiveBg'   => '',
                 'buttonActiveText' => '',
+                'vswatchEnabled'   => true,     // master toggle for the variation-swatch module
+                'vswatchSize'      => 'md',     // sm | md | lg — variation swatches
+                'vswatchShape'     => 'circle', // circle | rounded | square
+                'vswatchTooltip'   => true,
+                // Display.
+                'vswatchShowLabel'      => false,        // show "Attribute: Value" of the current selection
+                'vswatchLabelSeparator' => ':',
+                'vswatchDefaultButton'  => false,        // render un-configured attributes as buttons (not the native dropdown)
+                'vswatchPreloader'      => true,         // spinner while the variation form updates
+                'vswatchMaxVisible'     => 0,            // cap swatches per attribute, fold the rest behind "+N more" (0 = show all)
+                // Appearance.
+                'vswatchWidth'     => 0,        // px override for swatch width  (0 = use size token)
+                'vswatchHeight'    => 0,        // px override for swatch height (0 = use size token)
+                'vswatchFontSize'  => 0,        // px font size for button swatches (0 = inherit)
+                'vswatchTickColor'  => '',      // selected-indicator color (hex, '' = theme currentColor)
+                'vswatchCrossColor' => '',      // unavailable strike color (hex, '' = default)
+                'vswatchImageSize'  => 'thumbnail', // registered image size for image swatches
+                // Availability.
+                'vswatchOosBehavior'    => 'blur',   // blur | hide | none — unavailable/OOS swatches
+                'vswatchClearOnReselect' => false,   // click the selected swatch again to clear it
+                'vswatchShowStock'      => false,    // show per-swatch stock ("N left" / "Out of stock")
+                // Shop / archive.
+                'vswatchShowOnArchive'  => false,    // render swatches in the shop / category loop
             ],
             'advanced' => [
                 'hideZeroSubtotal' => true,
@@ -185,6 +211,25 @@ class Helper {
                 'buttonText'       => self::sanitize_optional_hex( $style['buttonText'] ?? null ),
                 'buttonActiveBg'   => self::sanitize_optional_hex( $style['buttonActiveBg'] ?? null ),
                 'buttonActiveText' => self::sanitize_optional_hex( $style['buttonActiveText'] ?? null ),
+                'vswatchEnabled'   => isset( $style['vswatchEnabled'] ) ? rest_sanitize_boolean( $style['vswatchEnabled'] ) : $defaults['style']['vswatchEnabled'],
+                'vswatchSize'      => isset( $style['vswatchSize'] ) && in_array( $style['vswatchSize'], $allowed_sizes, true ) ? $style['vswatchSize'] : $defaults['style']['vswatchSize'],
+                'vswatchShape'     => isset( $style['vswatchShape'] ) && in_array( $style['vswatchShape'], $allowed_shapes, true ) ? $style['vswatchShape'] : $defaults['style']['vswatchShape'],
+                'vswatchTooltip'   => isset( $style['vswatchTooltip'] ) ? rest_sanitize_boolean( $style['vswatchTooltip'] ) : $defaults['style']['vswatchTooltip'],
+                'vswatchShowLabel'      => isset( $style['vswatchShowLabel'] ) ? rest_sanitize_boolean( $style['vswatchShowLabel'] ) : $defaults['style']['vswatchShowLabel'],
+                'vswatchLabelSeparator' => isset( $style['vswatchLabelSeparator'] ) ? sanitize_text_field( (string) $style['vswatchLabelSeparator'] ) : $defaults['style']['vswatchLabelSeparator'],
+                'vswatchDefaultButton'  => isset( $style['vswatchDefaultButton'] ) ? rest_sanitize_boolean( $style['vswatchDefaultButton'] ) : $defaults['style']['vswatchDefaultButton'],
+                'vswatchPreloader'      => isset( $style['vswatchPreloader'] ) ? rest_sanitize_boolean( $style['vswatchPreloader'] ) : $defaults['style']['vswatchPreloader'],
+                'vswatchMaxVisible'     => isset( $style['vswatchMaxVisible'] ) ? absint( $style['vswatchMaxVisible'] ) : $defaults['style']['vswatchMaxVisible'],
+                'vswatchWidth'     => isset( $style['vswatchWidth'] ) ? absint( $style['vswatchWidth'] ) : $defaults['style']['vswatchWidth'],
+                'vswatchHeight'    => isset( $style['vswatchHeight'] ) ? absint( $style['vswatchHeight'] ) : $defaults['style']['vswatchHeight'],
+                'vswatchFontSize'  => isset( $style['vswatchFontSize'] ) ? absint( $style['vswatchFontSize'] ) : $defaults['style']['vswatchFontSize'],
+                'vswatchTickColor'  => self::sanitize_optional_hex( $style['vswatchTickColor'] ?? null ),
+                'vswatchCrossColor' => self::sanitize_optional_hex( $style['vswatchCrossColor'] ?? null ),
+                'vswatchImageSize'  => isset( $style['vswatchImageSize'] ) && '' !== (string) $style['vswatchImageSize'] ? sanitize_key( (string) $style['vswatchImageSize'] ) : $defaults['style']['vswatchImageSize'],
+                'vswatchOosBehavior'    => isset( $style['vswatchOosBehavior'] ) && in_array( $style['vswatchOosBehavior'], array( 'blur', 'hide', 'none' ), true ) ? $style['vswatchOosBehavior'] : $defaults['style']['vswatchOosBehavior'],
+                'vswatchClearOnReselect' => isset( $style['vswatchClearOnReselect'] ) ? rest_sanitize_boolean( $style['vswatchClearOnReselect'] ) : $defaults['style']['vswatchClearOnReselect'],
+                'vswatchShowStock'      => isset( $style['vswatchShowStock'] ) ? rest_sanitize_boolean( $style['vswatchShowStock'] ) : $defaults['style']['vswatchShowStock'],
+                'vswatchShowOnArchive'  => isset( $style['vswatchShowOnArchive'] ) ? rest_sanitize_boolean( $style['vswatchShowOnArchive'] ) : $defaults['style']['vswatchShowOnArchive'],
             ],
             'advanced' => [
                 'hideZeroSubtotal'    => isset( $advanced['hideZeroSubtotal'] ) ? rest_sanitize_boolean( $advanced['hideZeroSubtotal'] ) : $defaults['advanced']['hideZeroSubtotal'],
