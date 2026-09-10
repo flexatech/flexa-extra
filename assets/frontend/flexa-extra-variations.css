@@ -1,0 +1,339 @@
+/* Flexa Extra — variation swatches (storefront). Plain CSS, no build step.
+ * Size/shape are driven by CSS custom properties emitted on the list by
+ * SwatchRenderer; each var has a sane fallback so the file works standalone. */
+
+.flexa-extra-vswatch-wrap {
+    display: block;
+}
+
+/* Shop / category loop: stacked swatch groups, one per attribute. */
+.flexa-extra-vswatch-archive {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 8px 0;
+}
+
+.flexa-extra-vswatch-archive .flexa-extra-vswatch__item {
+    text-decoration: none;
+}
+
+.flexa-extra-vswatch {
+    --fxe-vswatch-size: 36px;
+    --fxe-vswatch-radius: 50%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.flexa-extra-vswatch__item {
+    position: relative;
+    box-sizing: border-box;
+    width: var(--fxe-vswatch-w, var(--fxe-vswatch-size));
+    height: var(--fxe-vswatch-h, var(--fxe-vswatch-size));
+    padding: 0;
+    margin: 0;
+    border: 2px solid rgba(0, 0, 0, 0.15);
+    border-radius: var(--fxe-vswatch-radius);
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+.flexa-extra-vswatch__item:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+.flexa-extra-vswatch__chip {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Button type: auto-width pills that show the term name. */
+.flexa-extra-vswatch--button .flexa-extra-vswatch__item {
+    width: auto;
+    height: auto;
+    min-height: var(--fxe-vswatch-size);
+    padding: 0 14px;
+    border-radius: var(--fxe-vswatch-pill-radius, 999px);
+    overflow: visible;
+}
+
+.flexa-extra-vswatch__label {
+    display: inline-block;
+    line-height: 1.2;
+    font-size: var(--fxe-vswatch-font, 0.85em);
+    white-space: nowrap;
+    padding: 2px 0;
+}
+
+/* Selected state. Tick color drives the ring (defaults to the theme text color). */
+.flexa-extra-vswatch__item.is-selected {
+    border-color: var(--fxe-vswatch-tick, currentColor);
+    box-shadow: 0 0 0 2px #fff inset, 0 0 0 1px var(--fxe-vswatch-tick, currentColor);
+}
+
+.flexa-extra-vswatch--button .flexa-extra-vswatch__item.is-selected {
+    box-shadow: none;
+    background: var(--fxe-vswatch-selected-bg, #1f2327);
+    border-color: var(--fxe-vswatch-selected-bg, #1f2327);
+}
+
+.flexa-extra-vswatch--button .flexa-extra-vswatch__item.is-selected .flexa-extra-vswatch__label {
+    color: #fff;
+    font-weight: 600;
+}
+
+/* Hover lift, for non-disabled items. */
+.flexa-extra-vswatch__item:not(.is-disabled):hover {
+    transform: translateY(-1px);
+}
+
+/* Unavailable combination (mirrored from the native <select>). */
+.flexa-extra-vswatch__item.is-disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+/* Diagonal strike reads well on the square color / image chips, but looks off on
+ * wide pills, so scope it to non-button lists and use a line-through there. */
+.flexa-extra-vswatch:not(.flexa-extra-vswatch--button) .flexa-extra-vswatch__item.is-disabled::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top left,
+        transparent calc(50% - 1px),
+        var(--fxe-vswatch-cross, rgba(0, 0, 0, 0.4)) 50%,
+        transparent calc(50% + 1px)
+    );
+}
+
+.flexa-extra-vswatch--button .flexa-extra-vswatch__item.is-disabled .flexa-extra-vswatch__label {
+    text-decoration: line-through;
+}
+
+/* Availability behavior for unavailable / out-of-stock swatches. Default is
+ * "blur" (the dim + strike above). "hide" removes them; "none" shows them flat. */
+.flexa-extra-vswatch[data-oos="hide"] .flexa-extra-vswatch__item.is-disabled {
+    display: none;
+}
+
+.flexa-extra-vswatch[data-oos="none"] .flexa-extra-vswatch__item.is-disabled {
+    opacity: 1;
+    cursor: default;
+}
+
+.flexa-extra-vswatch[data-oos="none"] .flexa-extra-vswatch__item.is-disabled::before {
+    display: none;
+}
+
+.flexa-extra-vswatch[data-oos="none"] .flexa-extra-vswatch__item.is-disabled .flexa-extra-vswatch__label {
+    text-decoration: none;
+}
+
+/* Optional "Attribute: Value" line for the current selection. */
+.flexa-extra-vswatch__selected {
+    margin-top: 6px;
+    font-size: 0.9em;
+    line-height: 1.3;
+}
+
+.flexa-extra-vswatch__selected-label {
+    color: #6b7280;
+}
+
+.flexa-extra-vswatch__selected-value {
+    font-weight: 600;
+}
+
+/* Preloader shown while WooCommerce resolves the matching variation. */
+.flexa-extra-vswatch-wrap.is-loading .flexa-extra-vswatch {
+    opacity: 0.55;
+    transition: opacity 0.15s ease;
+}
+
+.flexa-extra-vswatch-wrap.is-loading {
+    position: relative;
+}
+
+.flexa-extra-vswatch-wrap.is-loading::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(0, 0, 0, 0.15);
+    border-top-color: rgba(0, 0, 0, 0.55);
+    border-radius: 50%;
+    animation: fxe-vswatch-spin 0.6s linear infinite;
+}
+
+@keyframes fxe-vswatch-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Tooltip (opt-in via .flexa-extra-vswatch--tooltip). */
+.flexa-extra-vswatch--tooltip .flexa-extra-vswatch__item:hover::after,
+.flexa-extra-vswatch--tooltip .flexa-extra-vswatch__item:focus-visible::after {
+    content: attr(data-title);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1f2327;
+    color: #fff;
+    font-size: 11px;
+    line-height: 1;
+    white-space: nowrap;
+    padding: 5px 8px;
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Per-swatch stock badge ("N left" / "Out of stock"). The chip keeps its own
+ * rounding so the badge can escape the swatch box; the list gains row spacing so
+ * wrapped rows keep room for the badge underneath. */
+.flexa-extra-vswatch__chip {
+    border-radius: inherit;
+}
+
+.flexa-extra-vswatch--stock {
+    row-gap: 22px;
+}
+
+.flexa-extra-vswatch--stock .flexa-extra-vswatch__item {
+    overflow: visible;
+}
+
+.flexa-extra-vswatch__stock {
+    position: absolute;
+    top: calc(100% + 3px);
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    line-height: 1.1;
+    white-space: nowrap;
+    color: #6b7280;
+    pointer-events: none;
+}
+
+.flexa-extra-vswatch__stock:empty {
+    display: none;
+}
+
+.flexa-extra-vswatch__stock--oos {
+    color: #b91c1c;
+}
+
+/* "+N more" limit: overflow swatches are hidden until the toggle expands the
+ * list. The toggle is a chip that sits inline at the end of the swatch row. */
+.flexa-extra-vswatch__item--overflow {
+    display: none;
+}
+
+.flexa-extra-vswatch.is-expanded .flexa-extra-vswatch__item--overflow {
+    display: flex;
+}
+
+.flexa-extra-vswatch__more {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--fxe-vswatch-size);
+    padding: 0 12px;
+    border: 1px dashed rgba(0, 0, 0, 0.25);
+    border-radius: var(--fxe-vswatch-pill-radius, 999px);
+    background: transparent;
+    color: #6b7280;
+    font-size: var(--fxe-vswatch-font, 0.8em);
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.flexa-extra-vswatch__more:hover,
+.flexa-extra-vswatch__more:focus-visible {
+    color: #1f2327;
+    border-color: rgba(0, 0, 0, 0.45);
+    outline: none;
+}
+
+.flexa-extra-vswatch.is-expanded .flexa-extra-vswatch__more {
+    display: none;
+}
+
+/* Native WooCommerce "Clear" (reset) link. Left-align it and give it a clean,
+ * self-contained look: a crisp inline refresh icon (independent of the theme's
+ * icon font) plus a muted colour that darkens on hover. Specificity is kept
+ * above the theme's own `.reset_variations` rules so it wins regardless of
+ * stylesheet order. */
+.variations_form a.reset_variations {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 6px 0 0;
+    padding: 0;
+    font-size: 0.8em;
+    font-weight: 500;
+    line-height: 1.3;
+    color: #6b7280;
+    text-decoration: none;
+    opacity: 1;
+    transition: color 0.15s ease;
+}
+
+.variations_form a.reset_variations:hover,
+.variations_form a.reset_variations:focus-visible {
+    color: #1f2327;
+    text-decoration: none;
+}
+
+.variations_form a.reset_variations::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    margin: 0;
+    flex: none;
+    font-family: inherit;
+    background-color: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M23 4v6h-6'/%3E%3Cpath d='M1 20v-6h6'/%3E%3Cpath d='M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M23 4v6h-6'/%3E%3Cpath d='M1 20v-6h6'/%3E%3Cpath d='M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15'/%3E%3C/svg%3E") center / contain no-repeat;
+    transition: transform 0.3s ease;
+}
+
+.variations_form a.reset_variations:hover::before {
+    transform: rotate(-90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .flexa-extra-vswatch__item {
+        transition: none;
+    }
+    .flexa-extra-vswatch__item:not(.is-disabled):hover {
+        transform: none;
+    }
+    .flexa-extra-vswatch-wrap.is-loading::after {
+        animation: none;
+    }
+    .variations_form a.reset_variations:hover::before {
+        transform: none;
+    }
+}

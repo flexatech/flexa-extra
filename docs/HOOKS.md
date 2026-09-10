@@ -78,6 +78,21 @@ returning an extra instance of `Flexa\Extra\Migration\AbstractMigrationSource`.
 
 `apply_filters( 'flexa_extra/migration/sources', array $sources )`
 
+### `flexa_extra/hub/show_ecosystem`
+Whether the Flexa hub page lists the wider flexatech ecosystem (our other
+plugins) as install suggestions. Off by default while only the in-plugin modules
+(Product Options, Variation Swatches) are shown; return `true` to bring the full
+grid back.
+
+`apply_filters( 'flexa_extra/hub/show_ecosystem', bool $show )`
+
+### `flexa/dashboard/modules`
+Filter the Flexa module catalog shown on the hub. Add or override entries keyed
+by module slug (see `Settings::hub_modules()` for the recognised fields). This
+runs on both the in-plugin-only and the full-ecosystem views.
+
+`apply_filters( 'flexa/dashboard/modules', array $modules )`
+
 ### `flexa_extra/resolver/applicable_sets`
 Filter which option sets apply to a product before rendering. Return value is
 cached per product for the request.
@@ -102,6 +117,75 @@ add_filter( 'flexa_extra/cart/item_extra', function ( $extra, $cart_item, $resul
     // e.g. round the surcharge up to the nearest whole unit.
     return ceil( $extra );
 }, 10, 3 );
+```
+
+### `flexa_extra/variation_swatches/enabled`
+Turn the variation-swatch overlay on or off. Defaults to `general.enabled`. The
+"defer to another swatches plugin" guard hangs off this filter.
+
+`apply_filters( 'flexa_extra/variation_swatches/enabled', bool $enabled )`
+
+### `flexa_extra/variation_swatches/item_html`
+Filter the inner markup of a single variation swatch (the color chip, image or
+button label) before it is wrapped in its `<li>`.
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `$inner` | `string` | Inner HTML (chip / image / label) |
+| `$term` | `WP_Term` | The attribute term |
+| `$type` | `string` | Swatch type: `color`, `image` or `button` |
+
+```php
+add_filter( 'flexa_extra/variation_swatches/item_html', function ( $inner, $term, $type ) {
+    return $inner;
+}, 10, 3 );
+```
+
+### `flexa_extra/variation_swatches/archive_hook` and `/archive_hook_priority`
+Change where shop / category swatches are rendered in the product loop. Defaults
+to the `woocommerce_after_shop_loop_item_title` action at priority `20`.
+
+```php
+add_filter( 'flexa_extra/variation_swatches/archive_hook', fn() => 'woocommerce_after_shop_loop_item' );
+add_filter( 'flexa_extra/variation_swatches/archive_hook_priority', fn() => 15 );
+```
+
+### Variation swatch CSS variables
+
+The swatch list carries inline custom properties driven by the Variation Swatches
+settings. Any of these can be overridden in your own stylesheet:
+
+| Property | Purpose | Default |
+|----------|---------|---------|
+| `--fxe-vswatch-size` | Preset swatch box size | `36px` |
+| `--fxe-vswatch-w` / `--fxe-vswatch-h` | Custom width / height (px override) | falls back to size |
+| `--fxe-vswatch-radius` | Corner radius of colour / image chips | `50%` |
+| `--fxe-vswatch-pill-radius` | Corner radius of button pills | `999px` |
+| `--fxe-vswatch-font` | Button swatch font size | `0.85em` |
+| `--fxe-vswatch-tick` | Selected-swatch ring colour | theme `currentColor` |
+| `--fxe-vswatch-cross` | Strike colour on unavailable swatches | `rgba(0,0,0,0.4)` |
+| `--fxe-vswatch-selected-bg` | Background of the selected button pill | `#1f2327` |
+
+The list element also exposes `data-oos` (`blur` / `hide` / `none`) for the
+unavailable-swatch behaviour.
+
+When "Limit visible swatches" is set, swatches past the limit carry
+`flexa-extra-vswatch__item--overflow` and stay hidden until the
+`flexa-extra-vswatch__more` toggle ("+N more") is activated, which adds
+`is-expanded` to the list. Both the overflow items and the toggle chip are
+styleable from your own stylesheet.
+
+When "Show stock per swatch" is on, the list gets the `flexa-extra-vswatch--stock`
+class and each swatch holds a `flexa-extra-vswatch__stock` node that the storefront
+script fills from the matching variation: "N left" on low stock (at or below
+WooCommerce's low-stock threshold) or "Out of stock" when every matching variation
+is sold out. The node gains `flexa-extra-vswatch__stock--oos` in the sold-out case.
+This reads the variation data WooCommerce prints on the form, so products with more
+variations than the AJAX threshold do not show it.
+
+```css
+/* Brand-colour the selected button */
+.flexa-extra-vswatch--button { --fxe-vswatch-selected-bg: #2563eb; }
 ```
 
 ## Styling

@@ -25,5 +25,7 @@ final class Initialize {
         \Flexa\Extra\Cart\CartHandler::get_instance();
         \Flexa\Extra\Cart\PriceCalculator::get_instance();
         \Flexa\Extra\Cart\StockManager::get_instance();
+        \Flexa\Extra\Variations\SwatchRenderer::get_instance();
+        \Flexa\Extra\Variations\ArchiveSwatches::get_instance();
     }
 }

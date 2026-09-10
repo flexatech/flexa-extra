@@ -7,6 +7,9 @@ import OptionSetBuilder from './pages/option-sets/builder/OptionSetBuilder';
 import Analytics from './pages/analytics/Analytics';
 import Migration from './pages/migration/Migration';
 import Settings from './pages/settings/Settings';
+import VariationSwatches from './pages/variation-swatches/VariationSwatches';
+import VariationSwatchesSettings from './pages/variation-swatches/VariationSwatchesSettings';
+import VariationSwatchesAnalytics from './pages/variation-swatches/VariationSwatchesAnalytics';
 
 const baseRoutes: RouteObject[] = [
   {
@@ -24,6 +27,18 @@ const baseRoutes: RouteObject[] = [
   {
     path: 'option-sets/:id',
     element: <OptionSetBuilder />,
+  },
+  {
+    path: 'variation-swatches',
+    element: <VariationSwatches />,
+  },
+  {
+    path: 'variation-swatches/settings',
+    element: <VariationSwatchesSettings />,
+  },
+  {
+    path: 'variation-swatches/analytics',
+    element: <VariationSwatchesAnalytics />,
   },
   {
     path: 'analytics',
