@@ -61,6 +61,16 @@ export default function Migration() {
         </div>
       )}
 
+      {!isLoading && !isError && (sources ?? []).length === 0 && (
+        <div className="border-border text-muted-foreground flex items-center gap-2 rounded-lg border border-dashed p-6 text-sm">
+          <PackageOpen className="h-4 w-4 shrink-0" />
+          {__(
+            'No supported plugins were found on this site. Import sources appear here only once a plugin like YayExtra or ThemeHigh "Extra Product Options" has been installed and has data to bring over.',
+            'flexa-extra',
+          )}
+        </div>
+      )}
+
       <div className="space-y-4">
         {(sources ?? []).map((source) => {
           const busy = pending === source.slug;
