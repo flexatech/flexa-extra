@@ -34,14 +34,17 @@ land in three places in lockstep: the PHP engine, the storefront
 - **Light input types (high ROI)**: `email`, `url`, `tel`, `password`, `hidden`,
   `range`/slider, `time_picker`, `datetime`. Mostly native inputs plus validation,
   reusing the existing pipeline. Add in `Fields/FieldType.php` then flow through
-  `registry.ts`, `FieldRenderer.php`, and the sanitizer.
+  `registry.ts`, `FieldRenderer.php`, and the sanitizer. `time_picker` / `datetime`
+  also close an Acowebs WCPA gap: it has dedicated `time` and `datetime-local`
+  fields that Flexa currently maps to `text` / `date_picker` with a warning.
 - **Multi-select dropdown**: extend the existing `dropdown` with the `maxSelect`
   bound already in place.
 - **File upload, done safely (decision 2026-09-08: bring it back)**: server-side
   upload with a nonce, a MIME allowlist, a size cap, stored as an attachment (or a
   directory outside the web root); the value flows into cart/order meta as a URL or
   attachment id. Needs its own security review and integration test. Single largest
-  parity gap versus Pro.
+  parity gap versus Pro, and versus Acowebs WCPA free (which ships file/image upload
+  in the free tier); `AcowebsWcpaSource` skips `file` fields on import today.
 
 ## Phase 11: Logic / targeting + layout
 
@@ -51,6 +54,12 @@ land in three places in lockstep: the PHP engine, the storefront
   (`Frontend/OptionSetResolver::condition_matches`).
 - **Section layout**: `tabs` and `accordion` (a set-level setting that switches the
   container class plus a JS toggle), building on the existing Style tab.
+- **Multi-column / grid layout**: place several fields on one row with per-field
+  column widths (e.g. first name + last name side by side). Flexa renders a single
+  vertical column today; the builder would need a row/column model plus a
+  responsive grid in `FieldRenderer.php`, the storefront CSS, and the preview.
+  Acowebs WCPA stores fields as rows of column objects, so its forms currently
+  flatten to one column on import (`Migration\AcowebsWcpaSource::convert`).
 - **Confirm / custom validators**: field-level regex already exists; add a
   "confirm field" pattern.
 
