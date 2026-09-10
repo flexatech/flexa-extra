@@ -48,10 +48,11 @@ final class Migrator {
     /**
      * A summary of the importable sources and how many sets each would import.
      *
-     * Only sources whose plugin is (or was) installed on this site are listed —
-     * detected by {@see AbstractMigrationSource::is_available()}, i.e. the plugin
-     * is active or has left its data behind. A plugin that was never installed
-     * has nothing to import, so it is omitted rather than shown as an empty row.
+     * Only sources that actually have something to import are listed: the plugin
+     * must be available on this site (active or with its data left behind, per
+     * {@see AbstractMigrationSource::is_available()}) AND hold at least one option
+     * set. A plugin that was never installed, or is installed but empty, has
+     * nothing to bring over, so it is omitted rather than shown as an empty row.
      *
      * @return list<array{slug:string,label:string,available:bool,count:int}>
      */
@@ -61,11 +62,15 @@ final class Migrator {
             if ( ! $source->is_available() ) {
                 continue;
             }
+            $count = $source->count();
+            if ( $count < 1 ) {
+                continue;
+            }
             $report[] = [
                 'slug'      => $source->slug(),
                 'label'     => $source->label(),
                 'available' => true,
-                'count'     => $source->count(),
+                'count'     => $count,
             ];
         }
         return $report;

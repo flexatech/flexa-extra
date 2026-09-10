@@ -143,7 +143,7 @@ This plugin does not connect to any external services. All data is stored locall
 == Changelog ==
 
 = 1.2.1 =
-* Import screen: only lists plugins that are installed on the site (active, or with data left behind), instead of always showing every supported plugin with an empty row.
+* Import screen: only lists plugins that actually have option sets to import (present on the site, with at least one set), instead of always showing every supported plugin with an empty row.
 
 = 1.2.0 =
 * Formula prices: a price can be a safe arithmetic formula (on field prices, per-option prices and fee/discount rules) using `base`, `qty` and other fields' values, the operators `+ - * / ( )`, and `round()`, `min()`, `max()`. The result is the per-unit surcharge, so `qty` is for volume tiers like `max(2, 10 - qty)` rather than a plain per-unit charge. Evaluated with a hand-written parser (never `eval`); a bad formula is worth 0 and never errors. The builder validates as you type.
@@ -186,7 +186,7 @@ This plugin does not connect to any external services. All data is stored locall
 == Upgrade Notice ==
 
 = 1.2.1 =
-The Import screen now lists only the plugins found on your site, instead of every supported plugin. No breaking changes.
+The Import screen now lists only the plugins that actually have option sets to import, instead of every supported plugin. No breaking changes.
 
 = 1.2.0 =
 Adds formula prices (safe arithmetic over base, quantity and other fields), custom-styled checkbox/radio/colour controls, a localized calendar for the date field (with earliest/latest and blocked dates), and per-field CSS class hooks. No breaking changes; stored values are unchanged.
