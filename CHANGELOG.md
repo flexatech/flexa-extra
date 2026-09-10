@@ -3,6 +3,16 @@
 All notable changes to Flexa Extra are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [1.2.1] - 2026-09-10
+
+### Changed
+- **The Import screen only lists plugins that have something to import.** A source
+  (YayExtra, ThemeHigh "Extra Product Options") is shown only when its plugin is
+  present on this site (active or with its data left behind) and holds at least one
+  option set, instead of always listing every supported plugin with an empty "No
+  data found" row. A plugin that is installed but empty no longer appears, and an
+  empty state explains when nothing importable is present.
+
 ## [1.2.0] - 2026-09-09
 
 ### Added

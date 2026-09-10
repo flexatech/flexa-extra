@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Flexa Extra 1.2.0\n"
+"Project-Id-Version: Flexa Extra 1.2.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/flexa-extra\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-09T09:53:27+00:00\n"
+"POT-Creation-Date: 2026-09-10T01:18:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: flexa-extra\n"
@@ -1033,6 +1033,10 @@ msgstr ""
 
 #: js/main.js:5
 msgid "Failed to load import sources."
+msgstr ""
+
+#: js/main.js:5
+msgid "No supported plugins were found on this site. Import sources appear here only once a plugin like YayExtra or ThemeHigh \"Extra Product Options\" has been installed and has data to bring over."
 msgstr ""
 
 #. translators: %d: number of option sets found.
