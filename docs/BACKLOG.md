@@ -73,8 +73,16 @@ assignment. Not yet mapped, reported as warnings for now:
 - **YayExtra show/hide "actions"** and price sub-actions. Some could become Flexa
   fees/discounts, but the model differs; needs a careful mapping.
 - **ThemeHigh Pro pricing** (the free version stores no per-option price).
-- More sources behind the `flexa_extra/migration/sources` filter (e.g. YITH,
-  WooCommerce Product Add-ons) if there is demand.
+- [x] More sources behind the `flexa_extra/migration/sources` filter: **WooCommerce
+  Product Add-Ons**, **Acowebs "Custom Product Addons" (WCPA)**, and **YITH
+  WooCommerce Product Add-Ons** (free) shipped in 1.3.0. Acowebs was built and
+  verified against a real installed form; WooCommerce Product Add-Ons and YITH have
+  their `read_raw()` written against each plugin's documented storage format with a
+  unit-tested `convert()`. The YITH reader targets the current custom tables
+  (`{prefix}yith_wapo_blocks`/`_addons`); if a very different version is found,
+  `is_available()` fails safe (the source just does not appear).
+- Further sources (e.g. WPC Product Add-ons, Advanced Product Fields) if there is
+  demand, added through the same filter.
 
 ## Housekeeping (optional)
 

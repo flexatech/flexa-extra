@@ -6,7 +6,7 @@ Tested up to: 7.1
 Requires PHP: 7.4
 WC requires at least: 6.0.0
 WC tested up to: 11.0.0
-Stable tag: 1.2.1
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,7 +106,7 @@ Yes. Each field is wrapped in a `<div>` with class hooks: `flexa-extra-field` on
 
 = Can I import from another options plugin? =
 
-Yes. The Import screen reads option sets from YayExtra and from ThemeHigh "Extra Product Options" (free) and re-creates them in Flexa Extra, switched off. They appear in the Option Sets list for review; the storefront ignores them until you turn each one on. Field types, per-option prices, swatches and product assignment are mapped where an equivalent exists; anything that cannot be mapped 1:1 is listed per set so you can re-create it. Keep the source plugin active during the import so its data is readable.
+Yes. The Import screen reads option sets from YayExtra, ThemeHigh "Extra Product Options" (free), WooCommerce Product Add-Ons, Acowebs "Custom Product Addons for WooCommerce", and YITH WooCommerce Product Add-Ons (free), and re-creates them in Flexa Extra, switched off. They appear in the Option Sets list for review; the storefront ignores them until you turn each one on. Field types, per-option prices, swatches and product assignment are mapped where an equivalent exists; anything that cannot be mapped 1:1 is listed per set so you can re-create it. Keep the source plugin active during the import so its data is readable.
 
 = Can I use it with a headless or decoupled front end? =
 
@@ -141,6 +141,9 @@ no build step.
 This plugin does not connect to any external services. All data is stored locally in your WordPress database.
 
 == Changelog ==
+
+= 1.3.0 =
+* Import from more plugins: the Import screen now also reads option sets from **WooCommerce Product Add-Ons**, **Acowebs "Custom Product Addons for WooCommerce"**, and **YITH WooCommerce Product Add-Ons** (free), alongside the existing YayExtra and ThemeHigh sources. Field types, per-option prices (fixed, percentage, and increase/decrease), swatches and product/category assignment are mapped where an equivalent exists; anything that cannot be mapped 1:1 is listed per set. As before, imported sets are added switched off for you to review before turning them on.
 
 = 1.2.1 =
 * Import screen: only lists plugins that actually have option sets to import (present on the site, with at least one set), instead of always showing every supported plugin with an empty row.
@@ -184,6 +187,9 @@ This plugin does not connect to any external services. All data is stored locall
 * Initial release: option-set builder with text, number, date picker, colour picker, choice, swatch and button fields; storefront render engine; server-authoritative pricing/cart engine; UX & style settings; and a two-tier automated test suite.
 
 == Upgrade Notice ==
+
+= 1.3.0 =
+Adds three more import sources: WooCommerce Product Add-Ons, Acowebs "Custom Product Addons", and YITH WooCommerce Product Add-Ons (free). No breaking changes.
 
 = 1.2.1 =
 The Import screen now lists only the plugins that actually have option sets to import, instead of every supported plugin. No breaking changes.

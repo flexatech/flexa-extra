@@ -65,7 +65,7 @@ export default function Migration() {
         <div className="border-border text-muted-foreground flex items-center gap-2 rounded-lg border border-dashed p-6 text-sm">
           <PackageOpen className="h-4 w-4 shrink-0" />
           {__(
-            'No supported plugins were found on this site. Import sources appear here only once a plugin like YayExtra or ThemeHigh "Extra Product Options" has been installed and has data to bring over.',
+            'No supported plugins were found on this site. Import sources appear here only once a plugin like YayExtra, ThemeHigh "Extra Product Options", WooCommerce Product Add-Ons, Acowebs "Custom Product Addons" or YITH WooCommerce Product Add-Ons has been installed and has data to bring over.',
             'flexa-extra',
           )}
         </div>
