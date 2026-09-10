@@ -6,12 +6,22 @@ All notable changes to Flexa Extra are documented here. This project adheres to
 ## [1.3.0] - 2026-09-10
 
 ### Added
-- **Two more import sources.** The Import screen now recognizes **WooCommerce
+- **Three more import sources.** The Import screen now recognizes **WooCommerce
   Product Add-Ons** (per-product `_product_addons` meta and `global_product_addon`
-  groups) and the free **YITH WooCommerce Product Add-Ons & Extra Options** (its
+  groups), **Acowebs "Custom Product Addons for WooCommerce"** (WCPA), and the free
+  **YITH WooCommerce Product Add-Ons & Extra Options** (its
   `{prefix}yith_wapo_blocks` / `{prefix}yith_wapo_addons` tables). Each becomes an
   option set, added switched off, routed through the same schema sanitizer as the
   other sources.
+  - Acowebs WCPA: reads each `wcpa_pt_forms` form (fields stored as JSON in
+    `_wcpa_fb_json_data`, sections → rows → fields, choices under `values`). Text
+    (with email/url subtypes), textarea, number, date, colour, select, radio,
+    checkbox and single checkbox map across; a section name becomes a heading;
+    hidden/separator are dropped and file uploads skipped. Per-option prices
+    (fixed / percentage) and field-level prices import; a "custom" price formula is
+    flagged rather than guessed at. Options carrying a colour or image become a
+    swatch. A form's product assignment is rebuilt from the products that reference
+    it (`_wcpa_product_meta`) and from the form's own product categories.
   - WooCommerce Product Add-Ons: `multiple_choice` maps to dropdown / radio /
     swatch by its display; `custom_text`/`custom_textarea` to text/textarea;
     `checkbox` to multi-select; `custom_price`/`input_multiplier` to a number
@@ -26,10 +36,10 @@ All notable changes to Flexa Extra are documented here. This project adheres to
     into per-option rows, and per-option pricing (`increase` / `decrease` /
     `percentage` / `multiplied`) is honoured. Block product/category rules become
     Flexa Extra targeting.
-  - Both are registered through the existing `flexa_extra/migration/sources`
+  - All three are registered through the existing `flexa_extra/migration/sources`
     filter, so third-party sources plug in the same way. Converters are pure
-    array-to-array maps with unit tests
-    (`tests/Unit/WooProductAddonsSourceTest.php`, `YithWapoSourceTest.php`).
+    array-to-array maps with unit tests (`tests/Unit/WooProductAddonsSourceTest.php`,
+    `AcowebsWcpaSourceTest.php`, `YithWapoSourceTest.php`).
 
 ## [1.2.1] - 2026-09-10
 
