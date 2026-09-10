@@ -254,11 +254,12 @@ if ( ! function_exists( 'update_option' ) ) {
     }
 }
 
-if ( ! function_exists( 'wp_date' ) ) {
-    function wp_date( $format, $timestamp = null, $timezone = null ) {
-        $timestamp = null === $timestamp ? time() : $timestamp;
-        $tz        = $timezone instanceof \DateTimeZone ? $timezone : new \DateTimeZone( 'UTC' );
-        $dt        = ( new \DateTimeImmutable( '@' . (int) $timestamp ) )->setTimezone( $tz );
+if ( ! function_exists( 'date_i18n' ) ) {
+    function date_i18n( $format, $timestamp = false, $gmt = false ) {
+        $timestamp = false === $timestamp ? time() : $timestamp;
+        // The plugin passes an already-UTC timestamp with $gmt = true, so format
+        // it as UTC; otherwise fall back to UTC too (no site offset in the stub).
+        $dt = ( new \DateTimeImmutable( '@' . (int) $timestamp ) )->setTimezone( new \DateTimeZone( 'UTC' ) );
         return $dt->format( $format );
     }
 }

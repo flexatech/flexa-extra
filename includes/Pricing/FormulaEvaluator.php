@@ -257,7 +257,7 @@ final class FormulaEvaluator {
             if ( 'qty' === $name ) {
                 return $this->context['qty'];
             }
-            throw new \RuntimeException( 'unknown identifier: ' . $name );
+            throw new \RuntimeException( 'unknown identifier: ' . $name ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Internal control-flow exception, always caught in evaluate()/is_valid() and turned into 0.0; the message is never output.
         }
 
         throw new \RuntimeException( 'unexpected token' );
@@ -311,6 +311,6 @@ final class FormulaEvaluator {
                 }
                 return (float) max( $args );
         }
-        throw new \RuntimeException( 'unknown function: ' . $name );
+        throw new \RuntimeException( 'unknown function: ' . $name ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Internal control-flow exception, always caught in evaluate()/is_valid() and turned into 0.0; the message is never output.
     }
 }
