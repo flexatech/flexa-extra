@@ -32,3 +32,6 @@ Thumbs.db
 /vendor
 /docs
 /.editorconfig
+
+# Markdown docs are not shipped in the plugin (readme.txt is the WP.org readme).
+*.md
