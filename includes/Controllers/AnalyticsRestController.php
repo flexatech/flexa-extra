@@ -50,7 +50,7 @@ final class AnalyticsRestController extends BaseRestController {
             [ $from_ts, $to_ts ] = [ $to_ts, $from_ts ];
         }
 
-        $statuses = $this->parse_statuses( (string) $request->get_param( 'status' ) );
+        $statuses = $this->parse_order_statuses( (string) $request->get_param( 'status' ) );
 
         $orders = wc_get_orders(
             [
@@ -157,50 +157,5 @@ final class AnalyticsRestController extends BaseRestController {
                 ],
             ]
         );
-    }
-
-    /**
-     * Normalise a Y-m-d input to a day boundary timestamp. `$end` pins to the
-     * end of the day so the range is inclusive; falls back to `$default`.
-     */
-    private function day_bound( string $value, string $default, bool $end ): int {
-        $ts = '' !== $value ? strtotime( $value ) : false;
-        if ( false === $ts ) {
-            $ts = strtotime( $default );
-        }
-        $ts = false === $ts ? time() : $ts;
-
-        $suffix = $end ? ' 23:59:59' : ' 00:00:00';
-        $bound  = strtotime( gmdate( 'Y-m-d', $ts ) . $suffix );
-
-        return false === $bound ? $ts : $bound;
-    }
-
-    /**
-     * Parse a comma-separated status filter into WooCommerce order statuses.
-     * Empty / "any" means paid-and-fulfilled statuses (the useful default).
-     *
-     * @return list<string>
-     */
-    private function parse_statuses( string $raw ): array {
-        $raw = trim( $raw );
-        if ( '' === $raw || 'any' === $raw ) {
-            return [ 'completed', 'processing' ];
-        }
-
-        $valid = array_keys( wc_get_order_statuses() ); // e.g. wc-completed.
-        $out   = [];
-        foreach ( explode( ',', $raw ) as $status ) {
-            $status = sanitize_key( trim( $status ) );
-            if ( '' === $status ) {
-                continue;
-            }
-            $prefixed = 0 === strpos( $status, 'wc-' ) ? $status : 'wc-' . $status;
-            if ( in_array( $prefixed, $valid, true ) ) {
-                $out[] = substr( $prefixed, 3 );
-            }
-        }
-
-        return empty( $out ) ? [ 'completed', 'processing' ] : $out;
     }
 }

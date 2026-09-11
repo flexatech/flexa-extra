@@ -2,21 +2,1733 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Flexa Extra – Extra Product Options For WooCommerce 1.4.0\n"
+"Project-Id-Version: Flexa Extra 1.4.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/flexa-extra\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-10T09:48:19+00:00\n"
+"POT-Creation-Date: 2026-09-11T04:57:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: flexa-extra\n"
 
+#: js/main.js:1
+#: js/main.js:3
+#: includes/Engine/Admin/CustomPostType.php:29
+msgid "Option Sets"
+msgstr ""
+
+#: js/main.js:1
+#: includes/Engine/Admin/Settings.php:305
+msgid "Analytics"
+msgstr ""
+
+#: js/main.js:1
+#: js/main.js:3
+#: js/main.js:9
+msgid "Import"
+msgstr ""
+
+#: js/main.js:1
+#: js/main.js:15
+#: includes/Engine/Admin/Settings.php:66
+msgid "Settings"
+msgstr ""
+
+#: js/main.js:1
+msgid "Swatches"
+msgstr ""
+
+#: js/main.js:1
+#: includes/Engine/Admin/Settings.php:103
+#: includes/Engine/Admin/Settings.php:104
+#: includes/Engine/Admin/Settings.php:167
+msgid "Variation Swatches"
+msgstr ""
+
+#: js/main.js:1
+msgid "Extra Product Options"
+msgstr ""
+
+#: js/main.js:1
+msgid "Page Not Found"
+msgstr ""
+
+#: js/main.js:1
+msgid "Go to Option Sets"
+msgstr ""
+
+#: js/main.js:1
+msgid "Failed to load option sets"
+msgstr ""
+
+#: js/main.js:1
+msgid "Failed to create option set"
+msgstr ""
+
+#: js/main.js:1
+msgid "Option set created!"
+msgstr ""
+
+#: js/main.js:1
+msgid "Failed to load setup guide"
+msgstr ""
+
+#: js/main.js:1
+msgid "Failed to update setup guide"
+msgstr ""
+
+#: js/main.js:1
+msgid "Gift wrapping & message"
+msgstr ""
+
+#: js/main.js:1
+msgid "A paid gift-wrap add-on plus an optional printed message."
+msgstr ""
+
+#: js/main.js:1
+msgid "Gift wrapping"
+msgstr ""
+
+#: js/main.js:1
+msgid "Wrap this as a gift"
+msgstr ""
+
+#: js/main.js:1
+msgid "Gift message"
+msgstr ""
+
+#: js/main.js:1
+msgid "Write a short message (optional)"
+msgstr ""
+
+#: js/main.js:1
+msgid "Engraving / personalization"
+msgstr ""
+
+#: js/main.js:1
+msgid "A flat-fee engraving text field with a font choice."
+msgstr ""
+
+#: js/main.js:1
+msgid "Engraving"
+msgstr ""
+
+#: js/main.js:1
+msgid "Engraving text"
+msgstr ""
+
+#: js/main.js:1
+msgid "Up to 20 characters"
+msgstr ""
+
+#: js/main.js:1
+msgid "Font style"
+msgstr ""
+
+#: js/main.js:1
+msgid "Classic"
+msgstr ""
+
+#: js/main.js:1
+msgid "Script"
+msgstr ""
+
+#: js/main.js:1
+msgid "Modern"
+msgstr ""
+
+#: js/main.js:1
+msgid "Size & colour"
+msgstr ""
+
+#: js/main.js:1
+msgid "A size button group and a colour swatch picker."
+msgstr ""
+
+#: js/main.js:1
+msgid "Size"
+msgstr ""
+
+#: js/main.js:1
+msgid "S"
+msgstr ""
+
+#: js/main.js:1
+msgid "M"
+msgstr ""
+
+#: js/main.js:1
+msgid "L"
+msgstr ""
+
+#: js/main.js:1
+msgid "XL"
+msgstr ""
+
+#: js/main.js:1
+msgid "Colour"
+msgstr ""
+
+#: js/main.js:1
+msgid "Black"
+msgstr ""
+
+#: js/main.js:1
+msgid "White"
+msgstr ""
+
+#: js/main.js:1
+msgid "Red"
+msgstr ""
+
+#: js/main.js:1
+msgid "Blue"
+msgstr ""
+
+#: js/main.js:1
+msgid "Installation service"
+msgstr ""
+
+#: js/main.js:1
+msgid "A single-choice service tier with per-tier fees."
+msgstr ""
+
+#: js/main.js:1
+msgid "Installation"
+msgstr ""
+
+#: js/main.js:1
+msgid "No installation"
+msgstr ""
+
+#: js/main.js:1
+msgid "Standard installation"
+msgstr ""
+
+#: js/main.js:1
+msgid "Premium installation"
+msgstr ""
+
+#: js/main.js:1
+msgid "Warranty / protection plan"
+msgstr ""
+
+#: js/main.js:1
+msgid "An add-on plan priced as a percentage of the product."
+msgstr ""
+
+#: js/main.js:1
+msgid "Protection plan"
+msgstr ""
+
+#: js/main.js:1
+msgid "No thanks"
+msgstr ""
+
+#: js/main.js:1
+msgid "1-year protection"
+msgstr ""
+
+#: js/main.js:1
+msgid "2-year protection"
+msgstr ""
+
+#: js/main.js:1
+msgid "Product add-ons"
+msgstr ""
+
+#: js/main.js:1
+msgid "A multi-select list of paid extras the shopper can bundle in."
+msgstr ""
+
+#: js/main.js:1
+msgid "Add extras"
+msgstr ""
+
+#: js/main.js:1
+msgid "Extra battery pack"
+msgstr ""
+
+#: js/main.js:1
+msgid "Carry case"
+msgstr ""
+
+#: js/main.js:1
+msgid "Extended cable"
+msgstr ""
+
+#: js/main.js:1
+#: js/main.js:3
+msgid "Start from a template"
+msgstr ""
+
+#: js/main.js:1
+msgid "Pick a starting point. It creates a draft you can edit before publishing."
+msgstr ""
+
+#: js/main.js:1
+msgid "Add options shoppers can pick"
+msgstr ""
+
+#: js/main.js:1
+msgid "Text, choices, swatches, buttons, date and colour pickers."
+msgstr ""
+
+#: js/main.js:1
+msgid "Charge for the extras"
+msgstr ""
+
+#: js/main.js:1
+msgid "Per-option fees, recomputed on the server so totals always match."
+msgstr ""
+
+#: js/main.js:1
+msgid "Assign to the right products"
+msgstr ""
+
+#: js/main.js:1
+msgid "All products, a hand-picked list, or by category, tag and more."
+msgstr ""
+
+#: js/main.js:1
+msgid "Welcome to Flexa Extra"
+msgstr ""
+
+#: js/main.js:1
+msgid "Add extra options to your products and start charging for them. The quickest way is to begin from a ready-made template."
+msgstr ""
+
+#: js/main.js:1
+msgid "Browse templates"
+msgstr ""
+
+#: js/main.js:1
+msgid "Start from scratch"
+msgstr ""
+
+#: js/main.js:1
+msgid "Skip for now"
+msgstr ""
+
+#: js/main.js:1
+msgid "Dismiss the quick-start guide"
+msgstr ""
+
+#: js/main.js:1
+msgid "Your first option set is ready"
+msgstr ""
+
+#: js/main.js:1
+msgid "Finish your first option set"
+msgstr ""
+
+#: js/main.js:1
+msgid "Open a product it applies to and check the extra fields on the page. From here you can add more sets or fine-tune how they look."
+msgstr ""
+
+#: js/main.js:1
+msgid "Pick a template to drop in ready-made fields, then edit and publish it. You can leave and come back any time."
+msgstr ""
+
+#: js/main.js:1
+msgid "Create another"
+msgstr ""
+
+#: js/main.js:1
+msgid "Display settings"
+msgstr ""
+
+#: js/main.js:1
+msgid "Got it"
+msgstr ""
+
+#: js/main.js:1
+#: includes/Engine/Admin/ActivationRedirect.php:123
+msgid "Dismiss"
+msgstr ""
+
+#: js/main.js:1
+msgid "Failed to duplicate option set"
+msgstr ""
+
+#: js/main.js:1
+msgid "Option set duplicated!"
+msgstr ""
+
+#: js/main.js:1
+msgid "Failed to delete option set"
+msgstr ""
+
+#: js/main.js:1
+msgid "Option set deleted"
+msgstr ""
+
+#: js/main.js:1
+msgid "Failed to import option sets"
+msgstr ""
+
+#. translators: %d: number of option sets imported.
+#: js/main.js:3
+msgid "Imported %d option set"
+msgid_plural "Imported %d option sets"
+msgstr[0] ""
+msgstr[1] ""
+
+#: js/main.js:3
+msgid "Create groups of extra options and assign them to your products."
+msgstr ""
+
+#: js/main.js:3
+msgid "That file is not valid JSON."
+msgstr ""
+
+#: js/main.js:3
+msgid "Export all"
+msgstr ""
+
+#: js/main.js:3
+msgid "New Option Set"
+msgstr ""
+
+#: js/main.js:3
+msgid "Name"
+msgstr ""
+
+#: js/main.js:3
+msgid "Fields"
+msgstr ""
+
+#: js/main.js:3
+msgid "Assignment"
+msgstr ""
+
+#: js/main.js:3
+msgid "Status"
+msgstr ""
+
+#: js/main.js:3
+msgid "Delete this option set? This cannot be undone."
+msgstr ""
+
+#: js/main.js:3
+msgid "Active"
+msgstr ""
+
+#: js/main.js:3
+msgid "Draft"
+msgstr ""
+
+#: js/main.js:3
+msgid "No option sets yet"
+msgstr ""
+
+#: js/main.js:3
+msgid "Option sets let you add extra fields like text, checkboxes, swatches and buttons to product pages."
+msgstr ""
+
+#: js/main.js:3
+msgid "Create your first option set"
+msgstr ""
+
+#: js/main.js:3
+msgid "No charge"
+msgstr ""
+
+#: js/main.js:3
+msgid "Fixed"
+msgstr ""
+
+#: js/main.js:3
+msgid "Percent"
+msgstr ""
+
+#: js/main.js:3
+msgid "Formula"
+msgstr ""
+
+#: js/main.js:3
+msgid "Variables: base (item price), qty (quantity), {field_id}. Operators + - * / ( ) and round(), min(), max(). Result is the per-unit surcharge."
+msgstr ""
+
+#: js/main.js:3
+msgid "This formula cannot be parsed. Check the operators, brackets and field ids."
+msgstr ""
+
+#: js/main.js:3
+msgid "(unnamed field)"
+msgstr ""
+
+#: js/main.js:3
+msgid "Fees & discounts"
+msgstr ""
+
+#: js/main.js:3
+msgid "Add a fee or discount to the item when the shopper’s selections match your conditions."
+msgstr ""
+
+#: js/main.js:3
+msgid "Add rule"
+msgstr ""
+
+#: js/main.js:3
+msgid "No fees or discounts yet. Add one to adjust the price based on selections."
+msgstr ""
+
+#: js/main.js:3
+#: js/main.js:5
+#: includes/Cart/SelectionProcessor.php:171
+#: includes/Frontend/ProductRenderer.php:82
+#: includes/Helpers/Helper.php:85
+msgid "Fee"
+msgstr ""
+
+#: js/main.js:3
+#: includes/Cart/SelectionProcessor.php:171
+#: includes/Frontend/ProductRenderer.php:83
+#: includes/Helpers/Helper.php:86
+msgid "Discount"
+msgstr ""
+
+#: js/main.js:3
+msgid "Label (shown in cart)"
+msgstr ""
+
+#: js/main.js:3
+msgid "Amount"
+msgstr ""
+
+#: js/main.js:3
+msgid "Add a field first to build a condition."
+msgstr ""
+
+#: js/main.js:3
+msgid "Apply when"
+msgstr ""
+
+#: js/main.js:3
+msgid "any"
+msgstr ""
+
+#: js/main.js:3
+msgid "all"
+msgstr ""
+
+#: js/main.js:3
+msgid "of these conditions match:"
+msgstr ""
+
+#: js/main.js:3
+msgid "No conditions: this always applies."
+msgstr ""
+
+#: js/main.js:3
+msgid "Add condition"
+msgstr ""
+
+#: js/main.js:3
+msgid "is"
+msgstr ""
+
+#: js/main.js:3
+msgid "is not"
+msgstr ""
+
+#: js/main.js:3
+msgid "empty"
+msgstr ""
+
+#: js/main.js:3
+msgid "not empty"
+msgstr ""
+
+#: js/main.js:3
+msgid "value"
+msgstr ""
+
+#: js/main.js:3
+msgid "Option set name"
+msgstr ""
+
+#: js/main.js:3
+msgid "Preview"
+msgstr ""
+
+#: js/main.js:3
+msgid "Save"
+msgstr ""
+
+#: js/main.js:3
+msgid "Product assignment"
+msgstr ""
+
+#: js/main.js:3
+msgid "Input fields"
+msgstr ""
+
+#: js/main.js:3
+msgid "Choice fields"
+msgstr ""
+
+#: js/main.js:3
+msgid "Layout"
+msgstr ""
+
+#: js/main.js:3
+msgid "Add field"
+msgstr ""
+
+#: js/main.js:3
+msgid "No fields yet"
+msgstr ""
+
+#: js/main.js:3
+msgid "Drop to add"
+msgstr ""
+
+#: js/main.js:3
+msgid "Pick a field type from the left to start building this option set."
+msgstr ""
+
+#: js/main.js:3
+msgid "Untitled field"
+msgstr ""
+
+#: js/main.js:3
+msgid "Choices"
+msgstr ""
+
+#: js/main.js:3
+msgid "Add"
+msgstr ""
+
+#: js/main.js:3
+msgid "Swatch color"
+msgstr ""
+
+#: js/main.js:3
+msgid "Choice label"
+msgstr ""
+
+#: js/main.js:3
+msgid "Extra charge"
+msgstr ""
+
+#: js/main.js:3
+msgid "Stock"
+msgstr ""
+
+#: js/main.js:3
+msgid "Unlimited"
+msgstr ""
+
+#: js/main.js:3
+msgid "Stock quantity"
+msgstr ""
+
+#: js/main.js:3
+msgid "Add at least one choice for shoppers to pick from."
+msgstr ""
+
+#: js/main.js:3
+msgid "Conditional logic"
+msgstr ""
+
+#: js/main.js:3
+msgid "Add another field first to use it as a condition."
+msgstr ""
+
+#: js/main.js:3
+msgid "Show"
+msgstr ""
+
+#: js/main.js:3
+#: js/main.js:15
+msgid "Hide"
+msgstr ""
+
+#: js/main.js:3
+msgid "this field if"
+msgstr ""
+
+#: js/main.js:3
+msgid "match:"
+msgstr ""
+
+#: js/main.js:3
+msgid "No field selected"
+msgstr ""
+
+#: js/main.js:3
+msgid "Select a field to edit its settings."
+msgstr ""
+
+#: js/main.js:3
+msgid "field"
+msgstr ""
+
+#: js/main.js:3
+msgid "Label"
+msgstr ""
+
+#: js/main.js:3
+msgid "Field key"
+msgstr ""
+
+#: js/main.js:3
+msgid "Unique key stored with the order. Lowercase, no spaces."
+msgstr ""
+
+#: js/main.js:3
+#: includes/Frontend/FieldRenderer.php:101
+msgid "Required"
+msgstr ""
+
+#: js/main.js:3
+msgid "Placeholder"
+msgstr ""
+
+#: js/main.js:3
+msgid "Tooltip"
+msgstr ""
+
+#: js/main.js:3
+msgid "CSS class"
+msgstr ""
+
+#: js/main.js:3
+msgid "Extra class(es) added to the field wrapper for custom styling."
+msgstr ""
+
+#: js/main.js:3
+msgid "Text format"
+msgstr ""
+
+#: js/main.js:3
+msgid "Plain text"
+msgstr ""
+
+#: js/main.js:3
+msgid "Email"
+msgstr ""
+
+#: js/main.js:3
+msgid "URL"
+msgstr ""
+
+#: js/main.js:3
+msgid "Custom regex"
+msgstr ""
+
+#: js/main.js:3
+msgid "Regex pattern"
+msgstr ""
+
+#: js/main.js:3
+msgid "Min"
+msgstr ""
+
+#: js/main.js:3
+msgid "Max"
+msgstr ""
+
+#: js/main.js:3
+msgid "Step"
+msgstr ""
+
+#: js/main.js:3
+msgid "Earliest date"
+msgstr ""
+
+#: js/main.js:3
+msgid "Latest date"
+msgstr ""
+
+#: js/main.js:3
+msgid "Disabled dates"
+msgstr ""
+
+#: js/main.js:3
+msgid "One date per line (YYYY-MM-DD). These dates cannot be selected."
+msgstr ""
+
+#: js/main.js:3
+msgid "Date format"
+msgstr ""
+
+#: js/main.js:3
+msgid "PHP date format (e.g. F j, Y). Leave blank to use the site date format."
+msgstr ""
+
+#: js/main.js:3
+msgid "Default value"
+msgstr ""
+
+#: js/main.js:3
+msgid "Field price"
+msgstr ""
+
+#: js/main.js:3
+msgid "Allow multiple"
+msgstr ""
+
+#: js/main.js:3
+msgid "Min choices"
+msgstr ""
+
+#: js/main.js:3
+msgid "Leave blank for no minimum."
+msgstr ""
+
+#: js/main.js:3
+msgid "Max choices"
+msgstr ""
+
+#: js/main.js:3
+msgid "Leave blank for no maximum."
+msgstr ""
+
+#: js/main.js:3
+msgid "Lookup failed"
+msgstr ""
+
+#: js/main.js:3
+msgid "Search failed"
+msgstr ""
+
+#: js/main.js:3
+msgid "Search…"
+msgstr ""
+
+#: js/main.js:3
+msgid "Searching…"
+msgstr ""
+
+#: js/main.js:3
+msgid "No matches"
+msgstr ""
+
+#: js/main.js:3
+msgid "All products"
+msgstr ""
+
+#: js/main.js:3
+msgid "Applies everywhere."
+msgstr ""
+
+#: js/main.js:3
+msgid "Specific products"
+msgstr ""
+
+#: js/main.js:3
+msgid "Pick products by hand."
+msgstr ""
+
+#: js/main.js:3
+msgid "By condition"
+msgstr ""
+
+#: js/main.js:3
+msgid "Match by category, tag, price…"
+msgstr ""
+
+#: js/main.js:3
+msgid "Where should this apply?"
+msgstr ""
+
+#: js/main.js:3
+msgid "Choose which products show these extra options."
+msgstr ""
+
+#: js/main.js:3
+msgid "Products"
+msgstr ""
+
+#: js/main.js:3
+msgid "Search products…"
+msgstr ""
+
+#: js/main.js:3
+msgid "Match"
+msgstr ""
+
+#: js/main.js:3
+msgid "of the conditions below"
+msgstr ""
+
+#: js/main.js:3
+msgid "No conditions yet — this set would not apply anywhere."
+msgstr ""
+
+#: js/main.js:3
+msgid "greater than"
+msgstr ""
+
+#: js/main.js:3
+msgid "less than"
+msgstr ""
+
+#: js/main.js:3
+msgid "in stock"
+msgstr ""
+
+#: js/main.js:3
+msgid "out of stock"
+msgstr ""
+
+#: js/main.js:3
+msgid "Category"
+msgstr ""
+
+#: js/main.js:3
+msgid "Tag"
+msgstr ""
+
+#: js/main.js:3
+msgid "Product"
+msgstr ""
+
+#: js/main.js:3
+msgid "Price"
+msgstr ""
+
+#: js/main.js:3
+msgid "Live preview"
+msgstr ""
+
+#: js/main.js:3
+msgid "How this looks on the product page"
+msgstr ""
+
+#: js/main.js:3
+msgid "Product price"
+msgstr ""
+
+#: js/main.js:3
+msgid "Add fields to see the preview."
+msgstr ""
+
+#: js/main.js:3
+msgid "Extra subtotal"
+msgstr ""
+
+#: js/main.js:3
+msgid "Total price"
+msgstr ""
+
+#: js/main.js:3
+msgid "Failed to load option set"
+msgstr ""
+
+#: js/main.js:3
+msgid "Option set not found"
+msgstr ""
+
+#: js/main.js:3
+msgid "Failed to save option set"
+msgstr ""
+
+#: js/main.js:3
+msgid "Option set saved!"
+msgstr ""
+
+#: js/main.js:3
+#: includes/Fields/OptionSetSchema.php:45
+msgid "Untitled Option Set"
+msgstr ""
+
+#: js/main.js:3
+msgid "Edit Option Set"
+msgstr ""
+
+#: js/main.js:3
+#: js/main.js:15
+msgid "7 days"
+msgstr ""
+
+#: js/main.js:3
+#: js/main.js:15
+msgid "30 days"
+msgstr ""
+
+#: js/main.js:3
+#: js/main.js:15
+msgid "90 days"
+msgstr ""
+
+#: js/main.js:3
+#: js/main.js:15
+msgid "Paid (processing + completed)"
+msgstr ""
+
+#: js/main.js:3
+#: js/main.js:15
+msgid "Completed only"
+msgstr ""
+
+#: js/main.js:3
+#: js/main.js:15
+msgid "Any status"
+msgstr ""
+
+#: js/main.js:3
+msgid "Failed to load analytics"
+msgstr ""
+
+#: js/main.js:3
+msgid "Option analytics"
+msgstr ""
+
+#: js/main.js:3
+msgid "Which extra options your customers pick, and the revenue they add."
+msgstr ""
+
+#: js/main.js:3
+#: js/main.js:15
+msgid "Failed to load analytics."
+msgstr ""
+
+#: js/main.js:3
+msgid "Orders with options"
+msgstr ""
+
+#: js/main.js:3
+msgid "Options selected"
+msgstr ""
+
+#: js/main.js:3
+msgid "Extra revenue"
+msgstr ""
+
+#. translators: %d: maximum number of orders scanned.
+#: js/main.js:5
+#: js/main.js:17
+msgid "Showing the most recent %d orders in range; older orders were not scanned."
+msgstr ""
+
+#: js/main.js:5
+msgid "Option"
+msgstr ""
+
+#: js/main.js:5
+msgid "Field"
+msgstr ""
+
+#: js/main.js:5
+msgid "Times chosen"
+msgstr ""
+
+#: js/main.js:5
+#: js/main.js:17
+msgid "Revenue"
+msgstr ""
+
+#: js/main.js:5
+msgid "No option selections in this period yet."
+msgstr ""
+
+#: js/main.js:5
+msgid "(no label)"
+msgstr ""
+
+#: js/main.js:5
+msgid "Failed to load import sources"
+msgstr ""
+
+#: js/main.js:5
+msgid "Import failed"
+msgstr ""
+
+#: js/main.js:5
+msgid "Import from another plugin"
+msgstr ""
+
+#: js/main.js:5
+msgid "Bring your existing option sets over from another plugin. Each one is added switched off, so nothing changes on your storefront until you review it and turn it on."
+msgstr ""
+
+#: js/main.js:5
+msgid "Checking for importable data..."
+msgstr ""
+
+#: js/main.js:5
+msgid "Failed to load import sources."
+msgstr ""
+
+#: js/main.js:5
+msgid "No supported plugins were found on this site. Import sources appear here only once a plugin like YayExtra, ThemeHigh \"Extra Product Options\", WooCommerce Product Add-Ons, Acowebs \"Custom Product Addons\" or YITH WooCommerce Product Add-Ons has been installed and has data to bring over."
+msgstr ""
+
+#. translators: %d: number of option sets found.
+#: js/main.js:7
+msgid "%d option set found"
+msgid_plural "%d option sets found"
+msgstr[0] ""
+msgstr[1] ""
+
+#: js/main.js:7
+msgid "No data found on this site."
+msgstr ""
+
+#. translators: %s: source plugin name.
+#: js/main.js:9
+msgid "Import %s option sets into Flexa Extra? They are added switched off so you can review them before turning them on."
+msgstr ""
+
+#: js/main.js:9
+msgid "Importing..."
+msgstr ""
+
+#: js/main.js:9
+msgid "Nothing was imported."
+msgstr ""
+
+#. translators: %d: number of sets skipped.
+#: js/main.js:11
+#: js/main.js:15
+msgid "%d set was skipped (no importable fields)."
+msgid_plural "%d sets were skipped (no importable fields)."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of option sets imported.
+#: js/main.js:13
+msgid "%d option set added (switched off):"
+msgid_plural "%d option sets added (switched off):"
+msgstr[0] ""
+msgstr[1] ""
+
+#: js/main.js:15
+msgid "Review in Option Sets"
+msgstr ""
+
+#: js/main.js:15
+#: includes/Helpers/Helper.php:126
+msgid "Extra subtotal:"
+msgstr ""
+
+#: js/main.js:15
+#: includes/Helpers/Helper.php:127
+msgid "Total price:"
+msgstr ""
+
+#: js/main.js:15
+msgid "Before Add to Cart button"
+msgstr ""
+
+#: js/main.js:15
+msgid "After Add to Cart button"
+msgstr ""
+
+#: js/main.js:15
+msgid "Small"
+msgstr ""
+
+#: js/main.js:15
+msgid "Medium"
+msgstr ""
+
+#: js/main.js:15
+msgid "Large"
+msgstr ""
+
+#: js/main.js:15
+msgid "Circle"
+msgstr ""
+
+#: js/main.js:15
+msgid "Rounded"
+msgstr ""
+
+#: js/main.js:15
+msgid "Square"
+msgstr ""
+
+#: js/main.js:15
+msgid "Blur (dim + strike)"
+msgstr ""
+
+#: js/main.js:15
+msgid "Show as normal"
+msgstr ""
+
+#: js/main.js:15
+msgid "Failed to fetch settings"
+msgstr ""
+
+#: js/main.js:15
+msgid "Failed to save settings"
+msgstr ""
+
+#: js/main.js:15
+msgid "Settings saved!"
+msgstr ""
+
+#: js/main.js:15
+msgid "Oops! Something went wrong!"
+msgstr ""
+
+#: js/main.js:15
+msgid "Configure how extra product options behave on your store."
+msgstr ""
+
+#: js/main.js:15
+msgid "Saving..."
+msgstr ""
+
+#: js/main.js:15
+msgid "Save Settings"
+msgstr ""
+
+#: js/main.js:15
+msgid "General"
+msgstr ""
+
+#: js/main.js:15
+msgid "Core plugin settings"
+msgstr ""
+
+#: js/main.js:15
+msgid "Display"
+msgstr ""
+
+#: js/main.js:15
+msgid "Labels & position"
+msgstr ""
+
+#: js/main.js:15
+msgid "Style"
+msgstr ""
+
+#: js/main.js:15
+msgid "Swatches, buttons & tooltips"
+msgstr ""
+
+#: js/main.js:15
+msgid "Advanced"
+msgstr ""
+
+#: js/main.js:15
+msgid "Extended options"
+msgstr ""
+
+#: js/main.js:15
+msgid "Fine-tune behavior and script loading."
+msgstr ""
+
+#: js/main.js:15
+msgid "Hide zero subtotal"
+msgstr ""
+
+#: js/main.js:15
+msgid "Hide the extras subtotal when it equals zero."
+msgstr ""
+
+#: js/main.js:15
+msgid "Load scripts on all pages"
+msgstr ""
+
+#: js/main.js:15
+msgid "Enable only if a builder needs the assets site-wide."
+msgstr ""
+
+#: js/main.js:15
+msgid "Replay setup guide"
+msgstr ""
+
+#: js/main.js:15
+msgid "Show the first-run quick-start guide again on the Option Sets screen."
+msgstr ""
+
+#: js/main.js:15
+msgid "Replay"
+msgstr ""
+
+#: js/main.js:15
+msgid "Customize labels and where options appear on the product page."
+msgstr ""
+
+#: js/main.js:15
+msgid "Extra subtotal label"
+msgstr ""
+
+#: js/main.js:15
+msgid "Text shown before the extras subtotal."
+msgstr ""
+
+#: js/main.js:15
+msgid "Total price label"
+msgstr ""
+
+#: js/main.js:15
+msgid "Text shown before the total price."
+msgstr ""
+
+#: js/main.js:15
+msgid "Options position"
+msgstr ""
+
+#: js/main.js:15
+msgid "Where the option fields render on the product page."
+msgstr ""
+
+#: js/main.js:15
+msgid "Enable the plugin and choose what pricing information to show."
+msgstr ""
+
+#: js/main.js:15
+msgid "Enable extra options"
+msgstr ""
+
+#: js/main.js:15
+msgid "Render assigned option sets on product pages."
+msgstr ""
+
+#: js/main.js:15
+msgid "Show extra subtotal"
+msgstr ""
+
+#: js/main.js:15
+msgid "Display the summed price of selected options."
+msgstr ""
+
+#: js/main.js:15
+msgid "Show total price"
+msgstr ""
+
+#: js/main.js:15
+msgid "Display product price plus extras."
+msgstr ""
+
+#: js/main.js:15
+msgid "Show price breakdown"
+msgstr ""
+
+#: js/main.js:15
+msgid "List each selected option and its price on the product page."
+msgstr ""
+
+#: js/main.js:15
+msgid "Show values in mini cart"
+msgstr ""
+
+#: js/main.js:15
+msgid "List chosen option values in the cart widget."
+msgstr ""
+
+#: js/main.js:15
+msgid "Pick color"
+msgstr ""
+
+#: js/main.js:15
+msgid "Default"
+msgstr ""
+
+#: js/main.js:15
+msgid "Reset to theme default"
+msgstr ""
+
+#: js/main.js:15
+msgid "Fine-tune how swatches, buttons and tooltips look on the storefront."
+msgstr ""
+
+#: js/main.js:15
+msgid "Swatch size"
+msgstr ""
+
+#: js/main.js:15
+msgid "Size of color / image swatch chips."
+msgstr ""
+
+#: js/main.js:15
+msgid "Swatch shape"
+msgstr ""
+
+#: js/main.js:15
+msgid "Corner rounding of swatch chips."
+msgstr ""
+
+#: js/main.js:15
+msgid "Show tooltips"
+msgstr ""
+
+#: js/main.js:15
+msgid "Display the help markers next to field labels."
+msgstr ""
+
+#: js/main.js:15
+msgid "Button background"
+msgstr ""
+
+#: js/main.js:15
+msgid "Background of unselected option buttons."
+msgstr ""
+
+#: js/main.js:15
+msgid "Button text"
+msgstr ""
+
+#: js/main.js:15
+msgid "Text color of unselected option buttons."
+msgstr ""
+
+#: js/main.js:15
+msgid "Selected button background"
+msgstr ""
+
+#: js/main.js:15
+msgid "Background of the selected option button."
+msgstr ""
+
+#: js/main.js:15
+msgid "Selected button text"
+msgstr ""
+
+#: js/main.js:15
+msgid "Text color of the selected option button."
+msgstr ""
+
+#: js/main.js:15
+msgid "Failed to load attributes"
+msgstr ""
+
+#: js/main.js:15
+msgid "Failed to save term"
+msgstr ""
+
+#: js/main.js:15
+msgid "Select an image"
+msgstr ""
+
+#: js/main.js:15
+msgid "Use this image"
+msgstr ""
+
+#: js/main.js:15
+msgid "Change image"
+msgstr ""
+
+#: js/main.js:15
+msgid "Choose image"
+msgstr ""
+
+#: js/main.js:15
+msgid "Image set"
+msgstr ""
+
+#: js/main.js:15
+msgid "No image"
+msgstr ""
+
+#: js/main.js:15
+msgid "Remove image"
+msgstr ""
+
+#: js/main.js:15
+msgid "Off (default dropdown)"
+msgstr ""
+
+#: js/main.js:15
+msgid "Color"
+msgstr ""
+
+#: js/main.js:15
+msgid "Image"
+msgstr ""
+
+#: js/main.js:15
+msgid "Button"
+msgstr ""
+
+#: js/main.js:15
+msgid "Variation swatches are handled by another plugin"
+msgstr ""
+
+#: js/main.js:15
+msgid "Another variation-swatches plugin is active, so Flexa Extra stays out of the way to avoid double rendering. Deactivate it to manage swatches here."
+msgstr ""
+
+#: js/main.js:15
+msgid "Variation swatches"
+msgstr ""
+
+#: js/main.js:15
+msgid "Turn product attribute dropdowns into color, image or button swatches."
+msgstr ""
+
+#: js/main.js:15
+msgid "Failed to load attributes."
+msgstr ""
+
+#: js/main.js:15
+msgid "No global product attributes yet."
+msgstr ""
+
+#: js/main.js:15
+msgid "Create a product attribute"
+msgstr ""
+
+#: js/main.js:15
+msgid "Failed to save attribute"
+msgstr ""
+
+#: js/main.js:15
+msgid "Buttons use the term name. Nothing to assign per term."
+msgstr ""
+
+#: js/main.js:15
+msgid "This attribute has no terms yet."
+msgstr ""
+
+#: js/main.js:15
+msgid "Enable, size & shape"
+msgstr ""
+
+#: js/main.js:15
+msgid "Labels & visibility"
+msgstr ""
+
+#: js/main.js:15
+msgid "Appearance"
+msgstr ""
+
+#: js/main.js:15
+msgid "Sizes & colors"
+msgstr ""
+
+#: js/main.js:15
+msgid "Availability"
+msgstr ""
+
+#: js/main.js:15
+msgid "Stock & unavailable"
+msgstr ""
+
+#: js/main.js:15
+msgid "Shop pages"
+msgstr ""
+
+#: js/main.js:15
+msgid "Loop swatches"
+msgstr ""
+
+#: js/main.js:15
+msgid "Control how variation swatches look and behave on the storefront."
+msgstr ""
+
+#: js/main.js:15
+msgid "Applies to the color / image / button swatches on variable product attributes."
+msgstr ""
+
+#: js/main.js:15
+msgid "Enable variation swatches"
+msgstr ""
+
+#: js/main.js:15
+msgid "Turn attribute dropdowns into swatches on product pages."
+msgstr ""
+
+#: js/main.js:15
+msgid "Preset size of variation attribute swatches."
+msgstr ""
+
+#: js/main.js:15
+msgid "Corner rounding of variation attribute swatches."
+msgstr ""
+
+#: js/main.js:15
+msgid "Tooltips"
+msgstr ""
+
+#: js/main.js:15
+msgid "Show the term name on hover as a tooltip."
+msgstr ""
+
+#: js/main.js:15
+msgid "Labels and how attributes appear on the product page."
+msgstr ""
+
+#: js/main.js:15
+msgid "Show selected value"
+msgstr ""
+
+#: js/main.js:15
+msgid "Display an \"Attribute: Value\" line under the swatches."
+msgstr ""
+
+#: js/main.js:15
+msgid "Label separator"
+msgstr ""
+
+#: js/main.js:15
+msgid "Character between the attribute name and the value."
+msgstr ""
+
+#: js/main.js:15
+msgid "Default to button"
+msgstr ""
+
+#: js/main.js:15
+msgid "Show attributes with no swatch type as buttons instead of the native dropdown."
+msgstr ""
+
+#: js/main.js:15
+msgid "Loading spinner"
+msgstr ""
+
+#: js/main.js:15
+msgid "Show a spinner while the variation updates."
+msgstr ""
+
+#: js/main.js:15
+msgid "Limit visible swatches"
+msgstr ""
+
+#: js/main.js:15
+msgid "Show a \"+N more\" toggle after this many swatches per attribute. 0 = show all."
+msgstr ""
+
+#: js/main.js:15
+msgid "Fine-tune sizes and colors. Leave sizes at 0 to use the preset above."
+msgstr ""
+
+#: js/main.js:15
+msgid "Custom width (px)"
+msgstr ""
+
+#: js/main.js:15
+msgid "Override swatch width. 0 = use preset size."
+msgstr ""
+
+#: js/main.js:15
+msgid "Custom height (px)"
+msgstr ""
+
+#: js/main.js:15
+msgid "Override swatch height. 0 = use preset size."
+msgstr ""
+
+#: js/main.js:15
+msgid "Button font size (px)"
+msgstr ""
+
+#: js/main.js:15
+msgid "Font size for button swatches. 0 = inherit."
+msgstr ""
+
+#: js/main.js:15
+msgid "Selected color"
+msgstr ""
+
+#: js/main.js:15
+msgid "Ring color of the selected swatch. Empty = theme color."
+msgstr ""
+
+#: js/main.js:15
+msgid "Unavailable strike color"
+msgstr ""
+
+#: js/main.js:15
+msgid "Color of the strike on unavailable swatches. Empty = default."
+msgstr ""
+
+#: js/main.js:15
+msgid "Image size"
+msgstr ""
+
+#: js/main.js:15
+msgid "Registered image size used for image swatches."
+msgstr ""
+
+#: js/main.js:15
+msgid "How unavailable and out-of-stock combinations behave."
+msgstr ""
+
+#: js/main.js:15
+msgid "Unavailable swatches"
+msgstr ""
+
+#: js/main.js:15
+msgid "What to do with swatches that are not selectable."
+msgstr ""
+
+#: js/main.js:15
+msgid "Clear on reselect"
+msgstr ""
+
+#: js/main.js:15
+msgid "Click the selected swatch again to clear the choice."
+msgstr ""
+
+#: js/main.js:15
+msgid "Show stock per swatch"
+msgstr ""
+
+#: js/main.js:15
+msgid "Show \"N left\" on low-stock swatches and \"Out of stock\" when every matching variation is sold out. Needs the variation data on the page (products with many variations may not show it)."
+msgstr ""
+
+#: js/main.js:15
+msgid "Show swatches in the shop and category product loops."
+msgstr ""
+
+#: js/main.js:15
+msgid "Show on shop / archive"
+msgstr ""
+
+#: js/main.js:15
+msgid "Render swatches under products in the loop. Each links to the product with that option preselected."
+msgstr ""
+
+#: js/main.js:15
+msgid "Failed to load swatch analytics"
+msgstr ""
+
+#: js/main.js:15
+msgid "Swatch analytics"
+msgstr ""
+
+#: js/main.js:15
+msgid "Which attribute values shoppers actually buy, read from your orders."
+msgstr ""
+
+#: js/main.js:15
+msgid "Orders with variations"
+msgstr ""
+
+#: js/main.js:15
+msgid "Swatches selected"
+msgstr ""
+
+#: js/main.js:15
+msgid "Variation revenue"
+msgstr ""
+
+#: js/main.js:17
+msgid "Value"
+msgstr ""
+
+#: js/main.js:17
+msgid "Attribute"
+msgstr ""
+
+#: js/main.js:17
+msgid "Times bought"
+msgstr ""
+
+#: js/main.js:17
+msgid "No variation purchases in this period yet."
+msgstr ""
+
+#: js/main.js:17
+msgid "An error occurred"
+msgstr ""
+
 #. Plugin Name of the plugin
 #: flexa-extra.php
-msgid "Flexa Extra – Extra Product Options For WooCommerce"
+msgid "Flexa Extra – Product Options & Variation Swatches for WooCommerce"
 msgstr ""
 
 #. Plugin URI of the plugin
@@ -26,7 +1738,7 @@ msgstr ""
 
 #. Description of the plugin
 #: flexa-extra.php
-msgid "Add customizable extra options and personalization fields to WooCommerce products (text, checkbox, radio, dropdown, swatches, buttons, date and colour pickers) with optional extra fees."
+msgid "Add custom product options and personalization fields (text, checkbox, radio, dropdown, swatches, buttons, date and colour pickers) with optional fees, and turn variation attributes into colour, image or button swatches."
 msgstr ""
 
 #. Author of the plugin
@@ -45,21 +1757,6 @@ msgstr ""
 
 #: includes/Cart/CartHandler.php:321
 msgid "Update cart"
-msgstr ""
-
-#: includes/Cart/SelectionProcessor.php:171
-#: includes/Frontend/ProductRenderer.php:83
-#: includes/Helpers/Helper.php:86
-#: assets/dist/admin/js/main.js:3
-msgid "Discount"
-msgstr ""
-
-#: includes/Cart/SelectionProcessor.php:171
-#: includes/Frontend/ProductRenderer.php:82
-#: includes/Helpers/Helper.php:85
-#: assets/dist/admin/js/main.js:3
-#: assets/dist/admin/js/main.js:5
-msgid "Fee"
 msgstr ""
 
 #. translators: %s: field label.
@@ -135,10 +1832,12 @@ msgstr[1] ""
 
 #: includes/Controllers/AnalyticsRestController.php:44
 #: includes/Controllers/PublicRestController.php:88
+#: includes/Controllers/SwatchAnalyticsRestController.php:65
 msgid "WooCommerce is not active."
 msgstr ""
 
 #: includes/Controllers/BaseRestController.php:28
+#: includes/Controllers/SwatchAnalyticsRestController.php:58
 #: includes/Controllers/VariationSwatchesRestController.php:73
 msgid "You are not allowed to manage Flexa Extra."
 msgstr ""
@@ -250,25 +1949,8 @@ msgstr ""
 msgid "Start the guide"
 msgstr ""
 
-#: includes/Engine/Admin/ActivationRedirect.php:123
-#: assets/dist/admin/js/main.js:1
-msgid "Dismiss"
-msgstr ""
-
-#: includes/Engine/Admin/CustomPostType.php:29
-#: assets/dist/admin/js/main.js:1
-#: assets/dist/admin/js/main.js:3
-msgid "Option Sets"
-msgstr ""
-
 #: includes/Engine/Admin/CustomPostType.php:30
 msgid "Option Set"
-msgstr ""
-
-#: includes/Engine/Admin/Settings.php:66
-#: assets/dist/admin/js/main.js:1
-#: assets/dist/admin/js/main.js:15
-msgid "Settings"
 msgstr ""
 
 #: includes/Engine/Admin/Settings.php:84
@@ -287,13 +1969,6 @@ msgstr ""
 msgid "Product Options"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:103
-#: includes/Engine/Admin/Settings.php:104
-#: includes/Engine/Admin/Settings.php:167
-#: assets/dist/admin/js/main.js:1
-msgid "Variation Swatches"
-msgstr ""
-
 #: includes/Engine/Admin/Settings.php:159
 msgid "Custom option sets, fields, add-on pricing and conditional logic for your products."
 msgstr ""
@@ -302,146 +1977,140 @@ msgstr ""
 msgid "Color, image and button swatches for variable product attributes."
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:178
+#: includes/Engine/Admin/Settings.php:191
 msgid "Flexa Block"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:179
+#: includes/Engine/Admin/Settings.php:192
 msgid "A library of lightweight Gutenberg blocks for building modern pages."
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:189
+#: includes/Engine/Admin/Settings.php:202
 msgid "Flexa SEO & AEO"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:190
+#: includes/Engine/Admin/Settings.php:203
 msgid "SEO plus an Answer Engine readiness score and a health dashboard for AI search."
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:199
+#: includes/Engine/Admin/Settings.php:212
 msgid "Flexa Wishlist"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:200
+#: includes/Engine/Admin/Settings.php:213
 msgid "A fast, cache-safe wishlist for WooCommerce: one-tap save, guest persistence and sharing."
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:209
+#: includes/Engine/Admin/Settings.php:222
 msgid "Retailers Management"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:210
+#: includes/Engine/Admin/Settings.php:223
 msgid "Manage retailers, assign them to products and show retailer info on product pages."
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:219
+#: includes/Engine/Admin/Settings.php:232
 msgid "Flexa Media Folders"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:220
+#: includes/Engine/Admin/Settings.php:233
 msgid "Organize the Media Library into a drag-and-drop folder tree."
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:229
+#: includes/Engine/Admin/Settings.php:242
 msgid "Flexa Cache"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:230
+#: includes/Engine/Admin/Settings.php:243
 msgid "Page and object caching to speed up your storefront."
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:240
+#: includes/Engine/Admin/Settings.php:253
 msgid "Flexa Site Migrator"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:241
+#: includes/Engine/Admin/Settings.php:254
 msgid "Package files and database to migrate or stage your site anywhere."
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:250
+#: includes/Engine/Admin/Settings.php:263
 msgid "Flexa Unsubscribe"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:251
+#: includes/Engine/Admin/Settings.php:264
 msgid "One-click unsubscribe management with secure tokens and CSV tools."
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:260
+#: includes/Engine/Admin/Settings.php:273
 msgid "Flex Explorer"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:261
+#: includes/Engine/Admin/Settings.php:274
 msgid "A lightweight, read-only file browser for wp-content, right in the admin."
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:288
+#: includes/Engine/Admin/Settings.php:301
 msgid "Store & Product"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:289
+#: includes/Engine/Admin/Settings.php:302
 msgid "Booking & Hotel"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:290
+#: includes/Engine/Admin/Settings.php:303
 msgid "Marketing"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:291
+#: includes/Engine/Admin/Settings.php:304
 msgid "Reviews & Trust"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:292
-#: assets/dist/admin/js/main.js:1
-#: assets/dist/admin/js/main.js:15
-msgid "Analytics"
-msgstr ""
-
-#: includes/Engine/Admin/Settings.php:293
+#: includes/Engine/Admin/Settings.php:306
 msgid "Customer Experience"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:294
+#: includes/Engine/Admin/Settings.php:307
 msgid "Performance"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:309
-#: includes/Engine/Admin/Settings.php:324
+#: includes/Engine/Admin/Settings.php:322
+#: includes/Engine/Admin/Settings.php:337
 msgid "Open"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:333
+#: includes/Engine/Admin/Settings.php:346
 msgid "Activate"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:339
+#: includes/Engine/Admin/Settings.php:352
 msgid "Get it"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:364
+#: includes/Engine/Admin/Settings.php:377
 msgid "Flexa modules"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:365
+#: includes/Engine/Admin/Settings.php:378
 msgid "Everything from the Flexa ecosystem in one place. Open an active module, or discover more."
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:372
+#: includes/Engine/Admin/Settings.php:385
 msgid "All Modules"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:387
+#: includes/Engine/Admin/Settings.php:400
 msgid "Popular"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:388
+#: includes/Engine/Admin/Settings.php:401
 msgid "Name (A to Z)"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:466
+#: includes/Engine/Admin/Settings.php:479
 msgid "Premium"
 msgstr ""
 
-#: includes/Engine/Admin/Settings.php:473
+#: includes/Engine/Admin/Settings.php:486
 msgid "Learn more"
 msgstr ""
 
@@ -487,16 +2156,6 @@ msgstr ""
 
 #: includes/Fields/FieldType.php:106
 msgid "Heading / description"
-msgstr ""
-
-#: includes/Fields/OptionSetSchema.php:45
-#: assets/dist/admin/js/main.js:3
-msgid "Untitled Option Set"
-msgstr ""
-
-#: includes/Frontend/FieldRenderer.php:101
-#: assets/dist/admin/js/main.js:3
-msgid "Required"
 msgstr ""
 
 #: includes/Frontend/FieldRenderer.php:331
@@ -558,16 +2217,6 @@ msgstr ""
 
 #: includes/Frontend/ProductRenderer.php:87
 msgid "Next month"
-msgstr ""
-
-#: includes/Helpers/Helper.php:126
-#: assets/dist/admin/js/main.js:15
-msgid "Extra subtotal:"
-msgstr ""
-
-#: includes/Helpers/Helper.php:127
-#: assets/dist/admin/js/main.js:15
-msgid "Total price:"
 msgstr ""
 
 #: includes/Migration/AcowebsWcpaSource.php:53
@@ -736,1597 +2385,6 @@ msgstr ""
 
 #: assets/blocks/configurator/index.js:99
 msgid "Flexa Extra – Options configurator"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-#: assets/dist/admin/js/main.js:3
-#: assets/dist/admin/js/main.js:9
-msgid "Import"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Swatches"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Extra Product Options"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Page Not Found"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Go to Option Sets"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Failed to load option sets"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Failed to create option set"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Option set created!"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Failed to load setup guide"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Failed to update setup guide"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Gift wrapping & message"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "A paid gift-wrap add-on plus an optional printed message."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Gift wrapping"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Wrap this as a gift"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Gift message"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Write a short message (optional)"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Engraving / personalization"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "A flat-fee engraving text field with a font choice."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Engraving"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Engraving text"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Up to 20 characters"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Font style"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Classic"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Script"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Modern"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Size & colour"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "A size button group and a colour swatch picker."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Size"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "S"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "M"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "L"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "XL"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Colour"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Black"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "White"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Red"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Blue"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Installation service"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "A single-choice service tier with per-tier fees."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Installation"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "No installation"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Standard installation"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Premium installation"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Warranty / protection plan"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "An add-on plan priced as a percentage of the product."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Protection plan"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "No thanks"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "1-year protection"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "2-year protection"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Product add-ons"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "A multi-select list of paid extras the shopper can bundle in."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Add extras"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Extra battery pack"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Carry case"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Extended cable"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-#: assets/dist/admin/js/main.js:3
-msgid "Start from a template"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Pick a starting point. It creates a draft you can edit before publishing."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Add options shoppers can pick"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Text, choices, swatches, buttons, date and colour pickers."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Charge for the extras"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Per-option fees, recomputed on the server so totals always match."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Assign to the right products"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "All products, a hand-picked list, or by category, tag and more."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Welcome to Flexa Extra"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Add extra options to your products and start charging for them. The quickest way is to begin from a ready-made template."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Browse templates"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Start from scratch"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Skip for now"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Dismiss the quick-start guide"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Your first option set is ready"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Finish your first option set"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Open a product it applies to and check the extra fields on the page. From here you can add more sets or fine-tune how they look."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Pick a template to drop in ready-made fields, then edit and publish it. You can leave and come back any time."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Create another"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Display settings"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Got it"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Failed to duplicate option set"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Option set duplicated!"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Failed to delete option set"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Option set deleted"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:1
-msgid "Failed to import option sets"
-msgstr ""
-
-#. translators: %d: number of option sets imported.
-#: assets/dist/admin/js/main.js:3
-msgid "Imported %d option set"
-msgid_plural "Imported %d option sets"
-msgstr[0] ""
-msgstr[1] ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Create groups of extra options and assign them to your products."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "That file is not valid JSON."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Export all"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "New Option Set"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Name"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Fields"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Assignment"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Status"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Delete this option set? This cannot be undone."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Active"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Draft"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "No option sets yet"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Option sets let you add extra fields like text, checkboxes, swatches and buttons to product pages."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Create your first option set"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "No charge"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Fixed"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Percent"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Formula"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Variables: base (item price), qty (quantity), {field_id}. Operators + - * / ( ) and round(), min(), max(). Result is the per-unit surcharge."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "This formula cannot be parsed. Check the operators, brackets and field ids."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "(unnamed field)"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Fees & discounts"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Add a fee or discount to the item when the shopper’s selections match your conditions."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Add rule"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "No fees or discounts yet. Add one to adjust the price based on selections."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Label (shown in cart)"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Amount"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Add a field first to build a condition."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Apply when"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "any"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "all"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "of these conditions match:"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "No conditions: this always applies."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Add condition"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "is"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "is not"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "empty"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "not empty"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "value"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Option set name"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Preview"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Save"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Product assignment"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Input fields"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Choice fields"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Layout"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Add field"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "No fields yet"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Drop to add"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Pick a field type from the left to start building this option set."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Untitled field"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Choices"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Add"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Swatch color"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Choice label"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Extra charge"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Stock"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Unlimited"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Stock quantity"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Add at least one choice for shoppers to pick from."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Conditional logic"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Add another field first to use it as a condition."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Show"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-#: assets/dist/admin/js/main.js:15
-msgid "Hide"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "this field if"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "match:"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "No field selected"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Select a field to edit its settings."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "field"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Label"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Field key"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Unique key stored with the order. Lowercase, no spaces."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Placeholder"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Tooltip"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "CSS class"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Extra class(es) added to the field wrapper for custom styling."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Text format"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Plain text"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Email"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "URL"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Custom regex"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Regex pattern"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Min"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Max"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Step"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Earliest date"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Latest date"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Disabled dates"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "One date per line (YYYY-MM-DD). These dates cannot be selected."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Date format"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "PHP date format (e.g. F j, Y). Leave blank to use the site date format."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Default value"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Field price"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Allow multiple"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Min choices"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Leave blank for no minimum."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Max choices"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Leave blank for no maximum."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Lookup failed"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Search failed"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Search…"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Searching…"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "No matches"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "All products"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Applies everywhere."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Specific products"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Pick products by hand."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "By condition"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Match by category, tag, price…"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Where should this apply?"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Choose which products show these extra options."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Products"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Search products…"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Match"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "of the conditions below"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "No conditions yet — this set would not apply anywhere."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "greater than"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "less than"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "in stock"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "out of stock"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Category"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Tag"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Product"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Price"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Live preview"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "How this looks on the product page"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Product price"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Add fields to see the preview."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Extra subtotal"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Total price"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Failed to load option set"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Option set not found"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Failed to save option set"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Option set saved!"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Edit Option Set"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "7 days"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "30 days"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "90 days"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Paid (processing + completed)"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Completed only"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Any status"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Failed to load analytics"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Option analytics"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Which extra options your customers pick, and the revenue they add."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Failed to load analytics."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Orders with options"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Options selected"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:3
-msgid "Extra revenue"
-msgstr ""
-
-#. translators: %d: maximum number of orders scanned.
-#: assets/dist/admin/js/main.js:5
-msgid "Showing the most recent %d orders in range; older orders were not scanned."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:5
-msgid "Option"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:5
-msgid "Field"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:5
-msgid "Times chosen"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:5
-msgid "Revenue"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:5
-msgid "No option selections in this period yet."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:5
-msgid "(no label)"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:5
-msgid "Failed to load import sources"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:5
-msgid "Import failed"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:5
-msgid "Import from another plugin"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:5
-msgid "Bring your existing option sets over from another plugin. Each one is added switched off, so nothing changes on your storefront until you review it and turn it on."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:5
-msgid "Checking for importable data..."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:5
-msgid "Failed to load import sources."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:5
-msgid "No supported plugins were found on this site. Import sources appear here only once a plugin like YayExtra, ThemeHigh \"Extra Product Options\", WooCommerce Product Add-Ons, Acowebs \"Custom Product Addons\" or YITH WooCommerce Product Add-Ons has been installed and has data to bring over."
-msgstr ""
-
-#. translators: %d: number of option sets found.
-#: assets/dist/admin/js/main.js:7
-msgid "%d option set found"
-msgid_plural "%d option sets found"
-msgstr[0] ""
-msgstr[1] ""
-
-#: assets/dist/admin/js/main.js:7
-msgid "No data found on this site."
-msgstr ""
-
-#. translators: %s: source plugin name.
-#: assets/dist/admin/js/main.js:9
-msgid "Import %s option sets into Flexa Extra? They are added switched off so you can review them before turning them on."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:9
-msgid "Importing..."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:9
-msgid "Nothing was imported."
-msgstr ""
-
-#. translators: %d: number of sets skipped.
-#: assets/dist/admin/js/main.js:11
-#: assets/dist/admin/js/main.js:15
-msgid "%d set was skipped (no importable fields)."
-msgid_plural "%d sets were skipped (no importable fields)."
-msgstr[0] ""
-msgstr[1] ""
-
-#. translators: %d: number of option sets imported.
-#: assets/dist/admin/js/main.js:13
-msgid "%d option set added (switched off):"
-msgid_plural "%d option sets added (switched off):"
-msgstr[0] ""
-msgstr[1] ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Review in Option Sets"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Before Add to Cart button"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "After Add to Cart button"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Small"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Medium"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Large"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Circle"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Rounded"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Square"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Blur (dim + strike)"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Show as normal"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Failed to fetch settings"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Failed to save settings"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Settings saved!"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Oops! Something went wrong!"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Configure how extra product options behave on your store."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Saving..."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Save Settings"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "General"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Core plugin settings"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Display"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Labels & position"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Style"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Swatches, buttons & tooltips"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Advanced"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Extended options"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Fine-tune behavior and script loading."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Hide zero subtotal"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Hide the extras subtotal when it equals zero."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Load scripts on all pages"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Enable only if a builder needs the assets site-wide."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Replay setup guide"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Show the first-run quick-start guide again on the Option Sets screen."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Replay"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Customize labels and where options appear on the product page."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Extra subtotal label"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Text shown before the extras subtotal."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Total price label"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Text shown before the total price."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Options position"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Where the option fields render on the product page."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Enable the plugin and choose what pricing information to show."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Enable extra options"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Render assigned option sets on product pages."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Show extra subtotal"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Display the summed price of selected options."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Show total price"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Display product price plus extras."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Show price breakdown"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "List each selected option and its price on the product page."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Show values in mini cart"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "List chosen option values in the cart widget."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Pick color"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Default"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Reset to theme default"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Fine-tune how swatches, buttons and tooltips look on the storefront."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Swatch size"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Size of color / image swatch chips."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Swatch shape"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Corner rounding of swatch chips."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Show tooltips"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Display the help markers next to field labels."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Button background"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Background of unselected option buttons."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Button text"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Text color of unselected option buttons."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Selected button background"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Background of the selected option button."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Selected button text"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Text color of the selected option button."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Failed to load attributes"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Failed to save term"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Select an image"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Use this image"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Change image"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Choose image"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Image set"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "No image"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Remove image"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Off (default dropdown)"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Color"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Image"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Button"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Variation swatches are handled by another plugin"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Another variation-swatches plugin is active, so Flexa Extra stays out of the way to avoid double rendering. Deactivate it to manage swatches here."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Variation swatches"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Turn product attribute dropdowns into color, image or button swatches."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Failed to load attributes."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "No global product attributes yet."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Create a product attribute"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Failed to save attribute"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Buttons use the term name. Nothing to assign per term."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "This attribute has no terms yet."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Control how variation swatches look and behave on the storefront."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Applies to the color / image / button swatches on variable product attributes."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Enable variation swatches"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Turn attribute dropdowns into swatches on product pages."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Preset size of variation attribute swatches."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Corner rounding of variation attribute swatches."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Tooltips"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Show the term name on hover as a tooltip."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Labels and how attributes appear on the product page."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Show selected value"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Display an \"Attribute: Value\" line under the swatches."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Label separator"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Character between the attribute name and the value."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Default to button"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Show attributes with no swatch type as buttons instead of the native dropdown."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Loading spinner"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Show a spinner while the variation updates."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Limit visible swatches"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Show a \"+N more\" toggle after this many swatches per attribute. 0 = show all."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Appearance"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Fine-tune sizes and colors. Leave sizes at 0 to use the preset above."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Custom width (px)"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Override swatch width. 0 = use preset size."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Custom height (px)"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Override swatch height. 0 = use preset size."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Button font size (px)"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Font size for button swatches. 0 = inherit."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Selected color"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Ring color of the selected swatch. Empty = theme color."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Unavailable strike color"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Color of the strike on unavailable swatches. Empty = default."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Image size"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Registered image size used for image swatches."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Availability"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "How unavailable and out-of-stock combinations behave."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Unavailable swatches"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "What to do with swatches that are not selectable."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Clear on reselect"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Click the selected swatch again to clear the choice."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Show stock per swatch"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Show \"N left\" on low-stock swatches and \"Out of stock\" when every matching variation is sold out. Needs the variation data on the page (products with many variations may not show it)."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Shop pages"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Show swatches in the shop and category product loops."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Show on shop / archive"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Render swatches under products in the loop. Each links to the product with that option preselected."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "See which swatches shoppers pick most."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "No data yet"
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "Swatch analytics is coming soon. Once tracking is enabled, the most-picked colors, images and buttons will show up here."
-msgstr ""
-
-#: assets/dist/admin/js/main.js:15
-msgid "An error occurred"
 msgstr ""
 
 #: assets/blocks/configurator/block.json

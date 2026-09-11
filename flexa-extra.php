@@ -3,7 +3,7 @@
  * Plugin Name:       Flexa Extra – Product Options & Variation Swatches for WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/flexa-extra
  * Description:       Add custom product options and personalization fields (text, checkbox, radio, dropdown, swatches, buttons, date and colour pickers) with optional fees, and turn variation attributes into colour, image or button swatches.
- * Version:           1.4.0
+ * Version:           1.4.3
  * Author:            FlexaTech
  * Author URI:        https://profiles.wordpress.org/flexatech/
  * Text Domain:       flexa-extra
@@ -38,7 +38,7 @@ if ( ! defined( 'FLEXA_EXTRA_FILE' ) ) {
 }
 
 if ( ! defined( 'FLEXA_EXTRA_VERSION' ) ) {
-    define( 'FLEXA_EXTRA_VERSION', '1.4.0' );
+    define( 'FLEXA_EXTRA_VERSION', '1.4.3' );
 }
 
 if ( ! defined( 'FLEXA_EXTRA_PLUGIN_URL' ) ) {

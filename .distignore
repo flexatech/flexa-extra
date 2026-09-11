@@ -1,7 +1,7 @@
 # Files and folders excluded from the distributed plugin zip.
-# The compiled admin bundle in assets/dist/ IS shipped, and so is its
-# human-readable source (apps/admin/src + build config) per readme.txt —
-# only the installed dependencies (apps/admin/node_modules) are excluded.
+# Only the compiled admin bundle in assets/dist/ is shipped. The TypeScript
+# source and build tooling under apps/ are build-time only (never loaded at
+# runtime) and are published on GitHub instead, so the whole folder is excluded.
 
 /.git
 /.github
@@ -10,9 +10,7 @@
 /release.sh
 /dist
 /node_modules
-/apps/admin/node_modules
-/apps/admin/.env
-/apps/admin/.gitignore
+/apps
 /includes/Register/RegisterDev.php
 /tests
 /bin

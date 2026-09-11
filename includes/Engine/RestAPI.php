@@ -12,6 +12,7 @@ use Flexa\Extra\Controllers\AnalyticsRestController;
 use Flexa\Extra\Controllers\PublicRestController;
 use Flexa\Extra\Controllers\MigrationRestController;
 use Flexa\Extra\Controllers\VariationSwatchesRestController;
+use Flexa\Extra\Controllers\SwatchAnalyticsRestController;
 
 /**
  * Boots every REST controller on rest_api_init.
@@ -35,6 +36,7 @@ final class RestAPI {
         PublicRestController::get_instance();
         MigrationRestController::get_instance();
         VariationSwatchesRestController::get_instance();
+        SwatchAnalyticsRestController::get_instance();
 
         do_action( 'flexa_extra/rest/register_routes' );
     }

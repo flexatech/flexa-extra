@@ -6,7 +6,7 @@ Tested up to: 7.1
 Requires PHP: 7.4
 WC requires at least: 6.0.0
 WC tested up to: 11.0.0
-Stable tag: 1.4.0
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -137,12 +137,15 @@ On a variable product, Flexa Extra can replace each attribute dropdown with colo
 6. Decide where each set applies: all products, a hand-picked list, or by category, tag, price and stock conditions.
 7. Control what shoppers see: toggle the extra subtotal, total price, itemized breakdown, and mini-cart values.
 8. Start from a ready-made template: six starters you can edit before turning the set on.
+9. Set up variation swatches in the admin: give each attribute term a colour, image or button style, with tabs for Swatches, Settings and Analytics.
+10. Swatches on the product page: colour, image and button swatches replace the variation dropdowns, with a Clear link to reset the choice.
 
 == Source code for compiled JavaScript and CSS ==
 
 The admin app ships as a compiled bundle in `assets/dist/admin/`. The
-human-readable source is included in this package under `apps/admin/src/`
-(with its build config) and is built with pnpm + Vite:
+human-readable TypeScript source and its build config live in the public
+repository at https://github.com/flexatech/flexa-extra (under `apps/admin/`)
+and are built with pnpm + Vite:
 
 1. `cd apps/admin`
 2. `pnpm install`
@@ -156,6 +159,16 @@ no build step.
 This plugin does not connect to any external services. All data is stored locally in your WordPress database.
 
 == Changelog ==
+
+= 1.4.3 =
+* Swatch analytics: a new Analytics tab under Variation Swatches shows which attribute values shoppers actually buy, with the times bought and revenue for each, and the swatch colour or image next to it. It reads your existing orders, so no extra tracking is added and past orders count too.
+* Added two screenshots covering the Variation Swatches admin screen and swatches on the product page.
+
+= 1.4.2 =
+* Variation Swatches settings now use the same left-hand tab layout as the Product Options settings screen: General, Display, Appearance, Availability and Shop pages, instead of one long scrolling column. No settings or behaviour changed.
+
+= 1.4.1 =
+* Packaging: the distributed plugin now contains only the compiled admin bundle. The TypeScript build source is published in the public GitHub repository instead of being bundled in the download, so the zip is smaller. No functional changes.
 
 = 1.4.0 =
 * Variation swatches: turn WooCommerce variation attribute dropdowns into colour, image or button swatches on variable products, with a new **Variation Swatches** admin screen to assign a colour or image to each attribute term. The native `<select>` stays as the source of truth, so price, stock and gallery image update through WooCommerce's own logic; unavailable combinations are dimmed and keyboard selection works. Works with global attributes (`pa_*`) that have terms; if a dedicated swatches plugin like Woo Variation Swatches is active, Flexa Extra defers to it automatically.
@@ -212,6 +225,15 @@ This plugin does not connect to any external services. All data is stored locall
 * Initial release: option-set builder with text, number, date picker, colour picker, choice, swatch and button fields; storefront render engine; server-authoritative pricing/cart engine; UX & style settings; and a two-tier automated test suite.
 
 == Upgrade Notice ==
+
+= 1.4.3 =
+Adds a Swatch Analytics tab showing which variation attribute values sell, read from your existing orders. No breaking changes.
+
+= 1.4.2 =
+Cosmetic update: the Variation Swatches settings screen now uses the same tabbed layout as Product Options. No functional changes.
+
+= 1.4.1 =
+Packaging-only update: the download no longer bundles the admin build source (now on GitHub), making the zip smaller. No functional changes.
 
 = 1.4.0 =
 Adds variation swatches for variable products (colour/image/button) with a new admin screen to assign colours and images to attribute terms. No breaking changes.
