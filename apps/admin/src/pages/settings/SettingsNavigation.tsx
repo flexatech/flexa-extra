@@ -41,9 +41,14 @@ export const settingsTabs: SettingsTab[] = [
 interface SettingsNavigationProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  tabs?: SettingsTab[];
 }
 
-export default function SettingsNavigation({ activeTab, setActiveTab }: SettingsNavigationProps) {
+export default function SettingsNavigation({
+  activeTab,
+  setActiveTab,
+  tabs = settingsTabs,
+}: SettingsNavigationProps) {
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -51,7 +56,7 @@ export default function SettingsNavigation({ activeTab, setActiveTab }: Settings
       className="shrink-0 lg:w-64"
     >
       <nav className="space-y-1.5 lg:sticky lg:top-28">
-        {settingsTabs.map((tab) => {
+        {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
           return (

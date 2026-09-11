@@ -95,14 +95,14 @@ while IFS= read -r pattern; do
     fi
 done <<'EXCLUDED'
 includes/Register/RegisterDev.php
-apps/admin/node_modules/
-apps/admin/.env
+apps/
 vendor/
 node_modules/
 EXCLUDED
 
-# The buildable source and compiled bundle MUST be present.
-for pattern in apps/admin/src/ apps/admin/package.json assets/dist/admin/js/main.js "$SLUG.php"; do
+# The compiled bundle MUST be present. The TypeScript source lives on GitHub,
+# not in the distributed zip.
+for pattern in assets/dist/admin/js/main.js "$SLUG.php"; do
     if ! grep -qF "$SLUG/$pattern" <<<"$LISTING"; then
         echo "  ✗ MISSING from zip: $pattern" >&2
         FAIL=1
